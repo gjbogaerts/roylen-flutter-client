@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/ads.dart';
+import '../widgets/ads_grid.dart';
 
 class AdsList extends StatefulWidget {
+  static const routeName = '/ads-list';
   @override
   _AdsListState createState() => _AdsListState();
 }
@@ -31,14 +33,11 @@ class _AdsListState extends State<AdsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Ruilen?')),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Center(
-              child: Text('Hier komen alle ads'),
-            ),
-    );
+        appBar: AppBar(title: Text('Ruilen?')),
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : AdsGrid());
   }
 }

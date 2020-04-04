@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../utils/server_interface.dart';
 import '../models/ad.dart';
-import '../models/creator.dart';
+// import '../models/creator.dart';
 
 class Ads with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
@@ -12,6 +12,10 @@ class Ads with ChangeNotifier {
 
   List<Ad> get items {
     return [..._items];
+  }
+
+  Ad getById(String id) {
+    return _items.firstWhere((it) => it.id == id);
   }
 
   Future<void> fetchAndSetItems() async {

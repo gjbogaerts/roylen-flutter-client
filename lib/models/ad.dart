@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
-import 'dart:convert';
+// import 'package:provider/provider.dart';
 import './creator.dart';
 
-class Ad {
-  String id = '';
-  String title;
-  String description;
-  String category;
-  int virtualPrice;
-  String picture;
-  Creator creator;
-  String adNature;
-  String location;
+class Ad with ChangeNotifier {
+  String id;
+  final String title;
+  final String description;
+  final String category;
+  final int virtualPrice;
+  final String picture;
+  final Creator creator;
+  final String adNature;
+  final String location;
 
   Ad({
-    this.id,
+    this.id = '',
     @required this.title,
     @required this.description,
     @required this.category,
@@ -31,11 +31,11 @@ class Ad {
       description: json['description'],
       category: json['category'],
       virtualPrice: json['virtualPrice'],
-      picture: json['picture'],
+      picture: json['pics'][0],
       creator: Creator.fromJson(json['creator']),
       location: null,
       title: json['title'],
-      id: json['id'],
+      id: json['_id'],
     );
   }
 }
