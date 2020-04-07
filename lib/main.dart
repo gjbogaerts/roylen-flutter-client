@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 //screens
 import './screens/ads_list.dart';
 import './screens/ads_detail.dart';
+import './screens/auth.dart';
 //providers
 import './providers/ads.dart';
 // import './models/ad.dart';
@@ -44,6 +45,7 @@ class Roylen extends StatelessWidget {
         routes: {
           AdsList.routeName: (ctx) => AdsList(),
           AdsDetail.routeName: (ctx) => AdsDetail(),
+          Auth.routeName: (ctx) => Auth(),
         },
       ),
     );

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/ads.dart';
 import '../widgets/ads_grid.dart';
+import '../widgets/app_drawer.dart';
 
 class AdsList extends StatefulWidget {
   static const routeName = '/ads-list';
@@ -34,6 +35,7 @@ class _AdsListState extends State<AdsList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Ruilen?')),
+        drawer: AppDrawer(),
         body: _isLoading
             ? Center(
                 child: CircularProgressIndicator(),
