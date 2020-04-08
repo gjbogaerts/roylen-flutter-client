@@ -28,7 +28,8 @@ class AppDrawer extends StatelessWidget {
             title: Text('Inloggen/registreren'),
             subtitle: Text('Klik hier om in te loggen of je te registreren'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(Auth.routeName);
+              Navigator.of(context).pushReplacementNamed(Auth.routeName,
+                  arguments: {'registering': false});
             },
           )
         ],
