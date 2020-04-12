@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 //screens
 import './screens/ads_list.dart';
 import './screens/ads_detail.dart';
-import './screens/auth.dart';
+import './screens/auth.dart' as AuthScreen;
 //providers
 import './providers/ads.dart';
+import './providers/auth.dart' as AuthProvider;
 // import './models/ad.dart';
 
 void main() => runApp(Roylen());
@@ -15,6 +16,7 @@ class Roylen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: AuthProvider.Auth()),
         ChangeNotifierProvider.value(value: Ads()),
       ],
       child: MaterialApp(
@@ -45,7 +47,7 @@ class Roylen extends StatelessWidget {
         routes: {
           AdsList.routeName: (ctx) => AdsList(),
           AdsDetail.routeName: (ctx) => AdsDetail(),
-          Auth.routeName: (ctx) => Auth(),
+          AuthScreen.Auth.routeName: (ctx) => AuthScreen.Auth(),
         },
       ),
     );

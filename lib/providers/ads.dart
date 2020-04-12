@@ -30,7 +30,7 @@ class Ads with ChangeNotifier {
       });
       _items = loadedAds;
     } catch (err) {
-      print('Error $err');
+      print('Fout: Error $err');
     } finally {
       notifyListeners();
     }
