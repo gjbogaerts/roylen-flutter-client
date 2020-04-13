@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import '../utils/server_interface.dart';
 import '../screens/auth.dart';
 import '../providers/auth.dart' as AuthProvider;
-import '../screens/ads_list.dart';
 import '../models/user.dart';
+import '../screens/home.dart';
+import '../screens/info.dart';
+import '../screens/messages.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -39,7 +41,7 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Advertentie overzicht'),
             subtitle: Text('Klik hier om alle advertenties te zien'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AdsList.routeName);
+              Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
             },
           ),
           Divider(),
@@ -66,6 +68,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         Provider.of<AuthProvider.Auth>(context).logout();
                       },
                     ),
+                    Divider(),
                     ListTile(
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(
@@ -79,9 +82,28 @@ class _AppDrawerState extends State<AppDrawer> {
                       onTap: () {
                         print('Hier profiel bewerken functinoaliteint.');
                       },
+                    ),
+                    Divider(),
+                    ListTile(
+                      leading: Icon(Icons.message),
+                      title: Text('Je boodschappen'),
+                      subtitle: Text('Klik hier om je boodschappen te lezen'),
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(MessagesScreen.routeName);
+                      },
                     )
                   ],
-                )
+                ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.info),
+            title: Text('Over Roylen'),
+            subtitle: Text('Klik hier om meer te weten over Roylen'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(InfoScreen.routeName);
+            },
+          )
         ],
       ),
     );

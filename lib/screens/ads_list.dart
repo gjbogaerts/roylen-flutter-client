@@ -54,19 +54,15 @@ class _AdsListState extends State<AdsList> {
         _message = 'Je bent nu ingelogd.';
       }
     }
-    return Scaffold(
-      appBar: AppBar(title: Text('Ruilen?')),
-      drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Builder(builder: (BuildContext context) {
-              if (_message != null)
-                WidgetsBinding.instance
-                    .addPostFrameCallback((_) => onAfterBuild(context));
-              return AdsGrid();
-            }),
-    );
+    return _isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Builder(builder: (BuildContext context) {
+            if (_message != null)
+              WidgetsBinding.instance
+                  .addPostFrameCallback((_) => onAfterBuild(context));
+            return AdsGrid();
+          });
   }
 }

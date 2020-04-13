@@ -5,6 +5,12 @@ import './screens/ads_list.dart';
 import './screens/ads_detail.dart';
 import './screens/auth.dart' as AuthScreen;
 import './screens/splash.dart';
+import './screens/home.dart';
+import './screens/search.dart';
+import './screens/ad_create.dart';
+import './screens/ad_filter.dart';
+import './screens/info.dart';
+import './screens/messages.dart';
 //providers
 import './providers/ads.dart';
 import './providers/auth.dart' as AuthProvider;
@@ -53,18 +59,23 @@ class Roylen extends StatelessWidget {
               ),
             ),
             home: _authData.getUser() != null
-                ? AdsList()
+                ? HomeScreen()
                 : FutureBuilder(
                     future: _authData.tryAutoLogin(),
                     builder: (ctx, authResult) =>
                         authResult.connectionState == ConnectionState.waiting
                             ? SplashScreen()
-                            : AdsList(),
+                            : HomeScreen(),
                   ),
             routes: {
               AdsList.routeName: (ctx) => AdsList(),
               AdsDetail.routeName: (ctx) => AdsDetail(),
               AuthScreen.Auth.routeName: (ctx) => AuthScreen.Auth(),
+              SearchScreen.routeName: (ctx) => SearchScreen(),
+              AdCreate.routeName: (ctx) => AdCreate(),
+              AdFilter.routeName: (ctx) => AdFilter(),
+              InfoScreen.routeName: (ctx) => InfoScreen(),
+              MessagesScreen.routeName: (ctx) => MessagesScreen(),
             },
           );
         },
