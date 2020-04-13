@@ -4,14 +4,22 @@ import 'package:http/http.dart' as http;
 import '../utils/server_interface.dart';
 import '../models/ad.dart';
 // import '../models/creator.dart';
+import '../models/user.dart';
 
 class Ads with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
+  User _user;
 
   List<Ad> _items = [];
 
+  Ads(this._user, this._items);
+
   List<Ad> get items {
     return [..._items];
+  }
+
+  User get user {
+    return _user;
   }
 
   Ad getById(String id) {

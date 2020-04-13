@@ -19,6 +19,36 @@ class Auth with ChangeNotifier {
     return _token != null;
   }
 
+  Future<void> logout() async {
+    _token = null;
+    _userId = null;
+    _email = null;
+    _screenName = null;
+    _nix = null;
+    _avatar = null;
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    notifyListeners();
+  }
+
+  Future<bool> tryAutoLogin() async {
+    var prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('token') == null) {
+      // notifyListeners();
+      return false;
+    } else {
+      _token = prefs.getString('token');
+      _avatar = prefs.getString('avatar');
+      _screenName = prefs.getString('screenName');
+      _email = prefs.getString('email');
+      _nix = prefs.getInt('nix');
+      _userId = prefs.getString('userId');
+      print(_avatar);
+      notifyListeners();
+      return true;
+    }
+  }
+
   User getUser() {
     if (_isAuth()) {
       return User(
@@ -50,9 +80,10 @@ class Auth with ChangeNotifier {
       var prefs = await SharedPreferences.getInstance();
       prefs.setString('token', _token);
       prefs.setString('email', _email);
-      prefs.setString('avatar', _avatar);
+      prefs.setString('avatar', '$baseUrl$_avatar');
       prefs.setString('userId', _userId);
       prefs.setString('screenName', _screenName);
+      prefs.setInt('nix', _nix);
       notifyListeners();
       return true;
     } catch (err) {
@@ -119,6 +150,7 @@ class Auth with ChangeNotifier {
       prefs.setString('avatar', avatar);
       prefs.setString('userId', _userData['id']);
       prefs.setString('screenName', _userData['screenName']);
+      prefs.setInt('nix', _userData['nix']);
       notifyListeners();
       return true;
     } catch (err) {
