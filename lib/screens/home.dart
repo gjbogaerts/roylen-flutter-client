@@ -6,7 +6,7 @@ import './ad_filter.dart';
 import '../widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = '/home';
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -22,6 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
       {'page': AdsList(), 'title': 'Alle advertenties'},
       {'page': SearchScreen(), 'title': 'Zoek advertenties'},
       {'page': AdFilter(), 'title': 'Filter advertenties'},
+      {
+        'page': AdsList(
+          filterOnFavs: true,
+        ),
+        'title': 'Je favorieten'
+      },
       {'page': AdCreate(), 'title': 'Plaats advertentie'},
     ];
   }
@@ -44,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
               var idx = _pages
                   .indexWhere((elm) => elm['title'] == 'Plaats advertentie');
               _selectPage(idx);
-              // Navigator.of(context).pushReplacementNamed(AdCreate.routeName);
             },
           )
         ],
@@ -61,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.grid_on),
-            title: Text('Alle advertenties'),
+            title: Text('Advertenties'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
@@ -72,8 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Filter'),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            title: Text('Favorieten'),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.add_circle_outline),
-            title: Text('Plaats advertentie'),
+            title: Text('Plaatsen'),
           ),
         ],
       ),

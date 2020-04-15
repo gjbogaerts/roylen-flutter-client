@@ -11,6 +11,7 @@ import './screens/ad_create.dart';
 import './screens/ad_filter.dart';
 import './screens/info.dart';
 import './screens/messages.dart';
+import './screens/ad_user_list.dart';
 //providers
 import './providers/ads.dart';
 import './providers/auth.dart' as AuthProvider;
@@ -58,7 +59,7 @@ class Roylen extends StatelessWidget {
                     color: Color(0xff053505)),
               ),
             ),
-            home: _authData.getUser() != null
+            home: _authData.isAuth
                 ? HomeScreen()
                 : FutureBuilder(
                     future: _authData.tryAutoLogin(),
@@ -68,6 +69,7 @@ class Roylen extends StatelessWidget {
                             : HomeScreen(),
                   ),
             routes: {
+              HomeScreen.routeName: (ctx) => HomeScreen(),
               AdsList.routeName: (ctx) => AdsList(),
               AdsDetail.routeName: (ctx) => AdsDetail(),
               AuthScreen.Auth.routeName: (ctx) => AuthScreen.Auth(),
@@ -76,6 +78,7 @@ class Roylen extends StatelessWidget {
               AdFilter.routeName: (ctx) => AdFilter(),
               InfoScreen.routeName: (ctx) => InfoScreen(),
               MessagesScreen.routeName: (ctx) => MessagesScreen(),
+              AdUserList.routeName: (ctx) => AdUserList(),
             },
           );
         },

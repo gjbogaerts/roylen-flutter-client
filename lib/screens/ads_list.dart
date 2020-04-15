@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../providers/ads.dart';
 import '../widgets/ads_grid.dart';
-import '../widgets/app_drawer.dart';
 
 class AdsList extends StatefulWidget {
   static const routeName = '/ads-list';
+  final bool filterOnFavs;
+
+  AdsList({this.filterOnFavs = false});
 
   @override
   _AdsListState createState() => _AdsListState();

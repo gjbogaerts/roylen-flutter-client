@@ -15,6 +15,10 @@ class Auth with ChangeNotifier {
   int _nix;
   String _avatar;
 
+  bool get isAuth {
+    return _token != null;
+  }
+
   bool _isAuth() {
     return _token != null;
   }
@@ -26,24 +30,26 @@ class Auth with ChangeNotifier {
     _screenName = null;
     _nix = null;
     _avatar = null;
-    var prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     notifyListeners();
   }
 
   Future<bool> tryAutoLogin() async {
-    var prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('token') == null) {
-      // notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      print('no token found');
       return false;
     } else {
-      _token = prefs.getString('token');
-      _avatar = prefs.getString('avatar');
-      _screenName = prefs.getString('screenName');
-      _email = prefs.getString('email');
-      _nix = prefs.getInt('nix');
-      _userId = prefs.getString('userId');
-      print(_avatar);
+      // print('token fond');
+      final extractedUserData =
+          json.decode(prefs.getString('userData')) as Map<String, dynamic>;
+      _token = extractedUserData['token'];
+      _userId = extractedUserData['_userId'];
+      _email = extractedUserData['email'];
+      _screenName = extractedUserData['screenName'];
+      _nix = extractedUserData['nix'];
+      _avatar = extractedUserData['avatar'];
       notifyListeners();
       return true;
     }
@@ -70,24 +76,25 @@ class Auth with ChangeNotifier {
         headers: {'content-type': 'application/json'},
         body: json.encode({'email': email, 'password': password}),
       );
+
       var _userData = json.decode(uriResponse.body);
+      if (_userData['token'] == null) {
+        print('not token found');
+        return false;
+      }
       _token = _userData['token'];
       _email = _userData['email'];
       _screenName = _userData['screenName'];
       _userId = _userData['_id'];
       _avatar = _userData['avatar'];
       _nix = _userData['nix'];
-      var prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', _token);
-      prefs.setString('email', _email);
-      prefs.setString('avatar', '$baseUrl$_avatar');
-      prefs.setString('userId', _userId);
-      prefs.setString('screenName', _screenName);
-      prefs.setInt('nix', _nix);
+      final prefs = await SharedPreferences.getInstance();
+      final stringToStore = json.encode(_userData);
+      prefs.setString('userData', stringToStore);
       notifyListeners();
       return true;
     } catch (err) {
-      print(err);
+      print('Fout $err');
       return false;
     }
   }

@@ -8,6 +8,7 @@ import '../models/user.dart';
 import '../screens/home.dart';
 import '../screens/info.dart';
 import '../screens/messages.dart';
+import '../screens/ad_user_list.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -39,7 +40,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ListTile(
             leading: Icon(Icons.list),
             title: Text('Advertentie overzicht'),
-            subtitle: Text('Klik hier om alle advertenties te zien'),
+            subtitle: Text('Alle advertenties, ongefilterd.'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
             },
@@ -49,8 +50,6 @@ class _AppDrawerState extends State<AppDrawer> {
               ? ListTile(
                   leading: Icon(Icons.account_circle),
                   title: Text('Inloggen/registreren'),
-                  subtitle:
-                      Text('Klik hier om in te loggen of je te registreren'),
                   onTap: () {
                     Navigator.of(context).pushReplacementNamed(Auth.routeName,
                         arguments: {'registering': false});
@@ -61,7 +60,6 @@ class _AppDrawerState extends State<AppDrawer> {
                     ListTile(
                       leading: Icon(Icons.exit_to_app),
                       title: Text('Uitloggen'),
-                      subtitle: Text('Klik hier om uit te loggen'),
                       onTap: () {
                         Navigator.of(context).pop();
                         Navigator.of(context).pushReplacementNamed('/');
@@ -78,7 +76,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         radius: 15,
                       ),
                       title: Text('Je profiel'),
-                      subtitle: Text('Klik hier om je profiel bij te wennen'),
+                      subtitle: Text('Wijzig je email of je avatar'),
                       onTap: () {
                         print('Hier profiel bewerken functinoaliteint.');
                       },
@@ -87,19 +85,30 @@ class _AppDrawerState extends State<AppDrawer> {
                     ListTile(
                       leading: Icon(Icons.message),
                       title: Text('Je boodschappen'),
-                      subtitle: Text('Klik hier om je boodschappen te lezen'),
+                      subtitle: Text(
+                          'Lees je boodschappen van andere gebruikers, en beantwoord ze hier.'),
                       onTap: () {
                         Navigator.of(context)
                             .pushReplacementNamed(MessagesScreen.routeName);
                       },
-                    )
+                    ),
+                    Divider(),
+                    ListTile(
+                        leading: Icon(Icons.view_list),
+                        title: Text('Jouw advertenties'),
+                        subtitle:
+                            Text('Bewerk of verwijder je eigen advertenties'),
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushReplacementNamed(AdUserList.routeName);
+                        })
                   ],
                 ),
           Divider(),
           ListTile(
             leading: Icon(Icons.info),
             title: Text('Over Roylen'),
-            subtitle: Text('Klik hier om meer te weten over Roylen'),
+            subtitle: Text('Contact, privacy, info en wat dies meer zij'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(InfoScreen.routeName);
             },
