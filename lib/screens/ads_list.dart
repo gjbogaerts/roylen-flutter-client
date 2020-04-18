@@ -21,17 +21,20 @@ class _AdsListState extends State<AdsList> {
 
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Ads>(context).fetchAndSetItems().then((_) {
+    var adsProvider = Provider.of<Ads>(context);
+    if (adsProvider.items.length == 0) {
+      if (_isInit) {
         setState(() {
-          _isLoading = false;
+          _isLoading = true;
         });
-      });
+        Provider.of<Ads>(context).fetchAndSetItems().then((_) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      }
+      _isInit = false;
     }
-    _isInit = false;
     super.didChangeDependencies();
   }
 

@@ -28,7 +28,7 @@ class _AdCreateState extends State<AdCreate> {
     var provider = Provider.of<Auth>(context);
     if (provider.isAuth) {
       _user = provider.getUser();
-      print(_user.token);
+      // print(_user.token);
     }
     _checkLocationPermissions();
     super.didChangeDependencies();

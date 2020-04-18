@@ -50,20 +50,23 @@ class Roylen extends StatelessWidget {
                     color: Color(0xfffefaee)),
               ),
               textTheme: TextTheme(
-                  title: TextStyle(
-                    fontSize: 36.0,
-                    fontFamily: 'Quicksand',
-                    color: Color(0xff053505),
-                  ),
-                  body1: TextStyle(
-                    fontSize: 14.0,
-                    fontFamily: 'Dosis',
-                    color: Color(0xff053505),
-                  ),
-                  body2: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  )),
+                title: TextStyle(
+                  fontSize: 36.0,
+                  fontFamily: 'Quicksand',
+                  color: Color(0xff053505),
+                ),
+                body1: TextStyle(
+                  fontSize: 14.0,
+                  fontFamily: 'Dosis',
+                  color: Color(0xff053505),
+                ),
+                body2: TextStyle(
+                  fontSize: 16.0,
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff053505),
+                ),
+              ),
             ),
             home: _authData.isAuth
                 ? HomeScreen()

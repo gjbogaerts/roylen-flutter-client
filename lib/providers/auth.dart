@@ -39,14 +39,12 @@ class Auth with ChangeNotifier {
   Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
-      print('no token found');
       return false;
     } else {
-      // print('token fond');
       final extractedUserData =
           json.decode(prefs.getString('userData')) as Map<String, dynamic>;
       _token = extractedUserData['token'];
-      _userId = extractedUserData['_userId'];
+      _userId = extractedUserData['_id'];
       _email = extractedUserData['email'];
       _screenName = extractedUserData['screenName'];
       _nix = extractedUserData['nix'];
@@ -80,7 +78,7 @@ class Auth with ChangeNotifier {
 
       var _userData = json.decode(uriResponse.body);
       if (_userData['token'] == null) {
-        print('not token found');
+        // print('not token found');
         return false;
       }
       _token = _userData['token'];
@@ -91,7 +89,7 @@ class Auth with ChangeNotifier {
       _nix = _userData['nix'];
       final prefs = await SharedPreferences.getInstance();
       final stringToStore = json.encode(_userData);
-      prefs.setString('userData', stringToStore);
+      await prefs.setString('userData', stringToStore);
       notifyListeners();
       return true;
     } catch (err) {
@@ -157,7 +155,7 @@ class Auth with ChangeNotifier {
       prefs.setString('token', _token);
       prefs.setString('email', _userData['email']);
       prefs.setString('avatar', avatar);
-      prefs.setString('userId', _userData['id']);
+      prefs.setString('_id', _userData['id']);
       prefs.setString('screenName', _userData['screenName']);
       prefs.setInt('nix', _userData['nix']);
       notifyListeners();

@@ -53,6 +53,23 @@ class Ads with ChangeNotifier {
     }
   }
 
+  Future<List<Ad>> fetchItemsFromUser(String _userId) async {
+    final url = baseUrl + '/api/ads/fromUser/$_userId';
+    final List<Ad> loadedAds = [];
+    try {
+      final response = await http.get(url);
+      final adsData = json.decode(response.body) as List<dynamic>;
+      adsData.forEach((it) {
+        loadedAds.add(Ad.fromJson(it));
+      });
+      notifyListeners();
+      return loadedAds;
+    } catch (err) {
+      print('Fout: Error $err');
+      return loadedAds;
+    }
+  }
+
   Future<void> fetchAndSetItems() async {
     final url = baseUrl + '/api/ads';
     try {

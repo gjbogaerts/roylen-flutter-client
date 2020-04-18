@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-// import 'package:provider/provider.dart';
 import './creator.dart';
+import './location.dart';
 
 class Ad with ChangeNotifier {
   String id;
@@ -11,7 +11,7 @@ class Ad with ChangeNotifier {
   final String picture;
   final Creator creator;
   final String adNature;
-  final String location;
+  final Location location;
 
   Ad({
     this.id = '',
@@ -33,7 +33,8 @@ class Ad with ChangeNotifier {
       virtualPrice: json['virtualPrice'],
       picture: json['pics'][0],
       creator: Creator.fromJson(json['creator']),
-      location: null,
+      location:
+          json['location'] != null ? Location.fromJson(json['location']) : null,
       title: json['title'],
       id: json['_id'],
     );
