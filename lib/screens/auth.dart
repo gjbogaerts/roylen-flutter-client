@@ -8,6 +8,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
 import '../providers/auth.dart' as AuthProvider;
+import '../providers/toaster.dart';
 
 class Auth extends StatefulWidget {
   static const routeName = '/auth';
@@ -38,14 +39,15 @@ class _AuthState extends State<Auth> {
       });
       return;
     }
+    var toaster = Provider.of<Toaster>(context);
     _formKey.currentState.save();
     try {
       var _registerLogin = await Provider.of<AuthProvider.Auth>(context)
           .loginUser(
               email: _authData['email'], password: _authData['password']);
       if (_registerLogin) {
-        Navigator.of(context)
-            .pushReplacementNamed('/', arguments: {'login': 1, 'register': 0});
+        toaster.setMessage('Je bent succesvol ingelogd.');
+        Navigator.of(context).pushReplacementNamed('/');
       } else {
         setState(() {
           _hasError = true;
@@ -70,6 +72,7 @@ class _AuthState extends State<Auth> {
       });
       return;
     }
+    var toaster = Provider.of<Toaster>(context);
     _formKey.currentState.save();
     try {
       var _registerResult =
@@ -86,8 +89,8 @@ class _AuthState extends State<Auth> {
               'Er ging iets mis tijdens de registratie. Probeer het alstublieft opnieuw.';
         });
       } else {
-        Navigator.of(context)
-            .pushReplacementNamed('/', arguments: {'login': 0, 'register': 1});
+        toaster.setMessage('Je bent succesvol geregistreerd en ingelogd.');
+        Navigator.of(context).pushReplacementNamed('/');
       }
     } catch (err) {
       setState(() {
