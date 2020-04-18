@@ -23,9 +23,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Als je foto's wilt kiezen uit je fotobibliotheek, moet je Roylen toegang geven tot je foto's</string>
+	<string>Als je foto's wilt kiezen uit je fotobibliotheek, moet je Roylen toegang geven tot je foto's.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Als je foto's wil gebruiken die je zelf maakt, moet je Roylen toegang geven tot je camera</string>
+	<string>Als je foto's wil gebruiken die je zelf maakt, moet je Roylen toegang geven tot je camera.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We willen graag je locatie weten om het gemakkelijker te maken advertenties in je buurt te vinden.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
