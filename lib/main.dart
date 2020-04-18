@@ -15,6 +15,7 @@ import './screens/ad_user_list.dart';
 //providers
 import './providers/ads.dart';
 import './providers/auth.dart' as AuthProvider;
+import './providers/toaster.dart';
 // import './models/ad.dart';
 
 void main() => runApp(Roylen());
@@ -25,6 +26,7 @@ class Roylen extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider.Auth()),
+        ChangeNotifierProvider.value(value: Toaster()),
         ChangeNotifierProxyProvider<AuthProvider.Auth, Ads>(
           create: (ctx) => Ads(null, []),
           update: (ctx, auth, previousAds) =>

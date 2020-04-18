@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:location/location.dart';
 
 import '../providers/auth.dart';
+import '../providers/toaster.dart';
 import '../models/user.dart';
 import '../providers/ads.dart';
 import '../widgets/ad_form.dart';
@@ -39,6 +40,7 @@ class _AdCreateState extends State<AdCreate> {
     var result =
         await Provider.of<Ads>(context).createAd(formData, _user.token);
     if (result) {
+      Provider.of<Toaster>(context).setMessage('Je advertentie is aangemaakt');
       Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
     }
   }
