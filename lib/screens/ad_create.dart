@@ -4,8 +4,10 @@ import 'package:location/location.dart';
 
 import '../providers/auth.dart';
 import '../models/user.dart';
+import '../providers/ads.dart';
 import '../widgets/ad_form.dart';
 import '../screens/auth.dart' as AuthScreen;
+import '../screens/home.dart';
 
 class AdCreate extends StatefulWidget {
   static const routeName = '/add-create';
@@ -31,10 +33,14 @@ class _AdCreateState extends State<AdCreate> {
     super.didChangeDependencies();
   }
 
-  void _saveForm(Map<String, dynamic> formData) {
+  Future<void> _saveForm(Map<String, dynamic> formData) async {
     formData['latitude'] = _locationData.latitude;
     formData['longitude'] = _locationData.longitude;
-    print(formData);
+    var result =
+        await Provider.of<Ads>(context).createAd(formData, _user.token);
+    if (result) {
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+    }
   }
 
   Future<void> _checkLocationPermissions() async {

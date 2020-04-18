@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/server_interface.dart';
 import '../models/user.dart';
+import '../utils/content_type.dart';
 
 class Auth with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
@@ -123,7 +124,8 @@ class Auth with ChangeNotifier {
       _userId = _userData['_id'];
       _avatar = avatar;
       _nix = _userData['nix'];
-
+      var contentType = ContentType.getContentType(avatar);
+      /* 
       String contentType;
       if (avatar.endsWith('jpeg') || avatar.endsWith('jpg')) {
         contentType = 'image/jpeg';
@@ -134,7 +136,7 @@ class Auth with ChangeNotifier {
       } else {
         contentType = 'application/octet-stream';
       }
-
+ */
       var _req =
           http.MultipartRequest('POST', Uri.parse('$baseUrl/api/profile'));
       var file = await http.MultipartFile.fromPath('filename', avatar,

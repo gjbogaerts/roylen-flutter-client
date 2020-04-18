@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import '../utils/server_interface.dart';
 import '../models/ad.dart';
 // import '../models/creator.dart';
 import '../models/user.dart';
+import '../utils/content_type.dart';
 
 class Ads with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
@@ -24,6 +26,31 @@ class Ads with ChangeNotifier {
 
   Ad getById(String id) {
     return _items.firstWhere((it) => it.id == id);
+  }
+
+  Future<bool> createAd(Map<String, dynamic> adData, String token) async {
+    final url = baseUrl + '/api/adCreate';
+    final contentType = ContentType.getContentType(adData['picture']);
+    try {
+      var _req = http.MultipartRequest('POST', Uri.parse(url));
+      var _file = await http.MultipartFile.fromPath(
+          'filename', adData['picture'],
+          contentType: MediaType.parse(contentType));
+      _req.files.add(_file);
+      adData.forEach((s, v) {
+        _req.fields[s] = v.toString();
+      });
+      _req.headers.putIfAbsent('Authorization', () => 'Bearer $token');
+      var uriResponse = await _req.send();
+      if (uriResponse.statusCode != 200) {
+        return false;
+      }
+      await http.Response.fromStream(uriResponse);
+      notifyListeners();
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   Future<void> fetchAndSetItems() async {
