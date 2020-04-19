@@ -28,6 +28,37 @@ class Ads with ChangeNotifier {
     return _items.firstWhere((it) => it.id == id);
   }
 
+  Future<bool> setFavorite(String adId) async {
+    final _url = baseUrl + '/api/favorite';
+    try {
+      var response = await http.post(_url,
+          headers: {'content-type': 'application/json'},
+          body: json.encode({'userId': '${_user.id}', 'adId': '$adId'}));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
+  }
+
+  Future<bool> warnAboutAd(String adId) async {
+    final _url = baseUrl + '/api/ads/warning';
+    try {
+      var response = await http.post(_url,
+          headers: {'content-type': 'application/json'},
+          body: json.encode({'adId': adId}));
+      if (response.statusCode != 200) {
+        return false;
+      }
+      return true;
+    } catch (err) {
+      return true;
+    }
+  }
+
   Future<bool> removeAd(String adId) async {
     final _userId = _user.id;
     final _token = _user.token;

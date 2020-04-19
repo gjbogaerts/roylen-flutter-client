@@ -19,17 +19,13 @@ class _AdUserListState extends State<AdUserList> {
   User _user;
   List<Ad> _userAds;
   bool _isLoading = true;
-  bool _hasMessages = false;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     var adsProvider = Provider.of<Ads>(context);
     var authProvider = Provider.of<Auth>(context);
-    var toasterProvider = Provider.of<Toaster>(context);
-    if (toasterProvider.message) {
-      _hasMessages = true;
-    }
+
     if (authProvider.isAuth) {
       _user = authProvider.getUser();
     }
