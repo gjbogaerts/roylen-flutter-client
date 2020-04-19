@@ -12,6 +12,7 @@ import './screens/ad_filter.dart';
 import './screens/info.dart';
 import './screens/messages.dart';
 import './screens/ad_user_list.dart';
+import './screens/ads_favorite_list.dart';
 //theme
 import './utils/roylen_theme.dart';
 //providers
@@ -28,6 +29,7 @@ class Roylen extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider.Auth()),
         ChangeNotifierProvider.value(value: Toaster()),
+        // ChangeNotifierProvider.value(value: Ads(null, [])),
         ChangeNotifierProxyProvider<AuthProvider.Auth, Ads>(
           create: (ctx) => Ads(null, []),
           update: (ctx, auth, previousAds) =>
@@ -59,6 +61,7 @@ class Roylen extends StatelessWidget {
               InfoScreen.routeName: (ctx) => InfoScreen(),
               MessagesScreen.routeName: (ctx) => MessagesScreen(),
               AdUserList.routeName: (ctx) => AdUserList(),
+              AdsFavoriteList.routeName: (ctx) => AdsFavoriteList(),
             },
           );
         },

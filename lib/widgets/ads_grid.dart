@@ -4,9 +4,14 @@ import '../providers/ads.dart';
 import './ad_item.dart';
 
 class AdsGrid extends StatelessWidget {
+  final bool favsOnly;
+  AdsGrid({this.favsOnly = false});
   @override
   Widget build(BuildContext context) {
-    final adsData = Provider.of<Ads>(context).items;
+    final adsData = favsOnly
+        ? Provider.of<Ads>(context).favoriteItems
+        : Provider.of<Ads>(context).items;
+    // print(adsData);
     return GridView.builder(
       padding: const EdgeInsets.all(10),
       itemCount: adsData.length,

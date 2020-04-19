@@ -3,6 +3,7 @@ import './ads_list.dart';
 import './ad_create.dart';
 import './search.dart';
 import './ad_filter.dart';
+import './ads_favorite_list.dart';
 import '../widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,12 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {'page': AdsList(), 'title': 'Alle advertenties'},
       {'page': SearchScreen(), 'title': 'Zoek advertenties'},
       {'page': AdFilter(), 'title': 'Filter advertenties'},
-      {
-        'page': AdsList(
-          filterOnFavs: true,
-        ),
-        'title': 'Je favorieten'
-      },
+      {'page': AdsFavoriteList(), 'title': 'Je favorieten'},
       {'page': AdCreate(), 'title': 'Plaats advertentie'},
     ];
   }

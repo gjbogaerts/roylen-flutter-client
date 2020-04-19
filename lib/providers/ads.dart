@@ -13,11 +13,16 @@ class Ads with ChangeNotifier {
   User _user;
 
   List<Ad> _items = [];
+  List<Ad> _favoriteItems = [];
 
   Ads(this._user, this._items);
 
   List<Ad> get items {
     return [..._items];
+  }
+
+  List<Ad> get favoriteItems {
+    return [..._favoriteItems];
   }
 
   User get user {
@@ -26,6 +31,42 @@ class Ads with ChangeNotifier {
 
   Ad getById(String id) {
     return _items.firstWhere((it) => it.id == id);
+  }
+
+  Future<void> fetchAndSetItems() async {
+    final url = baseUrl + '/api/ads';
+    try {
+      final response = await http.get(url);
+      final adsData = json.decode(response.body) as List<dynamic>;
+      final List<Ad> loadedAds = [];
+
+      adsData.forEach((it) {
+        loadedAds.add(Ad.fromJson(it));
+      });
+      _items = loadedAds;
+    } catch (err) {
+      print('Fout: Error $err');
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchAndSetFavoriteItems() async {
+    final _url = baseUrl + '/api/ads/saved/${_user.id}';
+    final _token = _user.token;
+    try {
+      final _response =
+          await http.get(_url, headers: {'Authorization': 'Bearer $_token'});
+      final _adsData = json.decode(_response.body) as List<dynamic>;
+      final List<Ad> _loadedAds = [];
+      _adsData.forEach((it) {
+        _loadedAds.add(Ad.fromJson(it));
+      });
+      _favoriteItems = _loadedAds;
+      notifyListeners();
+    } catch (err) {
+      print('Fout: ' + err.toString());
+    }
   }
 
   Future<bool> setFavorite(String adId) async {
@@ -118,24 +159,6 @@ class Ads with ChangeNotifier {
     } catch (err) {
       print('Fout: Error $err');
       return loadedAds;
-    }
-  }
-
-  Future<void> fetchAndSetItems() async {
-    final url = baseUrl + '/api/ads';
-    try {
-      final response = await http.get(url);
-      final adsData = json.decode(response.body) as List<dynamic>;
-      final List<Ad> loadedAds = [];
-
-      adsData.forEach((it) {
-        loadedAds.add(Ad.fromJson(it));
-      });
-      _items = loadedAds;
-    } catch (err) {
-      print('Fout: Error $err');
-    } finally {
-      notifyListeners();
     }
   }
 }
