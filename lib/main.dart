@@ -12,11 +12,12 @@ import './screens/ad_filter.dart';
 import './screens/info.dart';
 import './screens/messages.dart';
 import './screens/ad_user_list.dart';
+//theme
+import './utils/roylen_theme.dart';
 //providers
 import './providers/ads.dart';
 import './providers/auth.dart' as AuthProvider;
 import './providers/toaster.dart';
-// import './models/ad.dart';
 
 void main() => runApp(Roylen());
 
@@ -37,37 +38,7 @@ class Roylen extends StatelessWidget {
         builder: (ctx, _authData, _) {
           return MaterialApp(
             title: 'Roylen',
-            theme: ThemeData(
-              primaryColor: Color(0xff053505),
-              accentColor: Color(0xffe9a401),
-              canvasColor: Color(0xfffefaee),
-              cardColor: Color(0xffefefef),
-              errorColor: Color(0xffee3333),
-              primaryTextTheme: TextTheme(
-                title: TextStyle(
-                    fontSize: 28.0,
-                    fontFamily: 'QuickSand',
-                    color: Color(0xfffefaee)),
-              ),
-              textTheme: TextTheme(
-                title: TextStyle(
-                  fontSize: 36.0,
-                  fontFamily: 'Quicksand',
-                  color: Color(0xff053505),
-                ),
-                body1: TextStyle(
-                  fontSize: 14.0,
-                  fontFamily: 'Dosis',
-                  color: Color(0xff053505),
-                ),
-                body2: TextStyle(
-                  fontSize: 16.0,
-                  fontFamily: 'Dosis',
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff053505),
-                ),
-              ),
-            ),
+            theme: RoylenTheme.getThemeData(),
             home: _authData.isAuth
                 ? HomeScreen()
                 : FutureBuilder(
