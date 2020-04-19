@@ -70,7 +70,7 @@ class _AdFormState extends State<AdForm> {
     } else {
       imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     }
-    print(imageFile);
+    // print(imageFile);
     if (imageFile == null) {
       return;
     }
@@ -132,6 +132,7 @@ class _AdFormState extends State<AdForm> {
             ),
             TextFormField(
               autocorrect: true,
+              maxLines: 5,
               decoration: const InputDecoration(
                   hintText: 'Ten minste dertig tekens',
                   labelText: 'Beschrijving'),

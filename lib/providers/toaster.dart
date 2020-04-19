@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class Toaster with ChangeNotifier {
   var _hasMessage = false;
@@ -22,5 +22,25 @@ class Toaster with ChangeNotifier {
     _message = null;
     _hasMessage = false;
     notifyListeners();
+  }
+
+  void showSnackBar(BuildContext context) {
+    if (_hasMessage) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Theme.of(context).accentColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+          ),
+        ),
+        content: Text(
+          _message,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.body2,
+        ),
+      ));
+      clearMessage();
+    }
   }
 }

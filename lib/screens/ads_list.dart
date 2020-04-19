@@ -38,27 +38,6 @@ class _AdsListState extends State<AdsList> {
     super.didChangeDependencies();
   }
 
-  void onAfterBuild(BuildContext context) {
-    var toaster = Provider.of<Toaster>(context);
-    if (toaster.message) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Theme.of(context).accentColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-          ),
-        ),
-        content: Text(
-          toaster.getMessage(),
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.body2,
-        ),
-      ));
-      toaster.clearMessage();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return _isLoading
@@ -66,8 +45,9 @@ class _AdsListState extends State<AdsList> {
             child: CircularProgressIndicator(),
           )
         : Builder(builder: (BuildContext context) {
-            WidgetsBinding.instance
-                .addPostFrameCallback((_) => onAfterBuild(context));
+            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                Provider.of<Toaster>(context)
+                    .showSnackBar(context) /* onAfterBuild(context) */);
             return AdsGrid();
           });
   }

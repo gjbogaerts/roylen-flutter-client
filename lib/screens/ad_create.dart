@@ -60,11 +60,7 @@ class _AdCreateState extends State<AdCreate> {
         return;
       }
     }
-    setState(() {});
-    final _data = await _location.getLocation();
-    setState(() {
-      _locationData = _data;
-    });
+    _locationData = await _location.getLocation();
   }
 
   void navigateToAuth() {

@@ -28,6 +28,25 @@ class Ads with ChangeNotifier {
     return _items.firstWhere((it) => it.id == id);
   }
 
+  Future<bool> removeAd(String adId) async {
+    final _userId = _user.id;
+    final _token = _user.token;
+    final _url = baseUrl + '/api/ads/$adId/$_userId';
+    try {
+      var response =
+          await http.delete(_url, headers: {'Authorization': 'Bearer $_token'});
+      _items.removeWhere((it) => it.id == adId);
+      notifyListeners();
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      print('Fouten Deleten: $err');
+      return false;
+    }
+  }
+
   Future<bool> createAd(Map<String, dynamic> adData, String token) async {
     final url = baseUrl + '/api/adCreate';
     final contentType = ContentType.getContentType(adData['picture']);
@@ -46,7 +65,8 @@ class Ads with ChangeNotifier {
         return false;
       }
       await http.Response.fromStream(uriResponse);
-      notifyListeners();
+      await fetchAndSetItems();
+      // notifyListeners();
       return true;
     } catch (err) {
       return false;

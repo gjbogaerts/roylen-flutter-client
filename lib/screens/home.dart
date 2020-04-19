@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     _pages = [
       {'page': AdsList(), 'title': 'Alle advertenties'},
       {'page': SearchScreen(), 'title': 'Zoek advertenties'},
@@ -30,6 +31,15 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       {'page': AdCreate(), 'title': 'Plaats advertentie'},
     ];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (ModalRoute.of(context).settings.arguments != null) {
+      var args = ModalRoute.of(context).settings.arguments as Map<String, int>;
+      _selectPage(args['idx']);
+    }
   }
 
   void _selectPage(int idx) {
