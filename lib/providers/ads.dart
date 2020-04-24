@@ -8,12 +8,16 @@ import '../models/ad.dart';
 import '../models/user.dart';
 import '../utils/content_type.dart';
 
+enum ReturnMode { Search, Favorites, Filtered, All }
+
 class Ads with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
   User _user;
+  ReturnMode _mode = ReturnMode.All;
 
   List<Ad> _items = [];
   List<Ad> _favoriteItems = [];
+  List<Ad> _searchItems = [];
 
   Ads(this._user, this._items);
 
@@ -25,15 +29,42 @@ class Ads with ChangeNotifier {
     return [..._favoriteItems];
   }
 
+  List<Ad> get searchItems {
+    return [..._searchItems];
+  }
+
   User get user {
     return _user;
+  }
+
+  ReturnMode get mode {
+    return _mode;
   }
 
   Ad getById(String id) {
     return _items.firstWhere((it) => it.id == id);
   }
 
+  Future<void> fetchAndSetSearchItems(String q) async {
+    _mode = ReturnMode.Search;
+    final url = baseUrl + '/api/ads/q/$q';
+    try {
+      final response = await http.get(url);
+      final adsData = json.decode(response.body) as List<dynamic>;
+      final List<Ad> loadedAds = [];
+      adsData.forEach((it) {
+        loadedAds.add(Ad.fromJson(it));
+      });
+      _searchItems = loadedAds;
+    } catch (err) {
+      print('Fout: $err');
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchAndSetItems() async {
+    _mode = ReturnMode.All;
     final url = baseUrl + '/api/ads';
     try {
       final response = await http.get(url);
@@ -52,6 +83,7 @@ class Ads with ChangeNotifier {
   }
 
   Future<void> fetchAndSetFavoriteItems() async {
+    _mode = ReturnMode.Favorites;
     final _url = baseUrl + '/api/ads/saved/${_user.id}';
     final _token = _user.token;
     try {

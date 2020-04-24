@@ -18,6 +18,12 @@ class RoylenTheme {
       canvasColor: Color(0xfffefaee),
       cardColor: Color(0xffefefef),
       errorColor: Color(0xffee3333),
+      buttonTheme: ButtonThemeData(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          textTheme: ButtonTextTheme.normal,
+          minWidth: 100,
+          height: 36),
       primaryTextTheme: TextTheme(
         title: TextStyle(
             fontSize: 28.0, fontFamily: 'QuickSand', color: Color(0xfffefaee)),

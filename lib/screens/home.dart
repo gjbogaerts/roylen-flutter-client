@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import './ads_list.dart';
 import './ad_create.dart';
-import './search.dart';
-import './ad_filter.dart';
-import './ads_favorite_list.dart';
+import './ads_selection.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/search.dart';
+import '../widgets/filter.dart';
+
+import '../providers/ads.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -22,9 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _pages = [
       {'page': AdsList(), 'title': 'Alle advertenties'},
-      {'page': SearchScreen(), 'title': 'Zoek advertenties'},
-      {'page': AdFilter(), 'title': 'Filter advertenties'},
-      {'page': AdsFavoriteList(), 'title': 'Je favorieten'},
+      {'page': AdsSelection(ReturnMode.Search), 'title': 'Zoek advertenties'},
+      {
+        'page': AdsSelection(ReturnMode.Filtered),
+        'title': 'Filter advertenties'
+      },
+      {'page': AdsSelection(ReturnMode.Favorites), 'title': 'Je favorieten'},
       {'page': AdCreate(), 'title': 'Plaats advertentie'},
     ];
   }
@@ -34,14 +40,64 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
     if (ModalRoute.of(context).settings.arguments != null) {
       var args = ModalRoute.of(context).settings.arguments as Map<String, int>;
-      _selectPage(args['idx']);
+      _selectedPageIndex = args['idx'];
+      _selectPage(_selectedPageIndex);
     }
   }
 
+  void setSearchTerm(String q) async {
+    await Provider.of<Ads>(context).fetchAndSetSearchItems(q);
+  }
+
+  void setFilterElements(elements) {
+    print('starting to filter');
+  }
+
+  void setFavoriteItems() async {
+    await Provider.of<Ads>(context).fetchAndSetFavoriteItems();
+  }
+
   void _selectPage(int idx) {
-    setState(() {
-      _selectedPageIndex = idx;
-    });
+    switch (idx) {
+      case 1:
+        //search screen
+        setState(() {
+          _selectedPageIndex = 1;
+        });
+        showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          builder: (context) {
+            return Search(setSearchTerm);
+          },
+        );
+        break;
+      case 2:
+        //filter screen
+        setState(() {
+          _selectedPageIndex = 2;
+        });
+        showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          builder: (context) {
+            return Filter(setFilterElements);
+          },
+        );
+        break;
+      case 3:
+        // favorites screen
+        setFavoriteItems();
+        setState(() {
+          _selectedPageIndex = 3;
+        });
+        break;
+      default:
+        setState(() {
+          _selectedPageIndex = idx;
+        });
+        break;
+    }
   }
 
   @override

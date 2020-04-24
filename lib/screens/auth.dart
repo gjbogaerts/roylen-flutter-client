@@ -286,6 +286,8 @@ class _AuthState extends State<Auth> {
                             ButtonTheme(
                               minWidth: MediaQuery.of(context).size.width / 3,
                               height: 50,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
                               child: RaisedButton.icon(
                                 onPressed: _isRegistering
                                     ? () {
