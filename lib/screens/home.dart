@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void setFilterElements(elements) {
+    print(elements);
     print('starting to filter');
   }
 

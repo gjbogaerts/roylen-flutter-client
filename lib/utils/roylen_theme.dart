@@ -17,6 +17,7 @@ class RoylenTheme {
       accentColor: Color(0xffe9a401),
       canvasColor: Color(0xfffefaee),
       cardColor: Color(0xffefefef),
+      hintColor: Color(0xff999999),
       errorColor: Color(0xffee3333),
       buttonTheme: ButtonThemeData(
           shape:
