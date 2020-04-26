@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../models/categories.dart';
-
-///
-///gevraagd/aangeboden
-///categorie
-///prijs
-///afstand
-///
-///
-///
+import 'package:location/location.dart';
 
 enum AdNature { offered, wanted }
 
@@ -22,16 +13,28 @@ class Filter extends StatefulWidget {
 }
 
 class _FilterState extends State<Filter> {
-  var _filterElements = {
-    'category': '',
-    'priceMin': 0,
-    'priceMax': 250,
-    'maxDistance': 200.0,
-    'adNature': null
+  Map<String, dynamic> _filterElements = {
+    'category': null,
+    'priceMin': null,
+    'priceMax': null,
+    'maxDistance': null,
+    'adNature': null,
+    'latitude': null,
+    'longitude': null,
   };
-
   AdNature _adNature = AdNature.offered;
   var _formKey = GlobalKey<FormState>();
+  Location _location = Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
+  String _categorySelected;
+
+  @override
+  void initState() {
+    _categorySelected = Categories.categories.first.value;
+    super.initState();
+  }
 
   void setSearch() {
     if (!_formKey.currentState.validate()) {
@@ -39,9 +42,35 @@ class _FilterState extends State<Filter> {
     }
 
     _formKey.currentState.save();
-    _filterElements['adNature'] = _adNature;
+    _filterElements['adNature'] =
+        _adNature == AdNature.offered ? 'offered' : 'wanted';
     widget.filterCallback(_filterElements);
     Navigator.of(context).pop();
+  }
+
+  void _startLocationCheck() {
+    _checkLocationPermissions();
+  }
+
+  Future<void> _checkLocationPermissions() async {
+    _serviceEnabled = await _location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+    _permissionGranted = await _location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await _location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    _locationData = await _location.getLocation();
+    // print(_locationData);
+    _filterElements['latitude'] = _locationData.latitude;
+    _filterElements['longitude'] = _locationData.longitude;
   }
 
   @override
@@ -59,11 +88,15 @@ class _FilterState extends State<Filter> {
                 child: Column(
                   children: <Widget>[
                     DropdownButtonFormField(
+                        value: _categorySelected,
                         decoration: const InputDecoration(
                             labelText: 'Kies je categorie'),
                         onChanged: (val) {
                           setState(() {
                             _filterElements['category'] = val;
+                            setState(() {
+                              _categorySelected = val;
+                            });
                           });
                         },
                         items: Categories.categories,
@@ -79,14 +112,6 @@ class _FilterState extends State<Filter> {
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                                 labelText: 'Minimum prijs'),
-                            validator: (val) {
-                              if (val.isEmpty ||
-                                  int.tryParse(val) == null ||
-                                  int.parse(val) < 0) {
-                                return 'Vul een positief getal in.';
-                              }
-                              return null;
-                            },
                             onSaved: (val) {
                               _filterElements['priceMin'] = val;
                             },
@@ -98,12 +123,6 @@ class _FilterState extends State<Filter> {
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                                 labelText: 'Maximum prijs'),
-                            validator: (val) {
-                              if (val.isEmpty || int.tryParse(val) == null) {
-                                return 'Vul een maximum prijs in, in gehele getallen';
-                              }
-                              return null;
-                            },
                             onSaved: (val) {
                               _filterElements['priceMax'] = val;
                             },
@@ -159,7 +178,10 @@ class _FilterState extends State<Filter> {
                           Slider(
                               activeColor: Theme.of(context).accentColor,
                               label: '${_filterElements['maxDistance']} km',
-                              value: _filterElements['maxDistance'],
+                              value: _filterElements['maxDistance'] == null
+                                  ? 200
+                                  : _filterElements['maxDistance'],
+                              onChangeStart: (_) => _startLocationCheck(),
                               onChanged: (val) {
                                 setState(() {
                                   _filterElements['maxDistance'] = val;

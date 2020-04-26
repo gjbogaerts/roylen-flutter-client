@@ -18,6 +18,7 @@ class Ads with ChangeNotifier {
   List<Ad> _items = [];
   List<Ad> _favoriteItems = [];
   List<Ad> _searchItems = [];
+  List<Ad> _filteredItems = [];
 
   Ads(this._user, this._items);
 
@@ -33,6 +34,10 @@ class Ads with ChangeNotifier {
     return [..._searchItems];
   }
 
+  List<Ad> get filteredItems {
+    return [..._filteredItems];
+  }
+
   User get user {
     return _user;
   }
@@ -43,6 +48,77 @@ class Ads with ChangeNotifier {
 
   Ad getById(String id) {
     return _items.firstWhere((it) => it.id == id);
+  }
+
+  Future<void> fetchAndSetFilteredItems(Map _filter) async {
+    _mode = ReturnMode.Filtered;
+    _filteredItems = [];
+    var _category = _filter['category'] == null ||
+            _filter['category'] == 'Kies je categorie'
+        ? null
+        : _filter['category'];
+    //category is not null, first we pick all up within this category
+    if (_category != null) {
+      final url = baseUrl + '/api/ads/c/$_category';
+      try {
+        final _response = await http.get(url);
+        final _adsData = json.decode(_response.body) as List<dynamic>;
+        // print(url);
+        // print(_adsData);
+        final List<Ad> _loadedAds = [];
+        _adsData.forEach((it) {
+          _loadedAds.add(Ad.fromJson(it));
+        });
+        _filteredItems = _loadedAds;
+      } catch (err) {
+        print('Fout: $err');
+      }
+    } else {
+      _filteredItems = _items;
+    }
+    // print('after category: ${_filteredItems.length}');
+
+    //now that we have _filteredItems, we can check them for price
+    if (_filter['priceMin'] != null && _filter['priceMin'] != '') {
+      _filteredItems.retainWhere(
+          (it) => it.virtualPrice > int.parse(_filter['priceMin']));
+    }
+    if (_filter['priceMax'] != null && _filter['priceMax'] != '') {
+      _filteredItems.retainWhere(
+          (it) => it.virtualPrice < int.parse(_filter['priceMax']));
+    }
+    // print('after pricecheck: ${_filteredItems.length}');
+    // we need to check for adnature:
+    _filteredItems.retainWhere((it) => it.adNature == _filter['adNature']);
+    // print('after adNature: ${_filteredItems.length}');
+    //finally, if distance is set, we can get all distance filtered items from the server and get the cross section with the result and _filteredItems;
+    if (_filter['maxDistance'] != null) {
+      // print(
+      // 'in distance: ${_filter['maxDistance']}, ${_filter['latitude']}, ${_filter['longitude']} ');
+      final _distanceUrl = baseUrl + '/api/ads/withDistance';
+      try {
+        final _distanceResponse = await http.post(_distanceUrl,
+            headers: {'content-type': 'application/json'},
+            body: json.encode({
+              'dist': _filter['maxDistance'],
+              'latitude': _filter['latitude'],
+              'longitude': _filter['longitude']
+            }));
+        final _adsDistanceData =
+            json.decode(_distanceResponse.body) as List<dynamic>;
+        final List<Ad> _loadedDistanceAds = [];
+        _adsDistanceData.forEach((it) {
+          _loadedDistanceAds.add(Ad.fromJson(it));
+        });
+        _loadedDistanceAds.forEach((item) {
+          _filteredItems.retainWhere((it) => it.id == item.id);
+        });
+      } catch (err) {
+        print('Fout: $err');
+      }
+    }
+    // print('after distance: ${_filteredItems.length}');
+    notifyListeners();
   }
 
   Future<void> fetchAndSetSearchItems(String q) async {

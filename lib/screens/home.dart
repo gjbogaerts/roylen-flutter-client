@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import './ads_list.dart';
 import './ad_create.dart';
-import './ads_selection.dart';
+import './ads_search.dart';
+import './ads_filters.dart';
+import './ads_favorites.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/search.dart';
 import '../widgets/filter.dart';
-
-import '../providers/ads.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -25,12 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _pages = [
       {'page': AdsList(), 'title': 'Alle advertenties'},
-      {'page': AdsSelection(ReturnMode.Search), 'title': 'Zoek advertenties'},
-      {
-        'page': AdsSelection(ReturnMode.Filtered),
-        'title': 'Filter advertenties'
-      },
-      {'page': AdsSelection(ReturnMode.Favorites), 'title': 'Je favorieten'},
+      {'page': AdsSearch(null), 'title': 'Zoek advertenties'},
+      {'page': AdsFilters(null), 'title': 'Filter advertenties'},
+      {'page': AdsFavorites(), 'title': 'Je favorieten'},
       {'page': AdCreate(), 'title': 'Plaats advertentie'},
     ];
   }
@@ -45,26 +41,27 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void setSearchTerm(String q) async {
-    await Provider.of<Ads>(context).fetchAndSetSearchItems(q);
+  void setSearchTerm(String q) {
+    setState(() {
+      _selectedPageIndex = 1;
+      _pages[1] = {'page': AdsSearch(q), 'title': 'Zoek advertenties'};
+    });
   }
 
   void setFilterElements(elements) {
-    print(elements);
-    print('starting to filter');
-  }
-
-  void setFavoriteItems() async {
-    await Provider.of<Ads>(context).fetchAndSetFavoriteItems();
+    setState(() {
+      _selectedPageIndex = 2;
+      _pages[2] = {
+        'page': AdsFilters(elements),
+        'title': 'Filter advertenties'
+      };
+    });
   }
 
   void _selectPage(int idx) {
     switch (idx) {
       case 1:
         //search screen
-        setState(() {
-          _selectedPageIndex = 1;
-        });
         showModalBottomSheet(
           isScrollControlled: true,
           context: context,
@@ -75,9 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       case 2:
         //filter screen
-        setState(() {
-          _selectedPageIndex = 2;
-        });
         showModalBottomSheet(
           isScrollControlled: true,
           context: context,
@@ -86,13 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         );
         break;
-      case 3:
-        // favorites screen
-        setFavoriteItems();
-        setState(() {
-          _selectedPageIndex = 3;
-        });
-        break;
+
       default:
         setState(() {
           _selectedPageIndex = idx;

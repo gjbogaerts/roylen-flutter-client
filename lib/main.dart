@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 //screens
 import './screens/ads_list.dart';
-import './screens/ads_selection.dart';
+import './screens/ads_search.dart';
+import './screens/ads_favorites.dart';
+import './screens/ads_filters.dart';
 import './screens/ads_detail.dart';
 import './screens/auth.dart' as AuthScreen;
 import './screens/splash.dart';
@@ -62,7 +64,9 @@ class Roylen extends StatelessWidget {
               InfoScreen.routeName: (ctx) => InfoScreen(),
               MessagesScreen.routeName: (ctx) => MessagesScreen(),
               AdUserList.routeName: (ctx) => AdUserList(),
-              AdsSelection.routeName: (ctx) => AdsSelection(ReturnMode.Search)
+              AdsSearch.routeName: (ctx) => AdsSearch(null),
+              AdsFavorites.routeName: (ctx) => AdsFavorites(),
+              AdsFilters.routeName: (ctx) => AdsFilters(null)
             },
           );
         },
