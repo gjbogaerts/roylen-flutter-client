@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/server_interface.dart';
+import '../widgets/contact.dart';
 import '../providers/ads.dart';
+import '../providers/auth.dart';
+import '../models/user.dart';
 
 class AdsDetail extends StatefulWidget {
   static const routeName = '/ads-detail';
@@ -12,13 +15,21 @@ class AdsDetail extends StatefulWidget {
 }
 
 class _AdsDetailState extends State<AdsDetail> {
-  void _showDialog(String msg) {
+  User _user;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (Provider.of<Auth>(context).isAuth) {
+      _user = Provider.of<Auth>(context).getUser();
+    }
+  }
+
+  void _showDialog(String msg, {String title = 'Dank je wel!'}) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(
-          'Dank je wel!',
-        ),
+        title: Text(title),
         content: Text(
           msg,
         ),
@@ -31,6 +42,20 @@ class _AdsDetailState extends State<AdsDetail> {
         ],
       ),
     );
+  }
+
+  void _contactCreator(ad) {
+    if (_user != null) {
+      showModalBottomSheet(
+        context: context,
+        builder: (ctx) => Contact(_user, ad),
+        isScrollControlled: true,
+      );
+    } else {
+      _showDialog(
+          'Je moet ingelogd zijn om een boodschap aan deze adverteerder te kunnen sturen.',
+          title: 'Graag inloggen');
+    }
   }
 
   void _setFavorite(String id) async {
@@ -106,7 +131,7 @@ class _AdsDetailState extends State<AdsDetail> {
                 Expanded(
                   child: RaisedButton(
                     onPressed: () {
-                      print('Interested');
+                      _contactCreator(ad);
                     },
                     color: Theme.of(context).accentColor,
                     child: Text('CONTACT'),

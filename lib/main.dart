@@ -20,6 +20,7 @@ import './utils/roylen_theme.dart';
 import './providers/ads.dart';
 import './providers/auth.dart' as AuthProvider;
 import './providers/toaster.dart';
+import './providers/messages.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,10 @@ class Roylen extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider.Auth()),
         ChangeNotifierProvider.value(value: Toaster()),
+        ChangeNotifierProxyProvider<AuthProvider.Auth, Messages>(
+            create: (ctx) => Messages(null, []),
+            update: (ctx, auth, previousMessages) =>
+                Messages(auth.getUser(), previousMessages.items)),
         ChangeNotifierProxyProvider<AuthProvider.Auth, Ads>(
           create: (ctx) => Ads(null, []),
           update: (ctx, auth, previousAds) =>

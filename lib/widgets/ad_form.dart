@@ -132,6 +132,7 @@ class _AdFormState extends State<AdForm> {
             ),
             TextFormField(
               autocorrect: true,
+              minLines: 2,
               maxLines: 5,
               decoration: const InputDecoration(
                   hintText: 'Ten minste dertig tekens',
