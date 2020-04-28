@@ -14,6 +14,7 @@ import './screens/ad_create.dart';
 import './screens/info.dart';
 import './screens/messages.dart';
 import './screens/ad_user_list.dart';
+import './screens/auth_password_reset.dart';
 //theme
 import './utils/roylen_theme.dart';
 //providers
@@ -71,7 +72,8 @@ class Roylen extends StatelessWidget {
               AdUserList.routeName: (ctx) => AdUserList(),
               AdsSearch.routeName: (ctx) => AdsSearch(null),
               AdsFavorites.routeName: (ctx) => AdsFavorites(),
-              AdsFilters.routeName: (ctx) => AdsFilters(null)
+              AdsFilters.routeName: (ctx) => AdsFilters(null),
+              AuthPasswordReset.routeName: (ctx) => AuthPasswordReset(),
             },
           );
         },

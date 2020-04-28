@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
 import '../providers/auth.dart' as AuthProvider;
 import '../providers/toaster.dart';
+import './auth_password_reset.dart';
 
 class Auth extends StatefulWidget {
   static const routeName = '/auth';
@@ -29,6 +30,10 @@ class _AuthState extends State<Auth> {
     'screenName': '',
     'avatar': ''
   };
+
+  void _handlePasswordForgotten() {
+    Navigator.of(context).pushNamed(AuthPasswordReset.routeName);
+  }
 
   void handleLogin() async {
     if (!_formKey.currentState.validate()) {
@@ -329,6 +334,14 @@ class _AuthState extends State<Auth> {
                     ),
                   ),
                 ),
+                if (!_isRegistering)
+                  GestureDetector(
+                    onTap: _handlePasswordForgotten,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Center(child: Text('Wachtwoord vergeten?')),
+                    ),
+                  ),
               ],
             );
           },

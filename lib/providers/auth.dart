@@ -36,6 +36,44 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> finishResetPasswordSequence(String key, String pw) async {
+    final _url = baseUrl + '/api/confirmResetPassword';
+    try {
+      final _response = await http.post(_url,
+          headers: {'content-type': 'application/json'},
+          body: json.encode({'key': key, 'pw': pw}));
+      if (_response.statusCode == 200) {
+        notifyListeners();
+        return true;
+      } else {
+        print(_response.body.toString());
+        return false;
+      }
+    } catch (err) {
+      print(err);
+      return false;
+    }
+  }
+
+  Future<bool> startResetPasswordSequence(String email) async {
+    final _url = baseUrl + '/api/resetPassword';
+    try {
+      final _response = await http.post(_url,
+          headers: {'content-type': 'application/json'},
+          body: json.encode({'email': email}));
+      if (_response.statusCode == 200) {
+        notifyListeners();
+        return true;
+      } else {
+        print(_response.body.toString());
+        return false;
+      }
+    } catch (err) {
+      print(err);
+      return false;
+    }
+  }
+
   Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {

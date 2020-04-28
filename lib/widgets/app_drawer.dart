@@ -69,8 +69,9 @@ class _AppDrawerState extends State<AppDrawer> {
                     Divider(),
                     ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            _user.avatar.startsWith('http')
+                        backgroundImage: _user.avatar == null
+                            ? AssetImage('assets/images/image9.jpeg')
+                            : NetworkImage(_user.avatar.startsWith('http')
                                 ? _user.avatar
                                 : '$baseUrl${_user.avatar}'),
                         radius: 15,
