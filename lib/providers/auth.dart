@@ -6,9 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/server_interface.dart';
 import '../models/user.dart';
 import '../utils/content_type.dart';
+import '../utils/api_key.dart';
 
 class Auth with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
+
+  final String apiKey = ApiKey.getKey();
   String _token;
   String _userId;
   String _email;
@@ -40,7 +43,7 @@ class Auth with ChangeNotifier {
     final _url = baseUrl + '/api/confirmResetPassword';
     try {
       final _response = await http.post(_url,
-          headers: {'content-type': 'application/json'},
+          headers: {'content-type': 'application/json', 'x-api-key': apiKey},
           body: json.encode({'key': key, 'pw': pw}));
       if (_response.statusCode == 200) {
         notifyListeners();
@@ -59,7 +62,7 @@ class Auth with ChangeNotifier {
     final _url = baseUrl + '/api/resetPassword';
     try {
       final _response = await http.post(_url,
-          headers: {'content-type': 'application/json'},
+          headers: {'content-type': 'application/json', 'x-api-key': apiKey},
           body: json.encode({'email': email}));
       if (_response.statusCode == 200) {
         notifyListeners();
@@ -110,7 +113,7 @@ class Auth with ChangeNotifier {
     try {
       var uriResponse = await http.post(
         '$baseUrl/api/signin',
-        headers: {'content-type': 'application/json'},
+        headers: {'content-type': 'application/json', 'x-api-key': apiKey},
         body: json.encode({'email': email, 'password': password}),
       );
 
@@ -144,7 +147,7 @@ class Auth with ChangeNotifier {
   }) async {
     try {
       var uriResponse = await http.post('$baseUrl/api/signup',
-          headers: {'content-type': 'application/json'},
+          headers: {'content-type': 'application/json', 'x-api-key': apiKey},
           body: json.encode({
             'email': email,
             'password': password,
@@ -179,6 +182,7 @@ class Auth with ChangeNotifier {
           contentType: MediaType.parse(contentType));
       _req.files.add(file);
       _req.headers.putIfAbsent('Authorization', () => 'Bearer $_token');
+      _req.headers.putIfAbsent('x-api-key', () => apiKey);
       _req.fields['email'] = email;
       var _imageData = await _req.send();
 

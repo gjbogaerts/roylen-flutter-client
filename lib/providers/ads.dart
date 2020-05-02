@@ -7,11 +7,13 @@ import '../models/ad.dart';
 // import '../models/creator.dart';
 import '../models/user.dart';
 import '../utils/content_type.dart';
+import '../utils/api_key.dart';
 
 enum ReturnMode { Search, Favorites, Filtered, All }
 
 class Ads with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
+  final String apiKey = ApiKey.getKey();
   User _user;
   ReturnMode _mode = ReturnMode.All;
 
@@ -61,7 +63,7 @@ class Ads with ChangeNotifier {
     if (_category != null) {
       final url = baseUrl + '/api/ads/c/$_category';
       try {
-        final _response = await http.get(url);
+        final _response = await http.get(url, headers: {'x-api-key': apiKey});
         final _adsData = json.decode(_response.body) as List<dynamic>;
         // print(url);
         // print(_adsData);
@@ -98,7 +100,7 @@ class Ads with ChangeNotifier {
       final _distanceUrl = baseUrl + '/api/ads/withDistance';
       try {
         final _distanceResponse = await http.post(_distanceUrl,
-            headers: {'content-type': 'application/json'},
+            headers: {'content-type': 'application/json', 'x-api-key': apiKey},
             body: json.encode({
               'dist': _filter['maxDistance'],
               'latitude': _filter['latitude'],
@@ -125,7 +127,7 @@ class Ads with ChangeNotifier {
     _mode = ReturnMode.Search;
     final url = baseUrl + '/api/ads/q/$q';
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: {'x-api-key': apiKey});
       final adsData = json.decode(response.body) as List<dynamic>;
       final List<Ad> loadedAds = [];
       adsData.forEach((it) {
@@ -143,7 +145,7 @@ class Ads with ChangeNotifier {
     _mode = ReturnMode.All;
     final url = baseUrl + '/api/ads';
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: {'x-api-key': apiKey});
       final adsData = json.decode(response.body) as List<dynamic>;
       final List<Ad> loadedAds = [];
 
@@ -163,8 +165,8 @@ class Ads with ChangeNotifier {
     final _url = baseUrl + '/api/ads/saved/${_user.id}';
     final _token = _user.token;
     try {
-      final _response =
-          await http.get(_url, headers: {'Authorization': 'Bearer $_token'});
+      final _response = await http.get(_url,
+          headers: {'Authorization': 'Bearer $_token', 'x-api-key': apiKey});
       final _adsData = json.decode(_response.body) as List<dynamic>;
       final List<Ad> _loadedAds = [];
       _adsData.forEach((it) {
@@ -181,7 +183,7 @@ class Ads with ChangeNotifier {
     final _url = baseUrl + '/api/favorite';
     try {
       var response = await http.post(_url,
-          headers: {'content-type': 'application/json'},
+          headers: {'content-type': 'application/json', 'x-api-key': apiKey},
           body: json.encode({'userId': '${_user.id}', 'adId': '$adId'}));
       if (response.statusCode == 200) {
         return true;
@@ -197,7 +199,7 @@ class Ads with ChangeNotifier {
     final _url = baseUrl + '/api/ads/warning';
     try {
       var response = await http.post(_url,
-          headers: {'content-type': 'application/json'},
+          headers: {'content-type': 'application/json', 'x-api-key': apiKey},
           body: json.encode({'adId': adId}));
       if (response.statusCode != 200) {
         return false;
@@ -213,8 +215,8 @@ class Ads with ChangeNotifier {
     final _token = _user.token;
     final _url = baseUrl + '/api/ads/$adId/$_userId';
     try {
-      var response =
-          await http.delete(_url, headers: {'Authorization': 'Bearer $_token'});
+      var response = await http.delete(_url,
+          headers: {'Authorization': 'Bearer $_token', 'x-api-key': apiKey});
       _items.removeWhere((it) => it.id == adId);
       notifyListeners();
       if (response.statusCode == 200) {
@@ -240,6 +242,7 @@ class Ads with ChangeNotifier {
         _req.fields[s] = v.toString();
       });
       _req.headers.putIfAbsent('Authorization', () => 'Bearer $token');
+      _req.headers.putIfAbsent('x-api-key', () => apiKey);
       var uriResponse = await _req.send();
       if (uriResponse.statusCode != 200) {
         return false;
@@ -257,7 +260,7 @@ class Ads with ChangeNotifier {
     final url = baseUrl + '/api/ads/fromUser/$_userId';
     final List<Ad> loadedAds = [];
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: {'x-api-key': apiKey});
       final adsData = json.decode(response.body) as List<dynamic>;
       adsData.forEach((it) {
         loadedAds.add(Ad.fromJson(it));
