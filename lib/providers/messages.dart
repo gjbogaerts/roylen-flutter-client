@@ -74,6 +74,24 @@ class Messages with ChangeNotifier {
     }
   }
 
+  Future<bool> sendContactMessage(String msg, String email, String name) async {
+    var _url = '$baseUrl/api/message/contact';
+    try {
+      var _response = await http.post(_url,
+          headers: {'content-type': 'application/json'},
+          body: json.encode({'msg': msg, 'email': email, 'name': name}));
+
+      if (_response.statusCode == 200) {
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (err) {
+      print(err);
+      return false;
+    }
+  }
+
   Future<bool> sendMessage(
       {String toId, String adId, String adTitle, String message}) async {
     var _url = baseUrl + '/api/message';
