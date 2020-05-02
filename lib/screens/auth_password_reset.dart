@@ -56,6 +56,7 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
       return;
     }
     _formKey2.currentState.save();
+    print(_pw2);
     var _result = await Provider.of<Auth>(context)
         .finishResetPasswordSequence(_resetCode, _pw);
     if (!_result) {
