@@ -29,7 +29,7 @@ class Faqs {
     Faq(
         headerValue: 'PublicSpaces',
         expandedValue:
-            'PublicSpaces is een organisatie die zich ten doel stelt om het publieke domein op het internet te versterken. Deze app is gemaakt met de waarborgen van PublicSpaces in het achterhoofd. Volledige transparantie is daarbij belangrijk. De broncode van  deze app is daarom openbaar, en kun je hier downloaden en inzien.'),
+            'PublicSpaces is een organisatie die zich ten doel stelt om het publieke domein op het internet te versterken. Deze app is gemaakt met de waarborgen van PublicSpaces in het achterhoofd. Volledige transparantie is daarbij belangrijk. De broncode van  deze app is daarom openbaar, en kun je hier downloaden en inzien.\nClient: https://github.com/gjbogaerts/roylen-flutter-client \nServer API: https://github.com/gjbogaerts/roylen-react-server'),
     Faq(
         headerValue: 'Credits',
         expandedValue:
