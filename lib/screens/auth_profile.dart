@@ -70,6 +70,9 @@ class _AuthProfileState extends State<AuthProfile> {
       return;
     }
     _formKey.currentState.save();
+    if (_email == null && _imageLocation == null) {
+      return;
+    }
     _profileChangeAttemptResult =
         Provider.of<Auth>(context).changeProfile(_imageLocation, _email);
   }
@@ -128,7 +131,8 @@ class _AuthProfileState extends State<AuthProfile> {
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return Center(
-                                  child: Text('Je profielwijziging is gelukt.'),
+                                  child: Text(
+                                      'Je profielwijziging is gelukt. Om je wijzingen te zien, moet je even uitloggen en weer opnieuw inloggen.'),
                                 );
                               } else if (snapshot.hasError) {
                                 return Center(

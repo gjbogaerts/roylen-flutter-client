@@ -61,17 +61,20 @@ class Auth with ChangeNotifier {
   Future<bool> changeProfile(String _imageLocation, String _newEmail) async {
     final _url = '$baseUrl/api/profile';
     try {
-      var contentType = ContentType.getContentType(_imageLocation);
       var _req = http.MultipartRequest('POST', Uri.parse(_url));
-      var file = await http.MultipartFile.fromPath('filename', _imageLocation,
-          contentType: MediaType.parse(contentType));
-      _req.files.add(file);
+      if (_imageLocation != null) {
+        var contentType = ContentType.getContentType(_imageLocation);
+        var file = await http.MultipartFile.fromPath('filename', _imageLocation,
+            contentType: MediaType.parse(contentType));
+        _req.files.add(file);
+      }
       _req.headers.putIfAbsent('Authorization', () => 'Bearer $_token');
       _req.headers.putIfAbsent('x-api-key', () => apiKey);
       _req.fields['email'] = _newEmail;
       var _imageData = await _req.send();
 
       if (_imageData.statusCode != 200) {
+        print(_imageData.stream.bytesToString());
         throw Exception(
             'Het lukte niet om je wijzingen op te slaan. Probeer het later nog eens.');
       }
@@ -86,7 +89,7 @@ class Auth with ChangeNotifier {
     } catch (err) {
       notifyListeners();
       throw Exception(
-          'Er ging iets mis in de verbinding met de server. Probeer het later nog eens.');
+          '$err: Er ging iets mis in de verbinding met de server. Probeer het later nog eens.');
     }
   }
 
