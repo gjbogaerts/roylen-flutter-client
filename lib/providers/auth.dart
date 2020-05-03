@@ -58,7 +58,7 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<bool> changeProfile(String _imageLocation, String _email) async {
+  Future<bool> changeProfile(String _imageLocation, String _newEmail) async {
     final _url = '$baseUrl/api/profile';
     try {
       var contentType = ContentType.getContentType(_imageLocation);
@@ -68,7 +68,7 @@ class Auth with ChangeNotifier {
       _req.files.add(file);
       _req.headers.putIfAbsent('Authorization', () => 'Bearer $_token');
       _req.headers.putIfAbsent('x-api-key', () => apiKey);
-      _req.fields['email'] = _email;
+      _req.fields['email'] = _newEmail;
       var _imageData = await _req.send();
 
       if (_imageData.statusCode != 200) {
@@ -76,8 +76,10 @@ class Auth with ChangeNotifier {
             'Het lukte niet om je wijzingen op te slaan. Probeer het later nog eens.');
       }
       var prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', _email);
+      prefs.setString('email', _newEmail);
       prefs.setString('avatar', _imageLocation);
+      _email = _newEmail;
+      _avatar = _imageLocation;
 
       notifyListeners();
       return true;
