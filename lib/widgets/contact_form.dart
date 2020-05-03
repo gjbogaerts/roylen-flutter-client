@@ -94,7 +94,7 @@ class _ContactFormState extends State<ContactForm> {
                       RaisedButton(
                         onPressed: _sendMessage,
                         child: Text('Versturen'),
-                        color: Theme.of(context).accentColor,
+                        // color: Theme.of(context).accentColor,
                       ),
                     ],
                   ),

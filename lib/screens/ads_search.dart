@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/ads.dart';
 import '../models/ad.dart';
 import '../widgets/ads_grid.dart';
+import '../widgets/background.dart';
 
 class AdsSearch extends StatefulWidget {
   static const routeName = '/ads-search';
@@ -44,10 +45,15 @@ class _AdsSearchState extends State<AdsSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : AdsGrid(adsData);
+    return Stack(
+      children: <Widget>[
+        Background(),
+        _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : AdsGrid(adsData)
+      ],
+    );
   }
 }

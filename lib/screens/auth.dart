@@ -10,6 +10,7 @@ import '../widgets/app_drawer.dart';
 import '../providers/auth.dart' as AuthProvider;
 import '../providers/toaster.dart';
 import './auth_password_reset.dart';
+import '../widgets/background.dart';
 
 class Auth extends StatefulWidget {
   static const routeName = '/auth';
@@ -136,218 +137,226 @@ class _AuthState extends State<Auth> {
         title: Text('Gebruikers'),
       ),
       drawer: AppDrawer(),
-      body: SingleChildScrollView(
-        child: Builder(
-          builder: (BuildContext context) {
-            return Column(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    _isRegistering ? 'Registreren' : 'Inloggen',
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: <Widget>[
-                        TextFormField(
-                          autocorrect: false,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            hintText: 'Je email-adres',
-                            labelText: 'Email',
-                          ),
-                          validator: (val) {
-                            if (!EmailValidator.validate(val.trim())) {
-                              return 'Dit is geen geldig email-adres.';
-                            } else
-                              return null;
-                          },
-                          onSaved: (val) {
-                            _authData['email'] = val.trim();
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          autocorrect: false,
-                          obscureText: true,
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: _pwController,
-                          decoration: const InputDecoration(
-                            hintText: 'Ten minste 5 tekens',
-                            labelText: 'Wachtwoord',
-                          ),
-                          validator: (val) {
-                            if (val.length < 5) {
-                              return 'Je wachtwoord moet ten minste vijf tekens lang zijn.';
-                            }
-                            return null;
-                          },
-                          onSaved: (val) {
-                            _authData['password'] = val;
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        if (_isRegistering)
-                          Column(
-                            children: <Widget>[
-                              TextFormField(
-                                autocorrect: false,
-                                obscureText: true,
-                                keyboardType: TextInputType.visiblePassword,
-                                decoration: const InputDecoration(
-                                  hintText: 'Je wachtwoord',
-                                  labelText: 'Herhaal je wachtwoord',
-                                ),
-                                validator: (val) {
-                                  if (val != _pwController.text) {
-                                    return 'Je wachtwoorden komen niet overeen.';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                autocorrect: false,
-                                decoration: const InputDecoration(
-                                  labelText: 'Je schermnaam',
-                                  hintText: 'Ten minste drie tekens',
-                                ),
-                                validator: (val) {
-                                  if (val.isEmpty || val.length < 3) {
-                                    return 'Je schermnaam moet ten minste drie tekens lang zijn.';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                onSaved: (val) {
-                                  _authData['screenName'] = val;
-                                },
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage: _image == null
-                                        ? AssetImage(
-                                            'assets/images/image9.jpeg')
-                                        : FileImage(_image),
-                                  ),
-                                  ButtonBar(
-                                    buttonPadding:
-                                        EdgeInsets.symmetric(horizontal: 5),
-                                    children: <Widget>[
-                                      RaisedButton.icon(
-                                        onPressed: () {
-                                          getImage('camera');
-                                        },
-                                        color: Theme.of(context).hintColor,
-                                        icon: Icon(Icons.photo_camera),
-                                        label: Text('Neem een foto'),
-                                      ),
-                                      RaisedButton.icon(
-                                        onPressed: () {
-                                          getImage('gallery');
-                                        },
-                                        color: Theme.of(context).hintColor,
-                                        icon: Icon(Icons.photo_album),
-                                        label: Text('Kies een foto'),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: <Widget>[
+          Background(),
+          SingleChildScrollView(
+            child: Builder(
+              builder: (BuildContext context) {
+                return Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        _isRegistering ? 'Registreren' : 'Inloggen',
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
                           children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pushReplacementNamed(
-                                      Auth.routeName,
-                                      arguments: {
-                                        'registering': !_isRegistering
-                                      });
-                                },
-                                child: Text(_isRegistering
-                                    ? 'Al een account? Je kunt hier inloggen'
-                                    : 'Nog geen account? Je kunt hier registreren'),
+                            TextFormField(
+                              autocorrect: false,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                hintText: 'Je email-adres',
+                                labelText: 'Email',
                               ),
+                              validator: (val) {
+                                if (!EmailValidator.validate(val.trim())) {
+                                  return 'Dit is geen geldig email-adres.';
+                                } else
+                                  return null;
+                              },
+                              onSaved: (val) {
+                                _authData['email'] = val.trim();
+                              },
                             ),
-                            ButtonTheme(
-                              minWidth: MediaQuery.of(context).size.width / 3,
-                              height: 50,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: RaisedButton.icon(
-                                onPressed: _isRegistering
-                                    ? () {
-                                        handleRegister();
-                                        if (_hasError)
-                                          Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                _errorString,
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          );
-                                      }
-                                    : () {
-                                        handleLogin();
-                                        if (_hasError)
-                                          Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                _errorString,
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          );
-                                      },
-                                icon: Icon(Icons.verified_user),
-                                color: Theme.of(context).accentColor,
-                                textColor: Theme.of(context).primaryColor,
-                                label: Text(
-                                  _isRegistering ? 'Registreren' : 'Inloggen',
-                                  style: TextStyle(fontSize: 18),
-                                ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
+                              autocorrect: false,
+                              obscureText: true,
+                              keyboardType: TextInputType.visiblePassword,
+                              controller: _pwController,
+                              decoration: const InputDecoration(
+                                hintText: 'Ten minste 5 tekens',
+                                labelText: 'Wachtwoord',
                               ),
+                              validator: (val) {
+                                if (val.length < 5) {
+                                  return 'Je wachtwoord moet ten minste vijf tekens lang zijn.';
+                                }
+                                return null;
+                              },
+                              onSaved: (val) {
+                                _authData['password'] = val;
+                              },
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            if (_isRegistering)
+                              Column(
+                                children: <Widget>[
+                                  TextFormField(
+                                    autocorrect: false,
+                                    obscureText: true,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    decoration: const InputDecoration(
+                                      hintText: 'Je wachtwoord',
+                                      labelText: 'Herhaal je wachtwoord',
+                                    ),
+                                    validator: (val) {
+                                      if (val != _pwController.text) {
+                                        return 'Je wachtwoorden komen niet overeen.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  TextFormField(
+                                    autocorrect: false,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Je schermnaam',
+                                      hintText: 'Ten minste drie tekens',
+                                    ),
+                                    validator: (val) {
+                                      if (val.isEmpty || val.length < 3) {
+                                        return 'Je schermnaam moet ten minste drie tekens lang zijn.';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    onSaved: (val) {
+                                      _authData['screenName'] = val;
+                                    },
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: _image == null
+                                            ? AssetImage(
+                                                'assets/images/image9.jpeg')
+                                            : FileImage(_image),
+                                      ),
+                                      ButtonBar(
+                                        buttonPadding:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        children: <Widget>[
+                                          RaisedButton.icon(
+                                            onPressed: () {
+                                              getImage('camera');
+                                            },
+                                            color: Theme.of(context).hintColor,
+                                            icon: Icon(Icons.photo_camera),
+                                            label: Text('Neem een foto'),
+                                          ),
+                                          RaisedButton.icon(
+                                            onPressed: () {
+                                              getImage('gallery');
+                                            },
+                                            color: Theme.of(context).hintColor,
+                                            icon: Icon(Icons.photo_album),
+                                            label: Text('Kies een foto'),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .pushReplacementNamed(Auth.routeName,
+                                              arguments: {
+                                            'registering': !_isRegistering
+                                          });
+                                    },
+                                    child: Text(_isRegistering
+                                        ? 'Al een account? Je kunt hier inloggen'
+                                        : 'Nog geen account? Je kunt hier registreren'),
+                                  ),
+                                ),
+                                ButtonTheme(
+                                  minWidth:
+                                      MediaQuery.of(context).size.width / 3,
+                                  height: 50,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: RaisedButton.icon(
+                                    onPressed: _isRegistering
+                                        ? () {
+                                            handleRegister();
+                                            if (_hasError)
+                                              Scaffold.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    _errorString,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              );
+                                          }
+                                        : () {
+                                            handleLogin();
+                                            if (_hasError)
+                                              Scaffold.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    _errorString,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              );
+                                          },
+                                    icon: Icon(Icons.verified_user),
+                                    color: Theme.of(context).primaryColor,
+                                    textColor: Theme.of(context).accentColor,
+                                    label: Text(
+                                      _isRegistering
+                                          ? 'Registreren'
+                                          : 'Inloggen',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                if (!_isRegistering)
-                  GestureDetector(
-                    onTap: _handlePasswordForgotten,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Center(child: Text('Wachtwoord vergeten?')),
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
+                    if (!_isRegistering)
+                      GestureDetector(
+                        onTap: _handlePasswordForgotten,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(child: Text('Wachtwoord vergeten?')),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

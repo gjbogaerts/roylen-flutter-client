@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/contact_form.dart';
 import '../models/faqs.dart';
+import '../widgets/background.dart';
 
 class InfoScreen extends StatefulWidget {
   static const routeName = '/info';
@@ -26,51 +27,56 @@ class _InfoScreenState extends State<InfoScreen> {
         title: Text('Over Roylen'),
       ),
       drawer: AppDrawer(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: ContactForm(),
+      body: Stack(
+        children: <Widget>[
+          Background(),
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: ContactForm(),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Column(
+                    children: <Widget>[
+                      Text('FAQ', style: Theme.of(context).textTheme.title),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ExpansionPanelList(
+                          expansionCallback: (int index, bool isExpanded) {
+                            setState(() {
+                              _faqs[index].isExpanded = !isExpanded;
+                            });
+                          },
+                          children: _faqs.map<ExpansionPanel>((Faq faq) {
+                            return ExpansionPanel(
+                                canTapOnHeader: true,
+                                headerBuilder:
+                                    (BuildContext context, bool isExpanded) {
+                                  return ListTile(title: Text(faq.headerValue));
+                                },
+                                body: Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        18, 0, 18, 18),
+                                    child: Text(faq.expandedValue)),
+                                isExpanded: faq.isExpanded);
+                          }).toList(),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                children: <Widget>[
-                  Text('FAQ', style: Theme.of(context).textTheme.title),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ExpansionPanelList(
-                      expansionCallback: (int index, bool isExpanded) {
-                        setState(() {
-                          _faqs[index].isExpanded = !isExpanded;
-                        });
-                      },
-                      children: _faqs.map<ExpansionPanel>((Faq faq) {
-                        return ExpansionPanel(
-                            canTapOnHeader: true,
-                            headerBuilder:
-                                (BuildContext context, bool isExpanded) {
-                              return ListTile(title: Text(faq.headerValue));
-                            },
-                            body: Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(18, 0, 18, 18),
-                                child: Text(faq.expandedValue)),
-                            isExpanded: faq.isExpanded);
-                      }).toList(),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

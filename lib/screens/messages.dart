@@ -4,6 +4,7 @@ import '../models/message.dart';
 import '../widgets/app_drawer.dart';
 import '../providers/messages.dart';
 import '../utils/server_interface.dart';
+import '../widgets/background.dart';
 
 class MessagesScreen extends StatefulWidget {
   static const routeName = '/messages';
@@ -141,87 +142,100 @@ class _MessagesScreenState extends State<MessagesScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Je boodschappen')),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _loadedMessages.length == 0
-              ? Center(
-                  child: Text('Nog geen boodschappen voor je'),
-                )
-              : Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                      FlatButton(
-                        child: Text(_showRead
-                            ? 'Verberg de gelezen berichten'
-                            : 'Toon de gelezen berichten'),
-                        onPressed: toggleRead,
-                      ),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _messages.length,
-                          itemBuilder: (ctx, idx) {
-                            var _msg = _messages[idx];
+      body: Stack(
+        children: <Widget>[
+          Background(),
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _loadedMessages.length == 0
+                  ? Center(
+                      child: Text('Nog geen boodschappen voor je'),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: <Widget>[
+                          FlatButton(
+                            child: Text(_showRead
+                                ? 'Verberg de gelezen berichten'
+                                : 'Toon de gelezen berichten'),
+                            onPressed: toggleRead,
+                          ),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: _messages.length,
+                              itemBuilder: (ctx, idx) {
+                                var _msg = _messages[idx];
 
-                            return ExpansionTile(
-                              leading: CircleAvatar(
-                                backgroundImage: _msg.creator.avatar == null
-                                    ? AssetImage('assets/images/image9.jpeg')
-                                    : NetworkImage(
-                                        _msg.creator.avatar.startsWith('http')
+                                return ExpansionTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: _msg.creator.avatar == null
+                                        ? AssetImage(
+                                            'assets/images/image9.jpeg')
+                                        : NetworkImage(_msg.creator.avatar
+                                                .startsWith('http')
                                             ? _msg.creator.avatar
                                             : '$baseUrl${_msg.creator.avatar}'),
-                                radius: 15,
-                              ),
-                              title: Text(
-                                _msg.creator.screenName,
-                                style: _msg.isRead
-                                    ? TextStyle(
-                                        decoration: TextDecoration.lineThrough)
-                                    : null,
-                              ),
-                              subtitle: Text(_msg.adTitle),
-                              children: <Widget>[
-                                Column(
+                                    radius: 15,
+                                  ),
+                                  title: Text(
+                                    _msg.creator.screenName,
+                                    style: _msg.isRead
+                                        ? TextStyle(
+                                            decoration:
+                                                TextDecoration.lineThrough)
+                                        : null,
+                                  ),
+                                  subtitle: Text(_msg.adTitle),
                                   children: <Widget>[
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        _msg.message,
-                                        style:
-                                            Theme.of(context).textTheme.body2,
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                    Column(
                                       children: <Widget>[
-                                        RaisedButton(
-                                            color: Theme.of(context).hintColor,
-                                            child: Text(_msg.isRead
-                                                ? 'Markeer als ongelezen'
-                                                : 'Markeer als gelezen'),
-                                            onPressed: () {
-                                              _markAsRead(_msg.id, _msg.isRead);
-                                            }),
-                                        RaisedButton(
-                                          color: Theme.of(context).accentColor,
-                                          child: Text('Antwoord'),
-                                          onPressed: () {
-                                            _startSendReply(_msg.adId,
-                                                _msg.adTitle, _msg.creator.id);
-                                          },
+                                        Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            _msg.message,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body2,
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            RaisedButton(
+                                                color:
+                                                    Theme.of(context).hintColor,
+                                                child: Text(_msg.isRead
+                                                    ? 'Markeer als ongelezen'
+                                                    : 'Markeer als gelezen'),
+                                                onPressed: () {
+                                                  _markAsRead(
+                                                      _msg.id, _msg.isRead);
+                                                }),
+                                            RaisedButton(
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                              child: Text('Antwoord'),
+                                              onPressed: () {
+                                                _startSendReply(
+                                                    _msg.adId,
+                                                    _msg.adTitle,
+                                                    _msg.creator.id);
+                                              },
+                                            )
+                                          ],
                                         )
                                       ],
-                                    )
+                                    ),
                                   ],
-                                ),
-                              ],
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+                                );
+                              }),
+                        ],
+                      ),
+                    ),
+        ],
+      ),
     );
   }
 }

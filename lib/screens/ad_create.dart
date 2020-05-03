@@ -9,6 +9,7 @@ import '../providers/ads.dart';
 import '../widgets/ad_form.dart';
 import '../screens/auth.dart' as AuthScreen;
 import '../screens/home.dart';
+import '../widgets/background.dart';
 
 class AdCreate extends StatefulWidget {
   static const routeName = '/add-create';
@@ -73,22 +74,27 @@ class _AdCreateState extends State<AdCreate> {
 
   @override
   Widget build(BuildContext context) {
-    return _user == null
-        ? MyDialog(navigateToAuth)
-        : SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Plaats je advertentie',
-                    style: Theme.of(context).textTheme.title,
-                  ),
+    return Stack(
+      children: <Widget>[
+        Background(),
+        _user == null
+            ? MyDialog(navigateToAuth)
+            : SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Plaats je advertentie',
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                    ),
+                    AdForm(_saveForm)
+                  ],
                 ),
-                AdForm(_saveForm)
-              ],
-            ),
-          );
+              ),
+      ],
+    );
   }
 }
 

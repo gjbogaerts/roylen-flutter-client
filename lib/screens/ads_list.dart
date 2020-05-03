@@ -5,6 +5,7 @@ import '../providers/ads.dart';
 import '../providers/toaster.dart';
 import '../models/ad.dart';
 import '../widgets/ads_grid.dart';
+import '../widgets/background.dart';
 
 class AdsList extends StatefulWidget {
   static const routeName = '/ads-list';
@@ -38,14 +39,19 @@ class _AdsListState extends State<AdsList> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : Builder(builder: (BuildContext context) {
-            WidgetsBinding.instance.addPostFrameCallback(
-                (_) => Provider.of<Toaster>(context).showSnackBar(context));
-            return AdsGrid(adsData);
-          });
+    return Stack(
+      children: <Widget>[
+        Background(),
+        _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Builder(builder: (BuildContext context) {
+                WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => Provider.of<Toaster>(context).showSnackBar(context));
+                return AdsGrid(adsData);
+              }),
+      ],
+    );
   }
 }

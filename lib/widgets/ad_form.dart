@@ -95,13 +95,15 @@ class _AdFormState extends State<AdForm> {
               alignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 RaisedButton.icon(
+                  color: Theme.of(context).hintColor,
                   onPressed: () {
                     _getImage('camera');
                   },
-                  icon: Icon(Icons.camera),
+                  icon: Icon(Icons.photo_camera),
                   label: Text('Neem een foto'),
                 ),
                 RaisedButton.icon(
+                  color: Theme.of(context).hintColor,
                   onPressed: () {
                     _getImage('gallery');
                   },
@@ -152,8 +154,9 @@ class _AdFormState extends State<AdForm> {
             ),
             DropdownButtonFormField(
                 value: _selectedCategory,
-                decoration:
-                    const InputDecoration(labelText: 'Kies je categorie'),
+                decoration: InputDecoration(
+                    labelText: 'Kies je categorie',
+                    labelStyle: Theme.of(context).textTheme.body1),
                 onChanged: (val) {
                   setState(() {
                     _selectedCategory = val;
@@ -192,40 +195,43 @@ class _AdFormState extends State<AdForm> {
                   ),
                 ),
                 Flexible(
-                    fit: FlexFit.tight,
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        ListTile(
-                          dense: true,
-                          title: const Text('Aangeboden'),
-                          trailing: Radio(
-                            groupValue: _adNature,
-                            value: AdNature.offered,
-                            onChanged: (AdNature value) {
-                              setState(() {
-                                _adNature = value;
-                              });
-                            },
-                          ),
+                  fit: FlexFit.tight,
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      ListTile(
+                        dense: true,
+                        title: Text('Aangeboden',
+                            style: Theme.of(context).textTheme.body1),
+                        trailing: Radio(
+                          groupValue: _adNature,
+                          value: AdNature.offered,
+                          onChanged: (AdNature value) {
+                            setState(() {
+                              _adNature = value;
+                            });
+                          },
                         ),
-                        ListTile(
-                          title: const Text('Gezocht'),
-                          dense: true,
-                          trailing: Radio(
-                            groupValue: _adNature,
-                            value: AdNature.wanted,
-                            onChanged: (AdNature value) {
-                              setState(() {
-                                _adNature = value;
-                              });
-                            },
-                          ),
+                      ),
+                      ListTile(
+                        title: Text('Gezocht',
+                            style: Theme.of(context).textTheme.body1),
+                        dense: true,
+                        trailing: Radio(
+                          groupValue: _adNature,
+                          value: AdNature.wanted,
+                          onChanged: (AdNature value) {
+                            setState(() {
+                              _adNature = value;
+                            });
+                          },
                         ),
-                      ],
-                    ))
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
             SizedBox(
@@ -237,19 +243,13 @@ class _AdFormState extends State<AdForm> {
               child: RaisedButton.icon(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
-                color: Theme.of(context).accentColor,
-                textColor: Theme.of(context).primaryColor,
+                color: Theme.of(context).primaryColor,
+                textColor: Theme.of(context).accentColor,
                 onPressed: () {
-                  /* if (_hasError) {
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text(_errorString),
-                    ));
-                  } */
                   _saveForm();
                 },
                 icon: Icon(Icons.save_alt),
-                label:
-                    Text('Bewaren', style: Theme.of(context).textTheme.body2),
+                label: Text('Bewaren'),
               ),
             ),
           ],

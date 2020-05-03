@@ -7,6 +7,7 @@ import '../providers/ads.dart';
 import '../providers/auth.dart';
 import '../providers/toaster.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/background.dart';
 import '../screens/home.dart';
 
 class AdUserList extends StatefulWidget {
@@ -84,95 +85,104 @@ class _AdUserListState extends State<AdUserList> {
         ],
       ),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _userAds.length == 0
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Je hebt nog geen advertenties aangemaakt.',
-                        style: Theme.of(context).textTheme.body2,
+      body: Stack(
+        children: <Widget>[
+          Background(),
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _userAds.length == 0
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Je hebt nog geen advertenties aangemaakt.',
+                            style: Theme.of(context).textTheme.body2,
+                          ),
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacementNamed(
+                                  HomeScreen.routeName,
+                                  arguments: {'idx': 4});
+                            },
+                            color: Theme.of(context).accentColor,
+                            child: Text('Maak een nieuwe advertentie'),
+                          )
+                        ],
                       ),
-                      RaisedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacementNamed(
-                              HomeScreen.routeName,
-                              arguments: {'idx': 4});
-                        },
-                        color: Theme.of(context).accentColor,
-                        child: Text('Maak een nieuwe advertentie'),
-                      )
-                    ],
-                  ),
-                )
-              : Builder(
-                  builder: (context) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) =>
-                        Provider.of<Toaster>(context).showSnackBar(context));
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder(
-                          itemCount: _userAds.length,
-                          itemBuilder: (context, idx) {
-                            return Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1,
-                                    color: Theme.of(context).cardColor),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    _userAds[idx].title,
-                                    style: Theme.of(context).textTheme.body2,
+                    )
+                  : Builder(
+                      builder: (context) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) =>
+                            Provider.of<Toaster>(context)
+                                .showSnackBar(context));
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView.builder(
+                              itemCount: _userAds.length,
+                              itemBuilder: (context, idx) {
+                                return Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1,
+                                        color: Theme.of(context).cardColor),
                                   ),
-                                  Row(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      IconButton(
-                                          color: Theme.of(context).primaryColor,
-                                          icon: Icon(Icons.edit),
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                      title: Text('TO DO'),
-                                                      content: Text(
-                                                          'Je kunt advertenties op dit moment nog niet wijzigen. Hier wordt aan gewerkt. Op dit moment is je enige optie om de advertentie te verwijderen, en daarna een nieuwe aan te maken. Excuus voor de overlast.'),
-                                                      actions: <Widget>[
-                                                        FlatButton(
-                                                          child: Text('OK'),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        )
-                                                      ],
-                                                    ));
-                                          }),
-                                      IconButton(
-                                        icon: Icon(Icons.delete_forever),
-                                        color: Theme.of(context).primaryColor,
-                                        onPressed: () {
-                                          confirmDeletion(
-                                              context, _userAds[idx].id);
-                                        },
+                                      Text(
+                                        _userAds[idx].title,
+                                        style:
+                                            Theme.of(context).textTheme.body2,
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          IconButton(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              icon: Icon(Icons.edit),
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: Text('TO DO'),
+                                                          content: Text(
+                                                              'Je kunt advertenties op dit moment nog niet wijzigen. Hier wordt aan gewerkt. Op dit moment is je enige optie om de advertentie te verwijderen, en daarna een nieuwe aan te maken. Excuus voor de overlast.'),
+                                                          actions: <Widget>[
+                                                            FlatButton(
+                                                              child: Text('OK'),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            )
+                                                          ],
+                                                        ));
+                                              }),
+                                          IconButton(
+                                            icon: Icon(Icons.delete_forever),
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            onPressed: () {
+                                              confirmDeletion(
+                                                  context, _userAds[idx].id);
+                                            },
+                                          )
+                                        ],
                                       )
                                     ],
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    );
-                  },
-                ),
+                                  ),
+                                );
+                              }),
+                        );
+                      },
+                    ),
+        ],
+      ),
     );
   }
 }

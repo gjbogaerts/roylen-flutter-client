@@ -6,6 +6,7 @@ import '../widgets/contact.dart';
 import '../providers/ads.dart';
 import '../providers/auth.dart';
 import '../models/user.dart';
+import '../widgets/background.dart';
 
 class AdsDetail extends StatefulWidget {
   static const routeName = '/ads-detail';
@@ -109,72 +110,78 @@ class _AdsDetailState extends State<AdsDetail> {
               })
         ],
       ),
-      body: ListView(
+      body: Stack(
         children: <Widget>[
-          Container(
-              child: Image.network(
-            '$baseUrl${ad.picture}',
-            fit: BoxFit.cover,
-            height: MediaQuery.of(context).size.height / 3,
-          )),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  '${ad.virtualPrice} nix',
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
+          Background(),
+          ListView(
+            children: <Widget>[
+              Container(
+                  child: Image.network(
+                '$baseUrl${ad.picture}',
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.height / 3,
+              )),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '${ad.virtualPrice} nix',
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: RaisedButton(
+                        onPressed: () {
+                          _contactCreator(ad);
+                        },
+                        // color: Theme.of(context).accentColor,
+                        child: Text('CONTACT'),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      ad.category,
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
                 ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: RaisedButton(
-                    onPressed: () {
-                      _contactCreator(ad);
-                    },
-                    color: Theme.of(context).accentColor,
-                    child: Text('CONTACT'),
-                  ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage:
+                          NetworkImage('$baseUrl${ad.creator.avatar}'),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Aangemaakt door: ${ad.creator.screenName}',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 10),
-                Text(
-                  ad.category,
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            child: Row(
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: NetworkImage('$baseUrl${ad.creator.avatar}'),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Aangemaakt door: ${ad.creator.screenName}',
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  'Beschrijving: ${ad.description}',
+                  textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 16),
+                  softWrap: true,
                 ),
-              ],
-            ),
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-          ),
-          SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              'Beschrijving: ${ad.description}',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 16),
-              softWrap: true,
-            ),
+              ),
+            ],
           ),
         ],
       ),
