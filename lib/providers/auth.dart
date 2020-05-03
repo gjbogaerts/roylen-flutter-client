@@ -58,6 +58,36 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<bool> changeProfile(String _imageLocation, String _email) async {
+    final _url = '$baseUrl/api/profile';
+    try {
+      var contentType = ContentType.getContentType(_imageLocation);
+      var _req = http.MultipartRequest('POST', Uri.parse(_url));
+      var file = await http.MultipartFile.fromPath('filename', _imageLocation,
+          contentType: MediaType.parse(contentType));
+      _req.files.add(file);
+      _req.headers.putIfAbsent('Authorization', () => 'Bearer $_token');
+      _req.headers.putIfAbsent('x-api-key', () => apiKey);
+      _req.fields['email'] = _email;
+      var _imageData = await _req.send();
+
+      if (_imageData.statusCode != 200) {
+        throw Exception(
+            'Het lukte niet om je wijzingen op te slaan. Probeer het later nog eens.');
+      }
+      var prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', _email);
+      prefs.setString('avatar', _imageLocation);
+
+      notifyListeners();
+      return true;
+    } catch (err) {
+      notifyListeners();
+      throw Exception(
+          'Er ging iets mis in de verbinding met de server. Probeer het later nog eens.');
+    }
+  }
+
   Future<bool> startResetPasswordSequence(String email) async {
     final _url = baseUrl + '/api/resetPassword';
     try {
@@ -164,18 +194,6 @@ class Auth with ChangeNotifier {
       _avatar = avatar;
       _nix = _userData['nix'];
       var contentType = ContentType.getContentType(avatar);
-      /* 
-      String contentType;
-      if (avatar.endsWith('jpeg') || avatar.endsWith('jpg')) {
-        contentType = 'image/jpeg';
-      } else if (avatar.endsWith('png')) {
-        contentType = 'image/png';
-      } else if (avatar.endsWith('gif')) {
-        contentType = 'image/gif';
-      } else {
-        contentType = 'application/octet-stream';
-      }
- */
       var _req =
           http.MultipartRequest('POST', Uri.parse('$baseUrl/api/profile'));
       var file = await http.MultipartFile.fromPath('filename', avatar,

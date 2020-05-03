@@ -9,6 +9,7 @@ import '../screens/home.dart';
 import '../screens/info.dart';
 import '../screens/messages.dart';
 import '../screens/ad_user_list.dart';
+import '../screens/auth_profile.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -79,7 +80,8 @@ class _AppDrawerState extends State<AppDrawer> {
                       title: Text('Je profiel'),
                       subtitle: Text('Wijzig je email of je avatar'),
                       onTap: () {
-                        print('Hier profiel bewerken functinoaliteint.');
+                        Navigator.of(context)
+                            .pushReplacementNamed(AuthProfile.routeName);
                       },
                     ),
                     Divider(),

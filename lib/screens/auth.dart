@@ -168,7 +168,7 @@ class _AuthState extends State<Auth> {
                               return null;
                           },
                           onSaved: (val) {
-                            _authData['email'] = val;
+                            _authData['email'] = val.trim();
                           },
                         ),
                         SizedBox(
@@ -254,13 +254,15 @@ class _AuthState extends State<Auth> {
                                         onPressed: () {
                                           getImage('camera');
                                         },
-                                        icon: Icon(Icons.camera),
+                                        color: Theme.of(context).hintColor,
+                                        icon: Icon(Icons.photo_camera),
                                         label: Text('Neem een foto'),
                                       ),
                                       RaisedButton.icon(
                                         onPressed: () {
                                           getImage('gallery');
                                         },
+                                        color: Theme.of(context).hintColor,
                                         icon: Icon(Icons.photo_album),
                                         label: Text('Kies een foto'),
                                       )
