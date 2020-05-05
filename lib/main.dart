@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
 //screens
 import './screens/ads_list.dart';
@@ -54,13 +55,13 @@ class Roylen extends StatelessWidget {
             title: 'Roylen',
             theme: RoylenTheme.getThemeData(),
             home: _authData.isAuth
-                ? HomeScreen()
+                ? I18n(child: HomeScreen())
                 : FutureBuilder(
                     future: _authData.tryAutoLogin(),
                     builder: (ctx, authResult) =>
                         authResult.connectionState == ConnectionState.waiting
-                            ? SplashScreen()
-                            : HomeScreen(),
+                            ? I18n(child: SplashScreen())
+                            : I18n(child: HomeScreen()),
                   ),
             routes: {
               HomeScreen.routeName: (ctx) => HomeScreen(),

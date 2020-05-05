@@ -9,13 +9,13 @@ class SplashScreen extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/image9.jpeg'),
+                image: AssetImage('assets/images/bgimage.jpeg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
@@ -24,13 +24,24 @@ class SplashScreen extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'QuickSand')),
+                        fontFamily: 'PatrickHandSC')),
               ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  'De ruil-app voor jonge ouders, hun kinderen en de planeet',
-                  style: Theme.of(context).textTheme.body2,
+              Center(
+                child: Image(
+                  image: AssetImage('assets/images/LogoGroen.png'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Center(
+                  child: Text(
+                    'De ruil-app voor jonge ouders, hun kinderen en de planeet',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .body2
+                        .copyWith(fontSize: 24, fontFamily: 'QuickSand'),
+                  ),
                 ),
               ),
             ],

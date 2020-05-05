@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,11 +70,13 @@ class Auth with ChangeNotifier {
         _req.files.add(file);
       }
       _req.headers.putIfAbsent('Authorization', () => 'Bearer $_token');
+      _req.headers.putIfAbsent('content-type', () => 'application/json');
       _req.headers.putIfAbsent('x-api-key', () => apiKey);
       _req.fields['email'] = _newEmail;
       var _imageData = await _req.send();
 
       if (_imageData.statusCode != 200) {
+        print('status: ${_imageData.statusCode}');
         print(_imageData.stream.bytesToString());
         throw Exception(
             'Het lukte niet om je wijzingen op te slaan. Probeer het later nog eens.');
@@ -112,10 +115,12 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<bool> tryAutoLogin() async {
+  Future<void> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
-      return false;
+      return Timer(Duration(seconds: 3), () {
+        return false;
+      });
     } else {
       final extractedUserData =
           json.decode(prefs.getString('userData')) as Map<String, dynamic>;
@@ -126,8 +131,11 @@ class Auth with ChangeNotifier {
       _nix = extractedUserData['nix'];
       _avatar = extractedUserData['avatar'];
       notifyListeners();
-      return true;
+      return Timer(Duration(seconds: 2), () {
+        return true;
+      });
     }
+    // return true;
   }
 
   User getUser() {
