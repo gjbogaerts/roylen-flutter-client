@@ -152,6 +152,16 @@ class _AuthState extends State<Auth> {
                         style: Theme.of(context).textTheme.title,
                       ),
                     ),
+                    Center(
+                      child: CircleAvatar(
+                        foregroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        radius: 50,
+                        backgroundImage: _image == null
+                            ? AssetImage('assets/images/image2.png')
+                            : FileImage(_image),
+                      ),
+                    ),
                     Form(
                       key: _formKey,
                       child: Container(
@@ -243,39 +253,29 @@ class _AuthState extends State<Auth> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      CircleAvatar(
-                                        radius: 25,
-                                        backgroundImage: _image == null
-                                            ? AssetImage(
-                                                'assets/images/image9.jpeg')
-                                            : FileImage(_image),
+                                      RaisedButton.icon(
+                                        onPressed: () {
+                                          getImage('camera');
+                                        },
+                                        color: Theme.of(context).canvasColor,
+                                        icon: Icon(Icons.photo_camera),
+                                        label: Text('Neem een foto'),
                                       ),
-                                      ButtonBar(
-                                        buttonPadding:
-                                            EdgeInsets.symmetric(horizontal: 5),
-                                        children: <Widget>[
-                                          RaisedButton.icon(
-                                            onPressed: () {
-                                              getImage('camera');
-                                            },
-                                            color: Theme.of(context).hintColor,
-                                            icon: Icon(Icons.photo_camera),
-                                            label: Text('Neem een foto'),
-                                          ),
-                                          RaisedButton.icon(
-                                            onPressed: () {
-                                              getImage('gallery');
-                                            },
-                                            color: Theme.of(context).hintColor,
-                                            icon: Icon(Icons.photo_album),
-                                            label: Text('Kies een foto'),
-                                          )
-                                        ],
-                                      ),
+                                      RaisedButton.icon(
+                                        onPressed: () {
+                                          getImage('gallery');
+                                        },
+                                        color: Theme.of(context).canvasColor,
+                                        icon: Icon(Icons.photo_album),
+                                        label: Text('Kies een foto'),
+                                      )
                                     ],
                                   )
                                 ],
                               ),
+                            SizedBox(
+                              height: 20,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[

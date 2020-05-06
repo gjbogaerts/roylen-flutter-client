@@ -20,6 +20,7 @@ class _AdUserListState extends State<AdUserList> {
   User _user;
   List<Ad> _userAds;
   bool _isLoading = true;
+  bool _isInit = true;
 
   @override
   void didChangeDependencies() async {
@@ -31,9 +32,13 @@ class _AdUserListState extends State<AdUserList> {
       _user = authProvider.getUser();
     }
     if (_user != null) {
-      _userAds = await adsProvider.fetchItemsFromUser(_user.id);
-
-      _isLoading = false;
+      if (_isInit) {
+        _userAds = await adsProvider.fetchItemsFromUser(_user.id);
+        setState(() {
+          _isLoading = false;
+        });
+        _isInit = false;
+      }
     } else {
       Navigator.of(context).pushReplacementNamed('/');
     }
@@ -49,10 +54,21 @@ class _AdUserListState extends State<AdUserList> {
             Text('Weet je zeker dat je deze advertentie wilt verwijderen?'),
         actions: <Widget>[
           RaisedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Nee, niet weg'),
+            color: Theme.of(ctx).accentColor,
+            textColor: Theme.of(ctx).primaryColor,
+          ),
+          RaisedButton(
             color: Theme.of(ctx).accentColor,
             textColor: Theme.of(ctx).primaryColor,
             onPressed: () async {
               var result = await Provider.of<Ads>(ctx).removeAd(adId);
+              setState(() {
+                _isInit = true;
+              });
               if (result) {
                 Provider.of<Toaster>(context)
                     .setMessage('Je advertentie is verwijderd.');
@@ -62,7 +78,7 @@ class _AdUserListState extends State<AdUserList> {
               }
               Navigator.of(ctx).pop();
             },
-            child: Text('Ja, verwijder deze advertentie'),
+            child: Text('Ja, mag weg'),
           )
         ],
       ),

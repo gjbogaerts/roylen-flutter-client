@@ -156,6 +156,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                       child: Column(
                         children: <Widget>[
                           FlatButton(
+                            textColor: Theme.of(context).primaryColor,
                             child: Text(_showRead
                                 ? 'Verberg de gelezen berichten'
                                 : 'Toon de gelezen berichten'),
@@ -181,12 +182,18 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                   title: Text(
                                     _msg.creator.screenName,
                                     style: _msg.isRead
-                                        ? TextStyle(
-                                            decoration:
-                                                TextDecoration.lineThrough)
-                                        : null,
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .body2
+                                            .copyWith(
+                                                decoration:
+                                                    TextDecoration.lineThrough)
+                                        : Theme.of(context).textTheme.body2,
                                   ),
-                                  subtitle: Text(_msg.adTitle),
+                                  subtitle: Text(
+                                    _msg.adTitle,
+                                    style: Theme.of(context).textTheme.body1,
+                                  ),
                                   children: <Widget>[
                                     Column(
                                       children: <Widget>[
@@ -204,8 +211,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             RaisedButton(
-                                                color:
-                                                    Theme.of(context).hintColor,
+                                                color: Theme.of(context)
+                                                    .canvasColor,
                                                 child: Text(_msg.isRead
                                                     ? 'Markeer als ongelezen'
                                                     : 'Markeer als gelezen'),
@@ -214,8 +221,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                       _msg.id, _msg.isRead);
                                                 }),
                                             RaisedButton(
-                                              color:
-                                                  Theme.of(context).accentColor,
                                               child: Text('Antwoord'),
                                               onPressed: () {
                                                 _startSendReply(

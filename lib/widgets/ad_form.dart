@@ -22,6 +22,7 @@ class _AdFormState extends State<AdForm> {
   final _formKey = GlobalKey<FormState>();
   AdNature _adNature = AdNature.offered;
   String _selectedCategory;
+  File _selectedImage;
 /*   bool _hasError = false;
   String _errorString; */
 
@@ -70,6 +71,9 @@ class _AdFormState extends State<AdForm> {
     } else {
       imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     }
+    setState(() {
+      _selectedImage = imageFile;
+    });
     // print(imageFile);
     if (imageFile == null) {
       return;
@@ -90,12 +94,11 @@ class _AdFormState extends State<AdForm> {
         padding: const EdgeInsets.fromLTRB(8, 20, 8, 0),
         child: Column(
           children: <Widget>[
-            ButtonBar(
-              buttonPadding: EdgeInsets.symmetric(horizontal: 5),
-              alignment: MainAxisAlignment.spaceBetween,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 RaisedButton.icon(
-                  color: Theme.of(context).hintColor,
+                  color: Theme.of(context).canvasColor,
                   onPressed: () {
                     _getImage('camera');
                   },
@@ -103,7 +106,7 @@ class _AdFormState extends State<AdForm> {
                   label: Text('Neem een foto'),
                 ),
                 RaisedButton.icon(
-                  color: Theme.of(context).hintColor,
+                  color: Theme.of(context).canvasColor,
                   onPressed: () {
                     _getImage('gallery');
                   },
@@ -175,7 +178,7 @@ class _AdFormState extends State<AdForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 SizedBox(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery.of(context).size.width / 3,
                   child: TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
@@ -199,14 +202,18 @@ class _AdFormState extends State<AdForm> {
                   flex: 3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       ListTile(
                         dense: true,
                         title: Text('Aangeboden',
+                            textAlign: TextAlign.end,
                             style: Theme.of(context).textTheme.body1),
                         trailing: Radio(
                           groupValue: _adNature,
+                          focusColor: Theme.of(context).primaryColor,
+                          hoverColor: Theme.of(context).primaryColor,
+                          activeColor: Theme.of(context).primaryColor,
                           value: AdNature.offered,
                           onChanged: (AdNature value) {
                             setState(() {
@@ -217,10 +224,14 @@ class _AdFormState extends State<AdForm> {
                       ),
                       ListTile(
                         title: Text('Gezocht',
+                            textAlign: TextAlign.end,
                             style: Theme.of(context).textTheme.body1),
                         dense: true,
                         trailing: Radio(
                           groupValue: _adNature,
+                          activeColor: Theme.of(context).primaryColor,
+                          focusColor: Theme.of(context).primaryColor,
+                          hoverColor: Theme.of(context).primaryColor,
                           value: AdNature.wanted,
                           onChanged: (AdNature value) {
                             setState(() {
@@ -237,6 +248,16 @@ class _AdFormState extends State<AdForm> {
             SizedBox(
               height: 10,
             ),
+            _selectedImage != null
+                ? Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                    child: Image.file(
+                      _selectedImage,
+                      height: 200,
+                      fit: BoxFit.scaleDown,
+                    ),
+                  )
+                : SizedBox(height: 0),
             ButtonTheme(
               minWidth: MediaQuery.of(context).size.width / 2,
               height: 50,
@@ -252,6 +273,7 @@ class _AdFormState extends State<AdForm> {
                 label: Text('Bewaren'),
               ),
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),

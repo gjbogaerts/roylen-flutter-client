@@ -109,7 +109,7 @@ class _AuthProfileState extends State<AuthProfile> {
                               fit: BoxFit.cover)
                           : _user.avatar == null
                               ? Image.asset(
-                                  'assets/images/image9.jpeg',
+                                  'assets/images/image2.png',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -150,13 +150,13 @@ class _AuthProfileState extends State<AuthProfile> {
                                       children: <Widget>[
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             RaisedButton.icon(
                                               icon: Icon(Icons.photo_album),
                                               label: Text('Kies een foto'),
                                               color:
-                                                  Theme.of(context).hintColor,
+                                                  Theme.of(context).canvasColor,
                                               onPressed: () {
                                                 _pickPhoto('gallery');
                                               },
@@ -165,7 +165,7 @@ class _AuthProfileState extends State<AuthProfile> {
                                               icon: Icon(Icons.photo_camera),
                                               label: Text('Maak een foto'),
                                               color:
-                                                  Theme.of(context).hintColor,
+                                                  Theme.of(context).canvasColor,
                                               onPressed: () {
                                                 _pickPhoto('camera');
                                               },

@@ -110,7 +110,6 @@ class _MyDialogState extends State<MyDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Theme.of(context).cardColor,
       elevation: 25,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       title: Text('Niet ingelogd'),

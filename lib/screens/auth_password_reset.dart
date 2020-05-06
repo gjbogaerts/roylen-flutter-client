@@ -84,6 +84,8 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
         content: Text(msg),
         actions: <Widget>[
           FlatButton(
+            color: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).accentColor,
             child: Text('OK'.i18n),
             onPressed: () {
               Navigator.of(context).pop();
@@ -106,7 +108,7 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
     } else {
       _showDialog(
           'Gelukt'.i18n,
-          'Je hebt een email gekregen met een code erin. Vul deze code hieronder in en maak een nieuw wachtwoord aan'
+          'Je hebt een email gekregen met een code erin. Vul deze code hieronder in en maak een nieuw wachtwoord aan.'
               .i18n);
     }
   }
@@ -167,9 +169,10 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
                       SizedBox(height: 10),
                       RaisedButton(
                         child: Text('Versturen'.i18n),
-                        onPressed: _handleEmailSubmit,
+                        onPressed:
+                            _handleEmailSubmit, /* 
                         color: Theme.of(context).accentColor,
-                        textColor: Theme.of(context).primaryColor,
+                        textColor: Theme.of(context).primaryColor, */
                       )
                     ],
                   ),
@@ -224,9 +227,10 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
                       ),
                       RaisedButton(
                         onPressed: _handlePasswordReset,
-                        child: Text('Versturen'.i18n),
+                        child: Text('Versturen'
+                            .i18n), /* 
                         color: Theme.of(context).accentColor,
-                        textColor: Theme.of(context).primaryColor,
+                        textColor: Theme.of(context).primaryColor, */
                       ),
                     ],
                   ),
