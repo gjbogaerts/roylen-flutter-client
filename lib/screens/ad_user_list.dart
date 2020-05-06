@@ -139,6 +139,7 @@ class _AdUserListState extends State<AdUserList> {
                               itemBuilder: (context, idx) {
                                 return Container(
                                   padding: const EdgeInsets.all(8),
+                                  margin: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1,
