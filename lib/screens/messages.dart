@@ -58,7 +58,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
   }
 
   void _markAsRead(String _msgId, bool isRead) async {
-    var msgProvider = Provider.of<Messages>(context);
+    var msgProvider = Provider.of<Messages>(context, listen: false);
     await msgProvider.markAsRead(_msgId, isRead);
   }
 
@@ -84,7 +84,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                         Container(
                           child: Text(
                             'Antwoord',
-                            style: Theme.of(context).textTheme.title,
+                            style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
                         Container(
@@ -98,7 +98,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                           ),
                         ),
                         RaisedButton(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).primaryColor,
                           onPressed: () {
                             _sendReply(adId, adTitle, controller.text, toId);
                             Navigator.of(context).pop(true);
@@ -131,7 +131,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   void _sendReply(
       String adId, String adTitle, String message, String toId) async {
-    var msgProvider = Provider.of<Messages>(context);
+    var msgProvider = Provider.of<Messages>(context, listen: false);
     await msgProvider.sendMessage(
         adId: adId, adTitle: adTitle, message: message, toId: toId);
   }
@@ -151,92 +151,98 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   ? Center(
                       child: Text('Nog geen boodschappen voor je'),
                     )
-                  : Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        children: <Widget>[
-                          FlatButton(
-                            textColor: Theme.of(context).primaryColor,
-                            child: Text(_showRead
-                                ? 'Verberg de gelezen berichten'
-                                : 'Toon de gelezen berichten'),
-                            onPressed: toggleRead,
-                          ),
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _messages.length,
-                              itemBuilder: (ctx, idx) {
-                                var _msg = _messages[idx];
+                  : SingleChildScrollView(
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: <Widget>[
+                            FlatButton(
+                              textColor: Theme.of(context).primaryColor,
+                              child: Text(_showRead
+                                  ? 'Verberg de gelezen berichten'
+                                  : 'Toon de gelezen berichten'),
+                              onPressed: toggleRead,
+                            ),
+                            ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _messages.length,
+                                itemBuilder: (ctx, idx) {
+                                  var _msg = _messages[idx];
 
-                                return ExpansionTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: _msg.creator.avatar == null
-                                        ? AssetImage(
-                                            'assets/images/image9.jpeg')
-                                        : NetworkImage(_msg.creator.avatar
-                                                .startsWith('http')
-                                            ? _msg.creator.avatar
-                                            : '$baseUrl${_msg.creator.avatar}'),
-                                    radius: 15,
-                                  ),
-                                  title: Text(
-                                    _msg.creator.screenName,
-                                    style: _msg.isRead
-                                        ? Theme.of(context)
-                                            .textTheme
-                                            .body2
-                                            .copyWith(
-                                                decoration:
-                                                    TextDecoration.lineThrough)
-                                        : Theme.of(context).textTheme.body2,
-                                  ),
-                                  subtitle: Text(
-                                    _msg.adTitle,
-                                    style: Theme.of(context).textTheme.body1,
-                                  ),
-                                  children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            _msg.message,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .body2,
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            RaisedButton(
-                                                color: Theme.of(context)
-                                                    .canvasColor,
-                                                child: Text(_msg.isRead
-                                                    ? 'Markeer als ongelezen'
-                                                    : 'Markeer als gelezen'),
-                                                onPressed: () {
-                                                  _markAsRead(
-                                                      _msg.id, _msg.isRead);
-                                                }),
-                                            RaisedButton(
-                                              child: Text('Antwoord'),
-                                              onPressed: () {
-                                                _startSendReply(
-                                                    _msg.adId,
-                                                    _msg.adTitle,
-                                                    _msg.creator.id);
-                                              },
-                                            )
-                                          ],
-                                        )
-                                      ],
+                                  return ExpansionTile(
+                                    leading: CircleAvatar(
+                                      backgroundImage: _msg.creator.avatar ==
+                                              null
+                                          ? AssetImage(
+                                              'assets/images/image9.jpeg')
+                                          : NetworkImage(_msg.creator.avatar
+                                                  .startsWith('http')
+                                              ? _msg.creator.avatar
+                                              : '$baseUrl${_msg.creator.avatar}'),
+                                      radius: 15,
                                     ),
-                                  ],
-                                );
-                              }),
-                        ],
+                                    title: Text(
+                                      _msg.creator.screenName,
+                                      style: _msg.isRead
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .copyWith(
+                                                  decoration: TextDecoration
+                                                      .lineThrough)
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                    ),
+                                    subtitle: Text(
+                                      _msg.adTitle,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    children: <Widget>[
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              _msg.message,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2,
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              RaisedButton(
+                                                  color: Theme.of(context)
+                                                      .canvasColor,
+                                                  child: Text(_msg.isRead
+                                                      ? 'Markeer als ongelezen'
+                                                      : 'Markeer als gelezen'),
+                                                  onPressed: () {
+                                                    _markAsRead(
+                                                        _msg.id, _msg.isRead);
+                                                  }),
+                                              RaisedButton(
+                                                child: Text('Antwoord'),
+                                                onPressed: () {
+                                                  _startSendReply(
+                                                      _msg.adId,
+                                                      _msg.adTitle,
+                                                      _msg.creator.id);
+                                                },
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                }),
+                          ],
+                        ),
                       ),
                     ),
         ],

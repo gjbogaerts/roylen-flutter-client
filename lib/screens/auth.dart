@@ -45,12 +45,13 @@ class _AuthState extends State<Auth> {
       });
       return;
     }
-    var toaster = Provider.of<Toaster>(context);
+    var toaster = Provider.of<Toaster>(context, listen: false);
     _formKey.currentState.save();
     try {
-      var _registerLogin = await Provider.of<AuthProvider.Auth>(context)
-          .loginUser(
-              email: _authData['email'], password: _authData['password']);
+      var _registerLogin =
+          await Provider.of<AuthProvider.Auth>(context, listen: false)
+              .loginUser(
+                  email: _authData['email'], password: _authData['password']);
       if (_registerLogin) {
         toaster.setMessage('Je bent succesvol ingelogd.');
         Navigator.of(context).pushReplacementNamed('/');
@@ -78,11 +79,12 @@ class _AuthState extends State<Auth> {
       });
       return;
     }
-    var toaster = Provider.of<Toaster>(context);
+    var toaster = Provider.of<Toaster>(context, listen: false);
     _formKey.currentState.save();
     try {
       var _registerResult =
-          await Provider.of<AuthProvider.Auth>(context).registerUser(
+          await Provider.of<AuthProvider.Auth>(context, listen: false)
+              .registerUser(
         avatar: _authData['avatar'],
         email: _authData['email'],
         screenName: _authData['screenName'],
@@ -149,7 +151,7 @@ class _AuthState extends State<Auth> {
                       padding: const EdgeInsets.all(8),
                       child: Text(
                         _isRegistering ? 'Registreren' : 'Inloggen',
-                        style: Theme.of(context).textTheme.title,
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                     ),
                     Center(

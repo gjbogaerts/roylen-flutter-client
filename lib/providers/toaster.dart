@@ -37,7 +37,7 @@ class Toaster with ChangeNotifier {
         content: Text(
           _message,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.body2,
+          style: Theme.of(context).textTheme.bodyText2,
         ),
       ));
       clearMessage();

@@ -159,7 +159,7 @@ class _AdFormState extends State<AdForm> {
                 value: _selectedCategory,
                 decoration: InputDecoration(
                     labelText: 'Kies je categorie',
-                    labelStyle: Theme.of(context).textTheme.body1),
+                    labelStyle: Theme.of(context).textTheme.bodyText1),
                 onChanged: (val) {
                   setState(() {
                     _selectedCategory = val;
@@ -208,7 +208,7 @@ class _AdFormState extends State<AdForm> {
                         dense: true,
                         title: Text('Aangeboden',
                             textAlign: TextAlign.end,
-                            style: Theme.of(context).textTheme.body1),
+                            style: Theme.of(context).textTheme.bodyText1),
                         trailing: Radio(
                           groupValue: _adNature,
                           focusColor: Theme.of(context).primaryColor,
@@ -225,7 +225,7 @@ class _AdFormState extends State<AdForm> {
                       ListTile(
                         title: Text('Gezocht',
                             textAlign: TextAlign.end,
-                            style: Theme.of(context).textTheme.body1),
+                            style: Theme.of(context).textTheme.bodyText1),
                         dense: true,
                         trailing: Radio(
                           groupValue: _adNature,

@@ -64,7 +64,8 @@ class _AppDrawerState extends State<AppDrawer> {
                       onTap: () {
                         Navigator.of(context).pop();
                         Navigator.of(context).pushReplacementNamed('/');
-                        Provider.of<AuthProvider.Auth>(context).logout();
+                        Provider.of<AuthProvider.Auth>(context, listen: false)
+                            .logout();
                       },
                     ),
                     Divider(),

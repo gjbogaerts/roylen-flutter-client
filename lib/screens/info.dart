@@ -46,7 +46,7 @@ class _InfoScreenState extends State<InfoScreen> {
                       borderRadius: BorderRadius.circular(15)),
                   child: Column(
                     children: <Widget>[
-                      Text('FAQ', style: Theme.of(context).textTheme.title),
+                      Text('FAQ', style: Theme.of(context).textTheme.headline6),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ExpansionPanelList(

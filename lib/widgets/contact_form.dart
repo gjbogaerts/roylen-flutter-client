@@ -20,7 +20,7 @@ class _ContactFormState extends State<ContactForm> {
       return;
     }
     _formKey.currentState.save();
-    var _result = await Provider.of<Messages>(context)
+    var _result = await Provider.of<Messages>(context, listen: false)
         .sendContactMessage(_message, _email, _name);
     if (_result) {
       setState(() {
@@ -42,7 +42,7 @@ class _ContactFormState extends State<ContactForm> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'Je boodschap is verstuurd',
-                style: Theme.of(context).textTheme.body2,
+                style: Theme.of(context).textTheme.bodyText2,
               ),
             ),
           )
@@ -52,7 +52,7 @@ class _ContactFormState extends State<ContactForm> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     _error,
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
               )
@@ -63,7 +63,7 @@ class _ContactFormState extends State<ContactForm> {
                   child: Column(
                     children: <Widget>[
                       Text('Contact met Roylen',
-                          style: Theme.of(context).textTheme.title),
+                          style: Theme.of(context).textTheme.headline6),
                       TextFormField(
                         decoration: InputDecoration(labelText: 'Je naam'),
                         validator: (val) =>

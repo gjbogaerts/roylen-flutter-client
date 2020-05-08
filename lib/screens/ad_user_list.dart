@@ -65,15 +65,16 @@ class _AdUserListState extends State<AdUserList> {
             color: Theme.of(ctx).accentColor,
             textColor: Theme.of(ctx).primaryColor,
             onPressed: () async {
-              var result = await Provider.of<Ads>(ctx).removeAd(adId);
+              var result =
+                  await Provider.of<Ads>(ctx, listen: false).removeAd(adId);
               setState(() {
                 _isInit = true;
               });
               if (result) {
-                Provider.of<Toaster>(context)
+                Provider.of<Toaster>(context, listen: false)
                     .setMessage('Je advertentie is verwijderd.');
               } else {
-                Provider.of<Toaster>(context)
+                Provider.of<Toaster>(context, listen: false)
                     .setMessage('Je advertentie kon niet worden verwijderd.');
               }
               Navigator.of(ctx).pop();
@@ -113,7 +114,7 @@ class _AdUserListState extends State<AdUserList> {
                         children: <Widget>[
                           Text(
                             'Je hebt nog geen advertenties aangemaakt.',
-                            style: Theme.of(context).textTheme.body2,
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                           RaisedButton(
                             onPressed: () {
@@ -130,7 +131,7 @@ class _AdUserListState extends State<AdUserList> {
                   : Builder(
                       builder: (context) {
                         WidgetsBinding.instance.addPostFrameCallback((_) =>
-                            Provider.of<Toaster>(context)
+                            Provider.of<Toaster>(context, listen: false)
                                 .showSnackBar(context));
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -151,8 +152,9 @@ class _AdUserListState extends State<AdUserList> {
                                     children: <Widget>[
                                       Text(
                                         _userAds[idx].title,
-                                        style:
-                                            Theme.of(context).textTheme.body2,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
                                       ),
                                       Row(
                                         children: <Widget>[

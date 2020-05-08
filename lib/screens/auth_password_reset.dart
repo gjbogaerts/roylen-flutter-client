@@ -101,8 +101,8 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
       return;
     }
     _formKey.currentState.save();
-    var _result =
-        await Provider.of<Auth>(context).startResetPasswordSequence(_email);
+    var _result = await Provider.of<Auth>(context, listen: false)
+        .startResetPasswordSequence(_email);
     if (!_result) {
       _showDialog('Mislukt'.i18n, 'Excuus, er ging iets mis'.i18n);
     } else {
@@ -119,7 +119,7 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
     }
     _formKey2.currentState.save();
     print(_pw2);
-    var _result = await Provider.of<Auth>(context)
+    var _result = await Provider.of<Auth>(context, listen: false)
         .finishResetPasswordSequence(_resetCode, _pw);
     if (!_result) {
       _showDialog('Mislukt'.i18n, 'Excuus, er ging iets mis'.i18n);
@@ -148,7 +148,7 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
                   child: Text(
                     'Vul hier eerst je emailadres in, en klik dan op verzenden. Je krijgt dan een code toegestuurd waarmee je hieronder een nieuw wachtwoord kunt aanmaken.'
                         .i18n,
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
                 Form(

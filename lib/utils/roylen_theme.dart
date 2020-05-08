@@ -34,21 +34,21 @@ class RoylenTheme {
           minWidth: 100,
           height: 36),
       primaryTextTheme: TextTheme(
-        title: TextStyle(
+        headline6: TextStyle(
             fontSize: 28.0, fontFamily: 'QuickSand', color: Color(0xfffefaee)),
       ),
       textTheme: TextTheme(
-        title: TextStyle(
+        headline6: TextStyle(
           fontSize: 36.0,
           fontFamily: 'Quicksand',
           color: Color(0xff053505),
         ),
-        body1: TextStyle(
+        bodyText2: TextStyle(
           fontSize: 16.0,
           fontFamily: 'Dosis',
           color: Color(0xff053505),
         ),
-        body2: TextStyle(
+        bodyText1: TextStyle(
           fontSize: 18.0,
           fontFamily: 'Dosis',
           fontWeight: FontWeight.bold,

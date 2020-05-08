@@ -1,4 +1,4 @@
-package com.example.client
+package nl.raker.roylen
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

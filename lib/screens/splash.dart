@@ -39,7 +39,7 @@ class SplashScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
-                        .body2
+                        .bodyText2
                         .copyWith(fontSize: 24, fontFamily: 'QuickSand'),
                   ),
                 ),

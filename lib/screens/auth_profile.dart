@@ -74,8 +74,8 @@ class _AuthProfileState extends State<AuthProfile> {
     if (_email == null && _imageLocation == null) {
       return;
     }
-    _profileChangeAttemptResult =
-        Provider.of<Auth>(context).changeProfile(_imageLocation, _email);
+    _profileChangeAttemptResult = Provider.of<Auth>(context, listen: false)
+        .changeProfile(_imageLocation, _email);
   }
 
   @override
@@ -99,7 +99,7 @@ class _AuthProfileState extends State<AuthProfile> {
                         padding: EdgeInsets.all(8),
                         child: Text(
                           _user.screenName,
-                          style: Theme.of(context).textTheme.body2,
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                       ),
                       _pic != null

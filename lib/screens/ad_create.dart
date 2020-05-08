@@ -38,10 +38,11 @@ class _AdCreateState extends State<AdCreate> {
   Future<void> _saveForm(Map<String, dynamic> formData) async {
     formData['latitude'] = _locationData.latitude;
     formData['longitude'] = _locationData.longitude;
-    var result =
-        await Provider.of<Ads>(context).createAd(formData, _user.token);
+    var result = await Provider.of<Ads>(context, listen: false)
+        .createAd(formData, _user.token);
     if (result) {
-      Provider.of<Toaster>(context).setMessage('Je advertentie is aangemaakt');
+      Provider.of<Toaster>(context, listen: false)
+          .setMessage('Je advertentie is aangemaakt');
       Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
     }
   }
@@ -86,7 +87,7 @@ class _AdCreateState extends State<AdCreate> {
                       alignment: Alignment.center,
                       child: Text(
                         'Plaats je advertentie',
-                        style: Theme.of(context).textTheme.title,
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                     ),
                     AdForm(_saveForm)
@@ -125,7 +126,7 @@ class _MyDialogState extends State<MyDialog> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Text('Log in', style: Theme.of(context).textTheme.body2),
+          child: Text('Log in', style: Theme.of(context).textTheme.bodyText2),
           color: Theme.of(context).accentColor,
           textColor: Theme.of(context).primaryColor,
           onPressed: () {

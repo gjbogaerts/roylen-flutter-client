@@ -16,26 +16,13 @@ class AdsFilters extends StatefulWidget {
 }
 
 class _AdsFiltersState extends State<AdsFilters> {
-  List<Ad> adsData;
-  bool _isInit = true;
-  bool _isLoading = false;
+  Future<List<Ad>> adsData;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var adsProvider = Provider.of<Ads>(context);
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-        Provider.of<Ads>(context)
-            .fetchAndSetFilteredItems(widget._elements)
-            .then((_) {
-          adsData = adsProvider.filteredItems;
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
+    adsData =
+        Provider.of<Ads>(context).fetchAndSetFilteredItems(widget._elements);
   }
 
   @override
@@ -43,11 +30,13 @@ class _AdsFiltersState extends State<AdsFilters> {
     return Stack(
       children: <Widget>[
         Background(),
-        _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : AdsGrid(adsData),
+        FutureBuilder(
+            future: adsData,
+            builder: (ctx, result) {
+              return result.connectionState == ConnectionState.waiting
+                  ? Center(child: CircularProgressIndicator())
+                  : AdsGrid(result.data);
+            })
       ],
     );
   }

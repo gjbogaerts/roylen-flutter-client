@@ -52,7 +52,7 @@ class Ads with ChangeNotifier {
     return _items.firstWhere((it) => it.id == id);
   }
 
-  Future<void> fetchAndSetFilteredItems(Map _filter) async {
+  Future<List<Ad>> fetchAndSetFilteredItems(Map _filter) async {
     _mode = ReturnMode.Filtered;
     _filteredItems = [];
     var _category = _filter['category'] == null ||
@@ -119,8 +119,9 @@ class Ads with ChangeNotifier {
         print('Fout: $err');
       }
     }
+    return _filteredItems;
     // print('after distance: ${_filteredItems.length}');
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> fetchAndSetSearchItems(String q) async {

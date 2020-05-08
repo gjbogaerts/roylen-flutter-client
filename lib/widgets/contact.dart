@@ -22,11 +22,12 @@ class _ContactState extends State<Contact> {
       return;
     }
     _formKey.currentState.save();
-    var _sendResult = await Provider.of<Messages>(context).sendMessage(
-        adId: widget._ad.id,
-        adTitle: widget._ad.title,
-        message: _messageToSend,
-        toId: widget._ad.creator.id);
+    var _sendResult = await Provider.of<Messages>(context, listen: false)
+        .sendMessage(
+            adId: widget._ad.id,
+            adTitle: widget._ad.title,
+            message: _messageToSend,
+            toId: widget._ad.creator.id);
     if (!_sendResult) {
       await showDialog(
         context: context,

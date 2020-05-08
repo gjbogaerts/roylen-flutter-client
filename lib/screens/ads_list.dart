@@ -22,8 +22,9 @@ class _AdsListState extends State<AdsList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     var adsProvider = Provider.of<Ads>(context);
-    if (_isInit) {
+    if (_isInit && mounted) {
       setState(() {
         _isLoading = true;
       });
@@ -33,8 +34,9 @@ class _AdsListState extends State<AdsList> {
           _isLoading = false;
         });
       });
+
+      _isInit = false;
     }
-    _isInit = false;
   }
 
   @override
@@ -47,8 +49,9 @@ class _AdsListState extends State<AdsList> {
                 child: CircularProgressIndicator(),
               )
             : Builder(builder: (BuildContext context) {
-                WidgetsBinding.instance.addPostFrameCallback(
-                    (_) => Provider.of<Toaster>(context).showSnackBar(context));
+                WidgetsBinding.instance.addPostFrameCallback((_) =>
+                    Provider.of<Toaster>(context, listen: false)
+                        .showSnackBar(context));
                 return AdsGrid(adsData);
               }),
       ],
