@@ -142,7 +142,7 @@ class Ads with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetItems() async {
+  Future<List<Ad>> fetchAndSetItems() async {
     _mode = ReturnMode.All;
     final url = baseUrl + '/api/ads';
     try {
@@ -154,10 +154,10 @@ class Ads with ChangeNotifier {
         loadedAds.add(Ad.fromJson(it));
       });
       _items = loadedAds;
+      return loadedAds;
     } catch (err) {
       print('Fout: Error $err');
-    } finally {
-      notifyListeners();
+      throw Exception(err);
     }
   }
 

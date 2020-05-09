@@ -16,45 +16,27 @@ class AdsList extends StatefulWidget {
 
 class _AdsListState extends State<AdsList> {
   List<Ad> adsData = [];
-  bool _isInit = true;
-  bool _isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    var adsProvider = Provider.of<Ads>(context);
-    if (_isInit && mounted) {
-      setState(() {
-        _isLoading = true;
-      });
-      adsProvider.fetchAndSetItems().then((_) {
-        adsData = adsProvider.items;
-        setState(() {
-          _isLoading = false;
-        });
-      });
-
-      _isInit = false;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Background(),
-        _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Builder(builder: (BuildContext context) {
-                WidgetsBinding.instance.addPostFrameCallback((_) =>
-                    Provider.of<Toaster>(context, listen: false)
-                        .showSnackBar(context));
-                return AdsGrid(adsData);
-              }),
-      ],
-    );
+    return FutureBuilder(
+        future: Provider.of<Ads>(context).fetchAndSetItems(),
+        builder: (context, adsResult) {
+          return Stack(
+            children: <Widget>[
+              Background(),
+              adsResult.connectionState == ConnectionState.waiting
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Builder(builder: (BuildContext context) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) =>
+                          Provider.of<Toaster>(context, listen: false)
+                              .showSnackBar(context));
+                      return AdsGrid(adsResult.data);
+                    }),
+            ],
+          );
+        });
   }
 }
