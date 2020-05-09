@@ -10,6 +10,7 @@ import '../widgets/ad_form.dart';
 import '../screens/auth.dart' as AuthScreen;
 import '../screens/home.dart';
 import '../widgets/background.dart';
+import '../widgets/my_dialog.dart';
 
 class AdCreate extends StatefulWidget {
   static const routeName = '/add-create';
@@ -30,8 +31,9 @@ class _AdCreateState extends State<AdCreate> {
     if (provider.isAuth) {
       _user = provider.getUser();
       // print(_user.token);
+
+      _checkLocationPermissions();
     }
-    _checkLocationPermissions();
     super.didChangeDependencies();
   }
 
@@ -79,7 +81,11 @@ class _AdCreateState extends State<AdCreate> {
       children: <Widget>[
         Background(),
         _user == null
-            ? MyDialog(navigateToAuth)
+            ? MyDialog(
+                navigateToAuth,
+                'Niet ingelogd',
+                'Je moet ingelogd zijn om een advertentie te kunnen maken.',
+                'Log in')
             : SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
@@ -94,45 +100,6 @@ class _AdCreateState extends State<AdCreate> {
                   ],
                 ),
               ),
-      ],
-    );
-  }
-}
-
-class MyDialog extends StatefulWidget {
-  final Function _callback;
-  MyDialog(this._callback);
-
-  @override
-  _MyDialogState createState() => _MyDialogState();
-}
-
-class _MyDialogState extends State<MyDialog> {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      elevation: 25,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: Text('Niet ingelogd'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text('Je moet ingelogd zijn om een advertentie te kunnen maken.')
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        RaisedButton(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Text('Log in', style: Theme.of(context).textTheme.bodyText2),
-          color: Theme.of(context).accentColor,
-          textColor: Theme.of(context).primaryColor,
-          onPressed: () {
-            widget._callback();
-          },
-        )
       ],
     );
   }

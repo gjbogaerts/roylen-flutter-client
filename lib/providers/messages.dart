@@ -58,7 +58,7 @@ class Messages with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetMessages() async {
+  Future<List<Message>> fetchAndSetMessages() async {
     var _url = '$baseUrl/api/message/${_user.id}';
     try {
       var _response = await http.get(_url, headers: {
@@ -72,9 +72,12 @@ class Messages with ChangeNotifier {
         _loadedMessages.add(Message.fromJson(it));
       });
       _items = _loadedMessages;
-      notifyListeners();
+      return _loadedMessages;
+      // notifyListeners();
     } catch (err) {
       print(err);
+      throw Exception();
+      // return null;
     }
   }
 

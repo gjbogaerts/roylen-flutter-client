@@ -266,7 +266,6 @@ class Ads with ChangeNotifier {
       adsData.forEach((it) {
         loadedAds.add(Ad.fromJson(it));
       });
-      notifyListeners();
       return loadedAds;
     } catch (err) {
       print('Fout: Error $err');
