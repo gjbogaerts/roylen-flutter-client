@@ -161,7 +161,7 @@ class Ads with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetFavoriteItems() async {
+  Future<List<Ad>> fetchAndSetFavoriteItems() async {
     _mode = ReturnMode.Favorites;
     final _url = baseUrl + '/api/ads/saved/${_user.id}';
     final _token = _user.token;
@@ -174,9 +174,10 @@ class Ads with ChangeNotifier {
         _loadedAds.add(Ad.fromJson(it));
       });
       _favoriteItems = _loadedAds;
-      notifyListeners();
+      return _loadedAds;
     } catch (err) {
       print('Fout: ' + err.toString());
+      throw Exception(err.toString());
     }
   }
 

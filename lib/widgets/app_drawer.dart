@@ -10,6 +10,7 @@ import '../screens/info.dart';
 import '../screens/messages.dart';
 import '../screens/ad_user_list.dart';
 import '../screens/auth_profile.dart';
+import '../translations/app_drawer.i18n.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -34,14 +35,14 @@ class _AppDrawerState extends State<AppDrawer> {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text('Meer opties:'),
+            title: Text('Meer opties:'.i18n),
             automaticallyImplyLeading: true,
           ),
           Divider(),
           ListTile(
             leading: Icon(Icons.list),
-            title: Text('Advertentie overzicht'),
-            subtitle: Text('Alle advertenties, ongefilterd.'),
+            title: Text('Advertentie overzicht'.i18n),
+            subtitle: Text('Alle advertenties, ongefilterd.'.i18n),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
             },
@@ -50,7 +51,7 @@ class _AppDrawerState extends State<AppDrawer> {
           _user == null
               ? ListTile(
                   leading: Icon(Icons.account_circle),
-                  title: Text('Inloggen/registreren'),
+                  title: Text('Inloggen/registreren'.i18n),
                   onTap: () {
                     Navigator.of(context).pushReplacementNamed(Auth.routeName,
                         arguments: {'registering': false});
@@ -60,7 +61,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   children: <Widget>[
                     ListTile(
                       leading: Icon(Icons.exit_to_app),
-                      title: Text('Uitloggen'),
+                      title: Text('Uitloggen'.i18n),
                       onTap: () {
                         Navigator.of(context).pop();
                         Navigator.of(context).pushReplacementNamed('/');
@@ -78,8 +79,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                 : '$baseUrl${_user.avatar}'),
                         radius: 15,
                       ),
-                      title: Text('Je profiel'),
-                      subtitle: Text('Wijzig je email of je avatar'),
+                      title: Text('Je profiel'.i18n),
+                      subtitle: Text('Wijzig je email of je avatar.'.i18n),
                       onTap: () {
                         Navigator.of(context)
                             .pushReplacementNamed(AuthProfile.routeName);
@@ -88,9 +89,10 @@ class _AppDrawerState extends State<AppDrawer> {
                     Divider(),
                     ListTile(
                       leading: Icon(Icons.message),
-                      title: Text('Je boodschappen'),
+                      title: Text('Je boodschappen'.i18n),
                       subtitle: Text(
-                          'Lees je boodschappen van andere gebruikers, en beantwoord ze hier.'),
+                          'Lees je boodschappen van andere gebruikers, en beantwoord ze hier.'
+                              .i18n),
                       onTap: () {
                         Navigator.of(context)
                             .pushReplacementNamed(MessagesScreen.routeName);
@@ -99,9 +101,9 @@ class _AppDrawerState extends State<AppDrawer> {
                     Divider(),
                     ListTile(
                         leading: Icon(Icons.view_list),
-                        title: Text('Jouw advertenties'),
-                        subtitle:
-                            Text('Bewerk of verwijder je eigen advertenties'),
+                        title: Text('Jouw advertenties'.i18n),
+                        subtitle: Text(
+                            'Bewerk of verwijder je eigen advertenties.'.i18n),
                         onTap: () {
                           Navigator.of(context)
                               .pushReplacementNamed(AdUserList.routeName);
@@ -111,8 +113,8 @@ class _AppDrawerState extends State<AppDrawer> {
           Divider(),
           ListTile(
             leading: Icon(Icons.info),
-            title: Text('Over Roylen'),
-            subtitle: Text('Contact, privacy, info en wat dies meer zij'),
+            title: Text('Over Roylen'.i18n),
+            subtitle: Text('Contact, privacy, info en wat dies meer zij.'.i18n),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(InfoScreen.routeName);
             },

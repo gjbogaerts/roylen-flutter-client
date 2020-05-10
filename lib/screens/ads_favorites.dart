@@ -19,29 +19,18 @@ class AdsFavorites extends StatefulWidget {
 
 class _AdsFavoritesState extends State<AdsFavorites> {
   List<Ad> adsData;
-  bool _isInit = true;
-  bool _isLoading = false;
   User _user;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var adsProvider = Provider.of<Ads>(context);
     var authProvider = Provider.of<Auth>(context);
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-        if (authProvider.isAuth) {
-          _user = authProvider.getUser();
 
-          Provider.of<Ads>(context).fetchAndSetFavoriteItems().then((_) {
-            adsData = adsProvider.favoriteItems;
-            _isLoading = false;
-          });
-        }
-      });
-    }
-    _isInit = false;
+    setState(() {
+      if (authProvider.isAuth) {
+        _user = authProvider.getUser();
+      }
+    });
   }
 
   void navigateToAuth() {
@@ -60,11 +49,16 @@ class _AdsFavoritesState extends State<AdsFavorites> {
         : Stack(
             children: <Widget>[
               Background(),
-              _isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : AdsGrid(adsData),
+              FutureBuilder(
+                future: Provider.of<Ads>(context).fetchAndSetFavoriteItems(),
+                builder: (context, result) {
+                  return result.connectionState == ConnectionState.waiting
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : AdsGrid(result.data);
+                },
+              )
             ],
           );
   }
