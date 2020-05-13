@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>client</string>
+	<string>Roylen</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -19,11 +19,15 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Als je foto's wil gebruiken die je zelf maakt, moet je Roylen toegang geven tot je camera.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We willen graag je locatie weten om het gemakkelijker te maken advertenties in je buurt te vinden.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We willen graag je locatie weten om het gemakkelijker te maken advertenties in je buurt te vinden.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We willen graag je locatie weten om het gemakkelijker te maken advertenties in je buurt te vinden.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
