@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/server_interface.dart';
@@ -206,17 +206,21 @@ class Auth with ChangeNotifier {
       _userId = _userData['_id'];
       _avatar = avatar;
       _nix = _userData['nix'];
-      var contentType = ContentType.getContentType(avatar);
+
       var _req =
           http.MultipartRequest('POST', Uri.parse('$baseUrl/api/profile'));
-      var file = await http.MultipartFile.fromPath('filename', avatar,
-          contentType: MediaType.parse(contentType));
-      _req.files.add(file);
+      if (avatar.isNotEmpty) {
+        var contentType = ContentType.getContentType(avatar);
+        var file = await http.MultipartFile.fromPath('filename', avatar,
+            contentType: MediaType.parse(contentType));
+
+        _req.files.add(file);
+      }
+
       _req.headers.putIfAbsent('Authorization', () => 'Bearer $_token');
       _req.headers.putIfAbsent('x-api-key', () => apiKey);
       _req.fields['email'] = email;
       var _imageData = await _req.send();
-
       if (_imageData.statusCode != 200) {
         print('no imagedata');
         return false;

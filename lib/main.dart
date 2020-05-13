@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 //screens
 import './screens/ads_list.dart';
 import './screens/ads_search.dart';
@@ -24,12 +25,28 @@ import './providers/ads.dart';
 import './providers/auth.dart' as AuthProvider;
 import './providers/toaster.dart';
 import './providers/messages.dart';
+//error reporting
+import './utils/error_reporting.dart';
 
-void main() {
+ErrorReporting sentry = ErrorReporting();
+
+Future<void> main() async {
+  FlutterError.onError = (FlutterErrorDetails details) async {
+    if (sentry.isInDebugMode) {
+      FlutterError.dumpErrorToConsole(details);
+    } else {
+      Zone.current.handleUncaughtError(details.exception, details.stack);
+    }
+  };
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(Roylen());
+  runZoned<Future<Null>>(() async {
+    runApp(Roylen());
+  }, onError: (error, stackTrace) async {
+    await (sentry.reportError(error, stackTrace));
+  });
+  // runApp(Roylen());
 }
 
 class Roylen extends StatelessWidget {
