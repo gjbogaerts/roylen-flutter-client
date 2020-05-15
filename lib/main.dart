@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 //screens
 import './screens/ads_list.dart';
@@ -18,6 +19,7 @@ import './screens/messages.dart';
 import './screens/ad_user_list.dart';
 import './screens/auth_password_reset.dart';
 import './screens/auth_profile.dart';
+import './screens/on_boarding.dart';
 //theme
 import './utils/roylen_theme.dart';
 //providers
@@ -39,19 +41,37 @@ Future<void> main() async {
     }
   };
   WidgetsFlutterBinding.ensureInitialized();
+  var prefs = await SharedPreferences.getInstance();
+  bool showOnBoarding;
+  if (prefs.containsKey('showOnBoarding')) {
+    showOnBoarding = prefs.getBool('showOnBoarding');
+  } else {
+    showOnBoarding = true;
+  }
+  prefs.setBool('showOnBoarding', false);
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runZoned<Future<Null>>(() async {
-    runApp(Roylen());
-  }, onError: (error, stackTrace) async {
+  runZonedGuarded(() async {
+    runApp(Roylen(showOnBoarding));
+  }, (error, stackTrace) async {
     await (sentry.reportError(error, stackTrace));
   });
+  // runZoned<Future<Null>>(() async {
+  //   runApp(Roylen(showOnBoarding));
+  // }, onError: (error, stackTrace) async {
+  //   await (sentry.reportError(error, stackTrace));
+  // });
   // runApp(Roylen());
 }
 
 class Roylen extends StatelessWidget {
+  final bool _showOnBoarding;
+  Roylen(this._showOnBoarding);
+
   @override
   Widget build(BuildContext context) {
+    // _showOnBoarding = true;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider.Auth()),
@@ -71,15 +91,18 @@ class Roylen extends StatelessWidget {
           return MaterialApp(
             title: 'Roylen',
             theme: RoylenTheme.getThemeData(),
-            home: _authData.isAuth
-                ? I18n(child: HomeScreen())
-                : FutureBuilder(
-                    future: _authData.tryAutoLogin(),
-                    builder: (ctx, authResult) =>
-                        authResult.connectionState == ConnectionState.waiting
-                            ? I18n(child: SplashScreen())
-                            : I18n(child: HomeScreen()),
-                  ),
+            home: _showOnBoarding
+                ? I18n(child: OnBoarding())
+                : _authData.isAuth
+                    ? I18n(child: HomeScreen())
+                    : FutureBuilder(
+                        future: _authData.tryAutoLogin(),
+                        builder: (ctx, authResult) =>
+                            authResult.connectionState ==
+                                    ConnectionState.waiting
+                                ? I18n(child: SplashScreen())
+                                : I18n(child: HomeScreen()),
+                      ),
             routes: {
               HomeScreen.routeName: (ctx) => HomeScreen(),
               AdsList.routeName: (ctx) => AdsList(),
