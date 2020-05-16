@@ -1,16 +1,11 @@
-# client
+# roylen client
 
-A new Flutter project.
+App for the exchange of children's toys and clothings. Made with love for the planet and for people, in honour of dougnut economics, circular economics, and all fresh moms and dads of the world that are wondering if their kids are going to need new clothes every three months.
 
-## Getting Started
+## source code
 
-This project is a starting point for a Flutter application.
+Built in Flutter.
 
-A few resources to get you started if this is your first Flutter project:
+### moved
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+14-02-20: moved to another git host to facilitate integration with bug tracking software tools.
