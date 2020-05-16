@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/server_interface.dart';
@@ -90,6 +91,9 @@ class _AdsDetailState extends State<AdsDetail> {
   Widget build(BuildContext context) {
     final ad = Provider.of<Ads>(context)
         .getById(ModalRoute.of(context).settings.arguments);
+    final _dateAdded = DateFormat.yMEd()
+        .addPattern('H:m')
+        .format(DateTime.parse(ad.dateAdded));
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -162,7 +166,7 @@ class _AdsDetailState extends State<AdsDetail> {
                       width: 10,
                     ),
                     Text(
-                      'Aangemaakt door: ${ad.creator.screenName}',
+                      'Aangemaakt door: ${ad.creator.screenName} \nop $_dateAdded',
                       style: TextStyle(fontSize: 16),
                     ),
                   ],
@@ -175,7 +179,7 @@ class _AdsDetailState extends State<AdsDetail> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  'Beschrijving: ${ad.description}',
+                  '${ad.description}',
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 16),
                   softWrap: true,
