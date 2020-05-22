@@ -3,10 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/server_interface.dart';
-import '../widgets/contact.dart';
+import '../models/user.dart';
 import '../providers/ads.dart';
 import '../providers/auth.dart';
-import '../models/user.dart';
+import '../widgets/contact.dart';
+import '../widgets/offer.dart';
 import '../widgets/background.dart';
 
 class AdsDetail extends StatefulWidget {
@@ -49,13 +50,28 @@ class _AdsDetailState extends State<AdsDetail> {
   void _contactCreator(ad) {
     if (_user != null) {
       showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         context: context,
-        builder: (ctx) => Contact(_user, ad),
+        builder: (context) => Contact(_user, ad),
         isScrollControlled: true,
       );
     } else {
       _showDialog(
           'Je moet ingelogd zijn om een boodschap aan deze adverteerder te kunnen sturen.',
+          title: 'Graag inloggen');
+    }
+  }
+
+  void _makeOffer(ad) {
+    if (_user != null) {
+      showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        context: context,
+        builder: (context) => Offer(_user, ad),
+        isScrollControlled: true,
+      );
+    } else {
+      _showDialog('Je moet ingelogd zijn om een bod te kunnen uitbrengen.',
           title: 'Graag inloggen');
     }
   }
@@ -135,17 +151,6 @@ class _AdsDetailState extends State<AdsDetail> {
                       style: TextStyle(fontSize: 20),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: RaisedButton(
-                        onPressed: () {
-                          _contactCreator(ad);
-                        },
-                        // color: Theme.of(context).accentColor,
-                        child: Text('CONTACT'),
-                      ),
-                    ),
-                    SizedBox(width: 10),
                     Text(
                       ad.category,
                       style: TextStyle(fontSize: 20),
@@ -154,7 +159,7 @@ class _AdsDetailState extends State<AdsDetail> {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Container(
                 child: Row(
                   children: <Widget>[
@@ -184,6 +189,26 @@ class _AdsDetailState extends State<AdsDetail> {
                   style: TextStyle(fontSize: 16),
                   softWrap: true,
                 ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {
+                      _contactCreator(ad);
+                    },
+                    child: Text('CONTACT'),
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      _makeOffer(ad);
+                    },
+                    child: Text('BIED NIX'),
+                  )
+                ],
               ),
             ],
           ),

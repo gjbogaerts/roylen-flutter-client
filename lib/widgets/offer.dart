@@ -2,50 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../models/ad.dart';
-import '../providers/messages.dart';
+import '../providers/offers.dart';
 
-class Contact extends StatefulWidget {
+class Offer extends StatefulWidget {
   final User _user;
   final Ad _ad;
-  Contact(this._user, this._ad);
+  Offer(this._user, this._ad);
 
   @override
-  _ContactState createState() => _ContactState();
+  _OfferState createState() => _OfferState();
 }
 
-class _ContactState extends State<Contact> {
+class _OfferState extends State<Offer> {
   var _formKey = GlobalKey<FormState>();
-  String _messageToSend;
+  String _offeredNix;
 
-  void sendMessage() async {
+  void _sendOffer() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
-    var _sendResult = await Provider.of<Messages>(context, listen: false)
-        .sendMessage(
-            adId: widget._ad.id,
-            adTitle: widget._ad.title,
-            message: _messageToSend,
-            toId: widget._ad.creator.id);
-    if (!_sendResult) {
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Er ging iets mis'),
-          content: Text(Provider.of<Messages>(context).err),
-        ),
-      );
-    } else {
+    try {
+      await Provider.of<Offers>(context, listen: false).setOffer(
+          ad: widget._ad,
+          fromUser: widget._user,
+          offerAmount: int.parse(_offeredNix));
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Verzonden'),
           content: Text(
-              'Je bericht is verzonden. Hopelijk krijg je een mooie reactie terug...'),
+              'Je bod is verzonden. Hopelijk krijg je een mooie reactie terug...'),
+        ),
+      );
+    } catch (err) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Er ging iets mis: $err'),
+          content: Text(Provider.of<Offers>(context).err.toString()),
         ),
       );
     }
+
     Navigator.of(context).pop();
   }
 
@@ -66,26 +65,32 @@ class _ContactState extends State<Contact> {
                     TextFormField(
                       autofocus: true,
                       readOnly: true,
+                      enabled: false,
                       decoration: InputDecoration(labelText: 'Je naam'),
                       initialValue: widget._user.screenName,
                     ),
                     TextFormField(
                       decoration: InputDecoration(labelText: 'Je email-adres'),
                       readOnly: true,
+                      enabled: false,
                       initialValue: widget._user.email,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Je boodschap'),
-                      maxLines: 3,
-                      minLines: 2,
+                      decoration: InputDecoration(
+                          labelText: 'Nix',
+                          hintText: 'Hoeveel nix wil je bieden?'),
+                      keyboardType: TextInputType.number,
                       validator: (val) {
-                        if (val.isEmpty) {
-                          return 'Je moet een boodschap achterlaten.';
+                        if (val.isEmpty ||
+                            int.tryParse(val) == null ||
+                            int.tryParse(val) < 0 ||
+                            int.tryParse(val) > 999) {
+                          return 'Vul een bod in tussen 0 en 1000 nix.';
                         }
                         return null;
                       },
                       onSaved: (val) {
-                        _messageToSend = val;
+                        _offeredNix = val;
                       },
                     ),
                     Row(
@@ -102,7 +107,7 @@ class _ContactState extends State<Contact> {
                           color: Theme.of(context).accentColor,
                           textColor: Theme.of(context).primaryColor,
                           child: Text('Versturen'),
-                          onPressed: sendMessage,
+                          onPressed: _sendOffer,
                         )
                       ],
                     )

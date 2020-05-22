@@ -18,4 +18,15 @@ class User {
     this.token = '',
     this.nix = 0,
   });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        screenName: json['screenName'],
+        email: json['email'],
+        avatar: json['avatar'],
+        password: '',
+        id: json['_id'],
+        token: json['token'],
+        nix: json['nix']);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:i18n_extension/i18n_widget.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -27,6 +28,7 @@ import './providers/ads.dart';
 import './providers/auth.dart' as AuthProvider;
 import './providers/toaster.dart';
 import './providers/messages.dart';
+import './providers/offers.dart';
 //error reporting
 import './utils/error_reporting.dart';
 
@@ -77,9 +79,15 @@ class Roylen extends StatelessWidget {
         ChangeNotifierProvider.value(value: AuthProvider.Auth()),
         ChangeNotifierProvider.value(value: Toaster()),
         ChangeNotifierProxyProvider<AuthProvider.Auth, Messages>(
-            create: (ctx) => Messages(null, []),
-            update: (ctx, auth, previousMessages) =>
-                Messages(auth.getUser(), previousMessages.items)),
+          create: (ctx) => Messages(null, []),
+          update: (ctx, auth, previousMessages) =>
+              Messages(auth.getUser(), previousMessages.items),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider.Auth, Offers>(
+          create: (ctx) => Offers(null, []),
+          update: (ctx, auth, previousOffers) =>
+              Offers(auth.getUser(), previousOffers.offers),
+        ),
         ChangeNotifierProxyProvider<AuthProvider.Auth, Ads>(
           create: (ctx) => Ads(null, []),
           update: (ctx, auth, previousAds) =>
@@ -89,6 +97,15 @@ class Roylen extends StatelessWidget {
       child: Consumer<AuthProvider.Auth>(
         builder: (ctx, _authData, _) {
           return MaterialApp(
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate
+            ],
+            supportedLocales: [
+              const Locale('en', 'US'),
+              const Locale('nl', 'NL')
+            ],
             title: 'Roylen',
             theme: RoylenTheme.getThemeData(),
             home: _showOnBoarding
@@ -100,7 +117,7 @@ class Roylen extends StatelessWidget {
                         builder: (ctx, authResult) =>
                             authResult.connectionState ==
                                     ConnectionState.waiting
-                                ? I18n(child: SplashScreen())
+                                ? SplashScreen()
                                 : I18n(child: HomeScreen()),
                       ),
             routes: {

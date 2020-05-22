@@ -187,8 +187,9 @@ class _AdFormState extends State<AdForm> {
                     validator: (val) {
                       if (val.isEmpty ||
                           int.tryParse(val) == null ||
-                          int.tryParse(val) < 0) {
-                        return 'Voer een prijs in, in positieve gehele getallen.';
+                          int.tryParse(val) < 0 ||
+                          int.tryParse(val) > 999) {
+                        return 'Voer een prijs in tussen 0 en 1000 nix.';
                       }
                       return null;
                     },

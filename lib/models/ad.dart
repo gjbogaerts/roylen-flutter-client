@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import './creator.dart';
 import './location.dart';
+import './offer.dart';
 
 class Ad with ChangeNotifier {
   String id;
@@ -13,6 +14,7 @@ class Ad with ChangeNotifier {
   final String adNature;
   final Location location;
   final String dateAdded;
+  List<Offer> offers;
 
   Ad(
       {this.id = '',
@@ -24,9 +26,17 @@ class Ad with ChangeNotifier {
       @required this.creator,
       @required this.adNature,
       @required this.location,
-      @required this.dateAdded});
+      @required this.dateAdded,
+      this.offers});
 
   factory Ad.fromJson(Map<String, dynamic> json) {
+    var offers = json['offers'] as List<dynamic>;
+    var loadedOffers = <Offer>[];
+    offers.forEach((element) {
+      // print(element);
+      loadedOffers.add(Offer.fromJson(element));
+    });
+
     return Ad(
         adNature: json['adNature'],
         description: json['description'],
@@ -39,6 +49,7 @@ class Ad with ChangeNotifier {
             : null,
         title: json['title'],
         id: json['_id'],
-        dateAdded: json['dateAdded']);
+        dateAdded: json['dateAdded'],
+        offers: loadedOffers);
   }
 }

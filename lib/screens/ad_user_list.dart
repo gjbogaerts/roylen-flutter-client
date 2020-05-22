@@ -6,6 +6,7 @@ import '../providers/auth.dart';
 import '../providers/toaster.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/background.dart';
+import '../widgets/ad_offer.dart';
 import '../screens/home.dart';
 
 class AdUserList extends StatefulWidget {
@@ -108,7 +109,7 @@ class _AdUserListState extends State<AdUserList> {
                                               HomeScreen.routeName,
                                               arguments: {'idx': 4});
                                     },
-                                    color: Theme.of(context).accentColor,
+                                    color: Theme.of(context).primaryColor,
                                     child: Text('Maak een nieuwe advertentie'),
                                   )
                                 ],
@@ -120,11 +121,12 @@ class _AdUserListState extends State<AdUserList> {
                                     (_) => Provider.of<Toaster>(context,
                                             listen: false)
                                         .showSnackBar(context));
-                                return Padding(
+                                return Container(
                                   padding: const EdgeInsets.all(8.0),
                                   child: ListView.builder(
                                       itemCount: result.data.length,
                                       itemBuilder: (context, idx) {
+                                        var curItem = result.data[idx];
                                         return Container(
                                           padding: const EdgeInsets.all(8),
                                           margin: const EdgeInsets.all(8),
@@ -138,11 +140,17 @@ class _AdUserListState extends State<AdUserList> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              Text(
-                                                result.data[idx].title,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2,
+                                              Column(
+                                                children: <Widget>[
+                                                  Text(
+                                                    curItem.title,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText2,
+                                                  ),
+                                                  if (curItem.offers.length > 0)
+                                                    AdOffer(curItem.offers)
+                                                ],
                                               ),
                                               Row(
                                                 children: <Widget>[
@@ -179,8 +187,8 @@ class _AdUserListState extends State<AdUserList> {
                                                     color: Theme.of(context)
                                                         .primaryColor,
                                                     onPressed: () {
-                                                      confirmDeletion(context,
-                                                          result.data[idx].id);
+                                                      confirmDeletion(
+                                                          context, curItem.id);
                                                     },
                                                   )
                                                 ],
