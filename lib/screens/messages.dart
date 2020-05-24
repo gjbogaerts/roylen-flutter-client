@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import '../widgets/app_drawer.dart';
 import '../providers/messages.dart';
 import '../utils/server_interface.dart';
+import '../utils/date_string.dart';
 import '../translations/messages.i18n.dart';
 import '../widgets/background.dart';
 
@@ -202,10 +202,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                 alignment:
                                                     Alignment.bottomRight,
                                                 child: Text(
-                                                    DateFormat.yMEd()
-                                                        .addPattern("H:m")
-                                                        .format(DateTime.parse(
-                                                            _msg.dateSent)),
+                                                    DateString.convert(
+                                                        _msg.dateSent),
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodyText2),

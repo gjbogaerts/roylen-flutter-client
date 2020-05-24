@@ -107,6 +107,15 @@ class _AppDrawerState extends State<AppDrawer> {
                         onTap: () {
                           Navigator.of(context)
                               .pushReplacementNamed(AdUserList.routeName);
+                        }),
+                    Divider(),
+                    ListTile(
+                        leading: Icon(Icons.attach_money),
+                        title: Text('Je biedingen'),
+                        subtitle: Text('De biedingen die je hebt gedaan'),
+                        onTap: () {
+                          print(
+                              'Hier worden alle biedingen getoond die je hebt gedaan en kun je ook een deal closen.');
                         })
                   ],
                 ),

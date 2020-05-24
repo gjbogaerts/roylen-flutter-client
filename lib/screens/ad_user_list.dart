@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../providers/ads.dart';
@@ -19,17 +20,127 @@ class _AdUserListState extends State<AdUserList> {
   User _user;
 
   @override
-  void didChangeDependencies() async {
+  void didChangeDependencies() {
     super.didChangeDependencies();
+    // print('change');
     var authProvider = Provider.of<Auth>(context);
     if (authProvider.isAuth) {
       _user = authProvider.getUser();
     } else {
-      Navigator.of(context).pushReplacementNamed('/');
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        Navigator.of(context).pushReplacementNamed('/');
+      });
     }
   }
 
-  void confirmDeletion(BuildContext ctx, String adId) async {
+  void _showAlert(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('TO DO'),
+              content: Text(
+                  'Je kunt advertenties op dit moment nog niet wijzigen. Hier wordt aan gewerkt. Op dit moment is je enige optie om de advertentie te verwijderen, en daarna een nieuwe aan te maken. Excuus voor de overlast.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+  }
+
+  Center _adInvite(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Je hebt nog geen advertenties aangemaakt.',
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          RaisedButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed(HomeScreen.routeName,
+                  arguments: {'idx': 4});
+            },
+            color: Theme.of(context).primaryColor,
+            child: Text('Maak een nieuwe advertentie'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Builder _adUserList(BuildContext context, AsyncSnapshot result) {
+    return Builder(
+      builder: (context) {
+        WidgetsBinding.instance.addPostFrameCallback((_) =>
+            Provider.of<Toaster>(context, listen: false).showSnackBar(context));
+        return Container(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+              itemCount: result.data.length,
+              itemBuilder: (context, idx) {
+                var curItem = result.data[idx];
+                return Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: Theme.of(context).cardColor,
+                    ),
+                  ),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              curItem.title,
+                              style: Theme.of(context).textTheme.subtitle1,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                    color: Theme.of(context).primaryColor,
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      _showAlert(context);
+                                    }),
+                                IconButton(
+                                  icon: Icon(Icons.delete_forever),
+                                  color: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    _confirmDeletion(context, curItem.id);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        curItem.offers.length > 0
+                            ? AdOffer(curItem.offers, curItem.id, curItem.title)
+                            : Text('Je hebt nog geen aanbiedingen')
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        );
+      },
+    );
+  }
+
+  void _confirmDeletion(BuildContext ctx, String adId) async {
     await showDialog(
       context: ctx,
       barrierDismissible: false,
@@ -93,113 +204,8 @@ class _AdUserListState extends State<AdUserList> {
                   result.connectionState == ConnectionState.waiting
                       ? Center(child: CircularProgressIndicator())
                       : result.data.length == 0
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Je hebt nog geen advertenties aangemaakt.',
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2,
-                                  ),
-                                  RaisedButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed(
-                                              HomeScreen.routeName,
-                                              arguments: {'idx': 4});
-                                    },
-                                    color: Theme.of(context).primaryColor,
-                                    child: Text('Maak een nieuwe advertentie'),
-                                  )
-                                ],
-                              ),
-                            )
-                          : Builder(
-                              builder: (context) {
-                                WidgetsBinding.instance.addPostFrameCallback(
-                                    (_) => Provider.of<Toaster>(context,
-                                            listen: false)
-                                        .showSnackBar(context));
-                                return Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListView.builder(
-                                      itemCount: result.data.length,
-                                      itemBuilder: (context, idx) {
-                                        var curItem = result.data[idx];
-                                        return Container(
-                                          padding: const EdgeInsets.all(8),
-                                          margin: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 1,
-                                                color: Theme.of(context)
-                                                    .cardColor),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Column(
-                                                children: <Widget>[
-                                                  Text(
-                                                    curItem.title,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText2,
-                                                  ),
-                                                  if (curItem.offers.length > 0)
-                                                    AdOffer(curItem.offers)
-                                                ],
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  IconButton(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      icon: Icon(Icons.edit),
-                                                      onPressed: () {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (context) =>
-                                                                    AlertDialog(
-                                                                      title: Text(
-                                                                          'TO DO'),
-                                                                      content: Text(
-                                                                          'Je kunt advertenties op dit moment nog niet wijzigen. Hier wordt aan gewerkt. Op dit moment is je enige optie om de advertentie te verwijderen, en daarna een nieuwe aan te maken. Excuus voor de overlast.'),
-                                                                      actions: <
-                                                                          Widget>[
-                                                                        FlatButton(
-                                                                          child:
-                                                                              Text('OK'),
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                        )
-                                                                      ],
-                                                                    ));
-                                                      }),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                        Icons.delete_forever),
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    onPressed: () {
-                                                      confirmDeletion(
-                                                          context, curItem.id);
-                                                    },
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        );
-                                      }),
-                                );
-                              },
-                            ),
+                          ? _adInvite(context)
+                          : _adUserList(context, result)
                 ],
               );
             }));
