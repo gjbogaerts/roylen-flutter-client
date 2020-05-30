@@ -5,7 +5,9 @@ class MyDialog extends StatefulWidget {
   final String _title;
   final String _text;
   final String _btnText;
-  MyDialog(this._callback, this._title, this._text, this._btnText);
+  final String showCancel;
+  MyDialog(this._callback, this._title, this._text, this._btnText,
+      {this.showCancel = ''});
 
   @override
   _MyDialogState createState() => _MyDialogState();
@@ -24,6 +26,15 @@ class _MyDialogState extends State<MyDialog> {
         ),
       ),
       actions: <Widget>[
+        widget.showCancel == ''
+            ? null
+            : FlatButton(
+                textColor: Theme.of(context).accentColor,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(widget.showCancel),
+              ),
         RaisedButton(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           shape:
