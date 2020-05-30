@@ -10,6 +10,7 @@ import '../screens/info.dart';
 import '../screens/messages.dart';
 import '../screens/ad_user_list.dart';
 import '../screens/auth_profile.dart';
+import '../screens/offer_closing.dart';
 import '../translations/app_drawer.i18n.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -114,8 +115,8 @@ class _AppDrawerState extends State<AppDrawer> {
                         title: Text('Je biedingen'),
                         subtitle: Text('De biedingen die je hebt gedaan'),
                         onTap: () {
-                          print(
-                              'Hier worden alle biedingen getoond die je hebt gedaan en kun je ook een deal closen.');
+                          Navigator.of(context)
+                              .pushReplacementNamed(OfferClosing.routeName);
                         })
                   ],
                 ),

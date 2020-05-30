@@ -26,6 +26,28 @@ class Offers with ChangeNotifier {
     return [...offers];
   }
 
+  Future<bool> finalizeTransaction(
+      String offerId, String from, String to, int amount) async {
+    var _url = '$_baseUrl/api/offers/finalizetransaction';
+    try {
+      var _response = await http.post(_url,
+          headers: {
+            'content-type': 'application/json',
+            'x-api-key': _apiKey,
+            'Authorization': 'Bearer ${forUser.token}'
+          },
+          body: json.encode(
+              {'offerId': offerId, 'from': from, 'to': to, 'amount': amount}));
+      if (_response.statusCode != 200) {
+        throw Exception(json.decode(_response.body));
+      }
+      notifyListeners();
+      return true;
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
+
   Future<bool> acceptOffer(Offer offer, String adTitle) async {
     var _url = '$_baseUrl/api/offers/accept';
     try {
@@ -50,6 +72,32 @@ class Offers with ChangeNotifier {
         throw Exception(json.decode(_response.body));
       }
     } catch (err) {
+      throw Exception(err);
+    }
+  }
+
+  Future<List<Offer>> getOffersFromUser() async {
+    var _url = '$_baseUrl/api/offers/fromUser';
+    try {
+      var _response = await http.get(_url, headers: {
+        'content-type': 'application/json',
+        'x-api-key': _apiKey,
+        'Authorization': 'Bearer ${forUser.token}'
+      });
+      if (_response.statusCode != 200) {
+        print('fout van server');
+        throw Exception(json.encode(_response.body));
+      }
+      var _loadedData = List<Offer>();
+      var _responseData = json.decode(_response.body) as List<dynamic>;
+      // print(_responseData);
+      _responseData.forEach((element) {
+        _loadedData.add(Offer.fromJson(element));
+      });
+      // print(_loadedData);
+      return _loadedData;
+    } catch (err) {
+      print(err);
       throw Exception(err);
     }
   }
