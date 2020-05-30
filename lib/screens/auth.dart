@@ -109,23 +109,26 @@ class _AuthState extends State<Auth> {
   }
 
   Future<void> getImage(String source) async {
-    File imageFile;
+    File _imageFile;
+    PickedFile _pickedFile;
+    var _picker = ImagePicker();
     if (source == 'camera') {
-      imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+      _pickedFile = await _picker.getImage(source: ImageSource.camera);
     } else {
-      imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+      _pickedFile = await _picker.getImage(source: ImageSource.gallery);
     }
-    if (imageFile == null) {
+    if (_pickedFile == null) {
       return;
     }
+    _imageFile = File(_pickedFile.path);
     final appDir = await syspaths.getApplicationDocumentsDirectory();
-    final fileName = path.basename(imageFile.path);
+    final fileName = path.basename(_imageFile.path);
     final imageLocation = '${appDir.path}/$fileName';
     /* final savedImage =  */
-    await imageFile.copy(imageLocation);
+    await _imageFile.copy(imageLocation);
     _authData['avatar'] = imageLocation;
     setState(() {
-      _image = imageFile;
+      _image = _imageFile;
     });
   }
 

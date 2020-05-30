@@ -46,23 +46,26 @@ class _AuthProfileState extends State<AuthProfile> {
   }
 
   void _pickPhoto(String source) async {
-    File imageFile;
+    PickedFile _pickedFile;
+    File _imageFile;
+    var _picker = new ImagePicker();
     if (source == 'camera') {
-      imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+      _pickedFile = await _picker.getImage(source: ImageSource.camera);
     } else {
-      imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+      _pickedFile = await _picker.getImage(source: ImageSource.gallery);
     }
-    if (imageFile == null) {
+    if (_pickedFile == null) {
       return;
     }
     final appDir = await syspaths.getApplicationDocumentsDirectory();
-    final fileName = path.basename(imageFile.path);
+    final fileName = path.basename(_pickedFile.path);
     final imageLocation = '${appDir.path}/$fileName';
+    _imageFile = File(_pickedFile.path);
     /* final savedImage =  */
-    await imageFile.copy(imageLocation);
+    await _imageFile.copy(imageLocation);
     _imageLocation = imageLocation;
     setState(() {
-      _pic = imageFile;
+      _pic = _imageFile;
     });
   }
 
