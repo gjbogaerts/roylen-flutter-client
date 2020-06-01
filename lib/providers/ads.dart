@@ -52,6 +52,24 @@ class Ads with ChangeNotifier {
     return _items.firstWhere((it) => it.id == id);
   }
 
+  Future<List<Ad>> fetchCategoryItems(
+      String categoryType, String categoryName) async {
+    final _url = '$baseUrl/api/ads/category/$categoryType/$categoryName';
+    try {
+      var _response = await http.get(_url,
+          headers: {'content-type': 'application/json', 'x-api-key': apiKey});
+      final adsData = json.decode(_response.body) as List<dynamic>;
+      final List<Ad> loadedAds = [];
+
+      adsData.forEach((it) {
+        loadedAds.add(Ad.fromJson(it));
+      });
+      return loadedAds;
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
   Future<List<Ad>> fetchAndSetFilteredItems(Map _filter) async {
     _mode = ReturnMode.Filtered;
     _filteredItems = [];

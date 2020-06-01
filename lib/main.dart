@@ -11,6 +11,7 @@ import './screens/ads_search.dart';
 import './screens/ads_favorites.dart';
 import './screens/ads_filters.dart';
 import './screens/ads_detail.dart';
+import './screens/ads_categoried_list.dart';
 import './screens/auth.dart' as AuthScreen;
 import './screens/splash.dart';
 import './screens/home.dart';
@@ -125,6 +126,7 @@ class Roylen extends StatelessWidget {
               HomeScreen.routeName: (ctx) => HomeScreen(),
               AdsList.routeName: (ctx) => AdsList(),
               AdsDetail.routeName: (ctx) => AdsDetail(),
+              AdsCategoriedList.routeName: (ctx) => AdsCategoriedList(),
               AuthScreen.Auth.routeName: (ctx) => AuthScreen.Auth(),
               AdCreate.routeName: (ctx) => AdCreate(),
               InfoScreen.routeName: (ctx) => InfoScreen(),

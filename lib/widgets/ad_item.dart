@@ -42,7 +42,7 @@ class AdItem extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(ad.category),
+              Text(ad.mainCategory),
               Text('${ad.virtualPrice.toString()} nix'),
             ],
           ),

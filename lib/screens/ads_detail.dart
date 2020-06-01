@@ -9,6 +9,13 @@ import '../providers/auth.dart';
 import '../widgets/contact.dart';
 import '../widgets/offer.dart';
 import '../widgets/background.dart';
+import './ads_categoried_list.dart';
+
+class ScreenArguments {
+  final String categoryType;
+  final String category;
+  ScreenArguments(this.categoryType, this.category);
+}
 
 class AdsDetail extends StatefulWidget {
   static const routeName = '/ads-detail';
@@ -136,30 +143,124 @@ class _AdsDetailState extends State<AdsDetail> {
           ListView(
             children: <Widget>[
               Container(
-                  child: Image.network(
-                '$baseUrl${ad.picture}',
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.height / 3,
-              )),
+                child: Image.network(
+                  '$baseUrl${ad.picture}',
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height / 3,
+                ),
+              ),
+              SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      '${ad.virtualPrice} nix',
-                      style: TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      ad.category,
-                      style: TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
+                child: Text(
+                  '${ad.virtualPrice} nix',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
                 ),
               ),
               SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(AdsCategoriedList.routeName, arguments: {
+                          'categoryType': 'mainCategory',
+                          'category': ad.mainCategory
+                        });
+                        // print('${ad.mainCategory} pressed');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(),
+                          ),
+                        ),
+                        child: Text('${ad.mainCategory}'),
+                      ),
+                    ),
+                    if (ad.subCategory.isNotEmpty)
+                      Row(
+                        children: <Widget>[
+                          Text(' > '),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  AdsCategoriedList.routeName,
+                                  arguments: {
+                                    'categoryType': 'subCategory',
+                                    'category': ad.subCategory
+                                  });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(),
+                                ),
+                              ),
+                              child: Text('${ad.subCategory}'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (ad.subSubCategory.isNotEmpty)
+                      Row(
+                        children: <Widget>[
+                          Text(' > '),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  AdsCategoriedList.routeName,
+                                  arguments: {
+                                    'categoryType': 'subSubCategory',
+                                    'category': ad.subSubCategory
+                                  });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(),
+                                ),
+                              ),
+                              child: Text('${ad.subSubCategory}'),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.start,
+                ),
+              ),
+              if (ad.ageCategory.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: <Widget>[
+                      Text('Leeftijd: '),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                              AdsCategoriedList.routeName,
+                              arguments: {
+                                'categoryType': 'ageCategory',
+                                'category': ad.ageCategory
+                              });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(),
+                            ),
+                          ),
+                          child: Text('${ad.ageCategory}'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              SizedBox(height: 10),
               Container(
                 child: Row(
                   children: <Widget>[
