@@ -8,6 +8,10 @@ class Ad with ChangeNotifier {
   final String title;
   final String description;
   final String category;
+  final String mainCategory;
+  final String subCategory;
+  final String subSubCategory;
+  final String ageCategory;
   final int virtualPrice;
   final String picture;
   final Creator creator;
@@ -20,7 +24,11 @@ class Ad with ChangeNotifier {
       {this.id = '',
       @required this.title,
       @required this.description,
-      @required this.category,
+      this.category = '',
+      this.mainCategory = '',
+      this.subCategory = '',
+      this.subSubCategory = '',
+      this.ageCategory = '',
       @required this.virtualPrice,
       @required this.picture,
       @required this.creator,
@@ -40,7 +48,14 @@ class Ad with ChangeNotifier {
     return Ad(
         adNature: json['adNature'],
         description: json['description'],
-        category: json['category'],
+        category: json['category'] == null ? '' : json['category'],
+        mainCategory: json['mainCategory'] == null
+            ? json['category']
+            : json['mainCategory'],
+        subCategory: json['subCategory'] == null ? '' : json['subCategory'],
+        subSubCategory:
+            json['subSubCategory'] == null ? '' : json['subSubCategory'],
+        ageCategory: json['ageCategory'] == null ? '' : json['ageCategory'],
         virtualPrice: json['virtualPrice'],
         picture: json['pics'][0],
         creator: Creator.fromJson(json['creator']),

@@ -6,7 +6,9 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/categories.dart';
+// import '../models/categories.dart';
+import 'ad_categories.dart';
+import 'ad_age_category.dart';
 
 enum AdNature { offered, wanted }
 
@@ -20,8 +22,10 @@ class AdForm extends StatefulWidget {
 
 class _AdFormState extends State<AdForm> {
   final _formKey = GlobalKey<FormState>();
-  AdNature _adNature = AdNature.offered;
-  String _selectedCategory;
+  String _selectedMainCategory;
+  String _selectedSubCategory;
+  String _selectedSubSubCategory;
+  String _selectedAgeCategory;
   File _selectedImage;
 /*   bool _hasError = false;
   String _errorString; */
@@ -29,20 +33,41 @@ class _AdFormState extends State<AdForm> {
   var _formData = {
     'title': '',
     'description': '',
-    'category': '',
     'virtualPrice': 0,
-    'adNature': 'offered',
+    'mainCategory': '',
+    'subCategory': '',
+    'subSubCategory': '',
+    'ageCategory': '',
     'picture': '',
     'location': '',
   };
 
   @override
   void initState() {
-    _selectedCategory = Categories.categories.first.value;
     super.initState();
   }
 
+  void _setAdAgeCategory(String age) {
+    _selectedAgeCategory = age;
+  }
+
+  void _setMainCat(String cat) {
+    _selectedMainCategory = cat;
+  }
+
+  void _setSubCat(String cat) {
+    _selectedSubCategory = cat;
+  }
+
+  void _setSubSubCat(String cat) {
+    _selectedSubSubCategory = cat;
+  }
+
   void _saveForm() {
+    _formData['ageCategory'] = _selectedAgeCategory;
+    _formData['mainCategory'] = _selectedMainCategory;
+    _formData['subCategory'] = _selectedSubCategory;
+    _formData['subSubCategory'] = _selectedSubSubCategory;
     if (!_formKey.currentState.validate()) {
 /*       setState(() {
         _hasError = true;
@@ -58,9 +83,8 @@ class _AdFormState extends State<AdForm> {
       }); */
       return;
     }
+
     _formKey.currentState.save();
-    _formData['adNature'] =
-        _adNature == AdNature.offered ? 'offered' : 'wanted';
     widget._saveCallback(_formData);
   }
 
@@ -159,7 +183,31 @@ class _AdFormState extends State<AdForm> {
             SizedBox(
               height: 10,
             ),
-            DropdownButtonFormField(
+            TextFormField(
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                  labelText: 'Prijs in nix',
+                  hintText: 'Gebruik alleen gehele getallen'),
+              validator: (val) {
+                if (val.isEmpty ||
+                    int.tryParse(val) == null ||
+                    int.tryParse(val) < 0 ||
+                    int.tryParse(val) > 999) {
+                  return 'Voer een prijs in tussen 0 en 1000 nix.';
+                }
+                return null;
+              },
+              onSaved: (val) {
+                _formData['virtualPrice'] = val;
+              },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            AdAgeCategory(_setAdAgeCategory),
+            SizedBox(height: 10),
+            AdCategories(_setMainCat, _setSubCat, _setSubSubCat),
+            /* DropdownButtonFormField(
                 value: _selectedCategory,
                 decoration: InputDecoration(
                     labelText: 'Kies je categorie',
@@ -174,82 +222,7 @@ class _AdFormState extends State<AdForm> {
                 items: Categories.categories,
                 onSaved: (val) {
                   _formData['category'] = val;
-                }),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                        labelText: 'Prijs in nix',
-                        hintText: 'Gebruik alleen gehele getallen'),
-                    validator: (val) {
-                      if (val.isEmpty ||
-                          int.tryParse(val) == null ||
-                          int.tryParse(val) < 0 ||
-                          int.tryParse(val) > 999) {
-                        return 'Voer een prijs in tussen 0 en 1000 nix.';
-                      }
-                      return null;
-                    },
-                    onSaved: (val) {
-                      _formData['virtualPrice'] = val;
-                    },
-                  ),
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      ListTile(
-                        dense: true,
-                        title: Text('Aangeboden',
-                            textAlign: TextAlign.end,
-                            style: Theme.of(context).textTheme.bodyText1),
-                        trailing: Radio(
-                          groupValue: _adNature,
-                          focusColor: Theme.of(context).primaryColor,
-                          hoverColor: Theme.of(context).primaryColor,
-                          activeColor: Theme.of(context).primaryColor,
-                          value: AdNature.offered,
-                          onChanged: (AdNature value) {
-                            setState(() {
-                              _adNature = value;
-                            });
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        title: Text('Gezocht',
-                            textAlign: TextAlign.end,
-                            style: Theme.of(context).textTheme.bodyText1),
-                        dense: true,
-                        trailing: Radio(
-                          groupValue: _adNature,
-                          activeColor: Theme.of(context).primaryColor,
-                          focusColor: Theme.of(context).primaryColor,
-                          hoverColor: Theme.of(context).primaryColor,
-                          value: AdNature.wanted,
-                          onChanged: (AdNature value) {
-                            setState(() {
-                              _adNature = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                }), */
             SizedBox(
               height: 10,
             ),
