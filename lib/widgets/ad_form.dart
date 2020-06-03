@@ -207,22 +207,6 @@ class _AdFormState extends State<AdForm> {
             AdAgeCategory(_setAdAgeCategory),
             SizedBox(height: 10),
             AdCategories(_setMainCat, _setSubCat, _setSubSubCat),
-            /* DropdownButtonFormField(
-                value: _selectedCategory,
-                decoration: InputDecoration(
-                    labelText: 'Kies je categorie',
-                    labelStyle: Theme.of(context).textTheme.bodyText1),
-                onChanged: (val) {
-                  setState(() {
-                    _selectedCategory = val;
-                  });
-
-                  _formData['category'] = val;
-                },
-                items: Categories.categories,
-                onSaved: (val) {
-                  _formData['category'] = val;
-                }), */
             SizedBox(
               height: 10,
             ),

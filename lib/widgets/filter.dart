@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/categories.dart';
 import 'package:location/location.dart';
-
-enum AdNature { offered, wanted }
+import './ad_categories.dart';
+import 'ad_age_category.dart';
 
 class Filter extends StatefulWidget {
   final Function filterCallback;
@@ -14,36 +13,51 @@ class Filter extends StatefulWidget {
 
 class _FilterState extends State<Filter> {
   Map<String, dynamic> _filterElements = {
-    'category': null,
+    'mainCategory': null,
+    'subCategory': null,
+    'subSubCategory': null,
+    'ageCategory': null,
     'priceMin': null,
     'priceMax': null,
     'maxDistance': null,
-    'adNature': null,
     'latitude': null,
     'longitude': null,
   };
-  AdNature _adNature = AdNature.offered;
   var _formKey = GlobalKey<FormState>();
   Location _location = Location();
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
   LocationData _locationData;
-  String _categorySelected;
 
   @override
   void initState() {
-    _categorySelected = Categories.categories.first.value;
+    // _categorySelected = Categories.categories.first.value;
     super.initState();
+  }
+
+  void _setMainCats(String _mainCat) {
+    _filterElements['mainCategory'] = _mainCat;
+  }
+
+  void _setSubCats(String _subCat) {
+    _filterElements['subCategory'] = _subCat;
+  }
+
+  void _setSubSubCats(String _subSubCat) {
+    _filterElements['subSubCategory'] = _subSubCat;
+  }
+
+  void _setAgeCat(String _ageCat) {
+    _filterElements['ageCategory'] = _ageCat;
   }
 
   void setSearch() {
     if (!_formKey.currentState.validate()) {
       return;
     }
+    // print(_filterElements);
 
     _formKey.currentState.save();
-    _filterElements['adNature'] =
-        _adNature == AdNature.offered ? 'offered' : 'wanted';
     widget.filterCallback(_filterElements);
     Navigator.of(context).pop();
   }
@@ -87,22 +101,8 @@ class _FilterState extends State<Filter> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    DropdownButtonFormField(
-                        value: _categorySelected,
-                        decoration: const InputDecoration(
-                            labelText: 'Kies je categorie'),
-                        onChanged: (val) {
-                          setState(() {
-                            _filterElements['category'] = val;
-                            setState(() {
-                              _categorySelected = val;
-                            });
-                          });
-                        },
-                        items: Categories.categories,
-                        onSaved: (val) {
-                          _filterElements['category'] = val;
-                        }),
+                    AdCategories(_setMainCats, _setSubCats, _setSubSubCats),
+                    AdAgeCategory(_setAgeCat),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -129,45 +129,6 @@ class _FilterState extends State<Filter> {
                           ),
                         )
                       ],
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            width: double.infinity,
-                            child: RadioListTile(
-                              title: const Text('Aangeboden'),
-                              groupValue: _adNature,
-                              value: AdNature.offered,
-                              onChanged: (AdNature value) {
-                                setState(() {
-                                  _adNature = value;
-                                });
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: RadioListTile(
-                              title: const Text('Gezocht'),
-                              groupValue: _adNature,
-                              value: AdNature.wanted,
-                              onChanged: (AdNature value) {
-                                setState(() {
-                                  _adNature = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
