@@ -95,13 +95,16 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(_pages[_selectedPageIndex]['title']),
         actions: <Widget>[
-          GestureDetector(
-            child: Icon(Icons.add_circle_outline),
-            onTap: () {
-              var idx = _pages
-                  .indexWhere((elm) => elm['title'] == 'Plaats advertentie');
-              _selectPage(idx);
-            },
+          Container(
+            padding: const EdgeInsets.only(right: 10),
+            child: GestureDetector(
+              child: Icon(Icons.add_circle_outline),
+              onTap: () {
+                var idx = _pages
+                    .indexWhere((elm) => elm['title'] == 'Plaats advertentie');
+                _selectPage(idx);
+              },
+            ),
           )
         ],
       ),
