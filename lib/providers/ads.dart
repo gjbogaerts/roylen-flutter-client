@@ -127,6 +127,9 @@ class Ads with ChangeNotifier {
 
   Future<List<Ad>> fetchAndSetFavoriteItems() async {
     _mode = ReturnMode.Favorites;
+    if (_user == null) {
+      return [];
+    }
     final _url = baseUrl + '/api/ads/saved/${_user.id}';
     final _token = _user.token;
     try {

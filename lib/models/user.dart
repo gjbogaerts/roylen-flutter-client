@@ -7,6 +7,7 @@ class User {
   final String password;
   final String id;
   final String token;
+  final List favoriteAds;
   final int nix;
 
   User({
@@ -14,6 +15,7 @@ class User {
     @required this.email,
     @required this.avatar,
     @required this.password,
+    this.favoriteAds,
     this.id = '',
     this.token = '',
     this.nix = 0,
@@ -25,6 +27,7 @@ class User {
         email: json['email'],
         avatar: json['avatar'],
         password: '',
+        favoriteAds: json['favoriteAds'],
         id: json['_id'],
         token: json['token'],
         nix: json['nix']);

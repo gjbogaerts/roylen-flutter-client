@@ -42,7 +42,9 @@ class Ad with ChangeNotifier {
     var loadedOffers = <Offer>[];
     offers.forEach((element) {
       // print(element);
-      loadedOffers.add(Offer.fromJson(element));
+      if (element is Map) {
+        loadedOffers.add(Offer.fromJson(element));
+      }
     });
 
     return Ad(

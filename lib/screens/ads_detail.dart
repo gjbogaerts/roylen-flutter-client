@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../utils/server_interface.dart';
 import '../models/user.dart';
+import '../models/ad.dart';
 import '../providers/ads.dart';
 import '../providers/auth.dart';
 import '../widgets/contact.dart';
@@ -26,12 +27,17 @@ class AdsDetail extends StatefulWidget {
 
 class _AdsDetailState extends State<AdsDetail> {
   User _user;
+  bool _isFavorite;
+  Ad _ad;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _ad = Provider.of<Ads>(context)
+        .getById(ModalRoute.of(context).settings.arguments);
     if (Provider.of<Auth>(context).isAuth) {
       _user = Provider.of<Auth>(context).getUser();
+      _isFavorite = _user.favoriteAds.any((element) => element == _ad.id);
     }
   }
 
@@ -84,15 +90,11 @@ class _AdsDetailState extends State<AdsDetail> {
   }
 
   void _setFavorite(String id) async {
-    String msg;
-    var result = await Provider.of<Ads>(context, listen: false).setFavorite(id);
-    if (result) {
-      msg = 'Deze advertentie wordt bewaard in je favorietenlijstje.';
-    } else {
-      msg =
-          'Er ging iets mis tijdens de opslag in je favorietenlijstje. Probeer het alsjeblieft later nog een keer.';
-    }
-    _showDialog(msg);
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
+    Provider.of<Auth>(context, listen: false).updateFavorite(id);
+    await Provider.of<Ads>(context, listen: false).setFavorite(id);
   }
 
   void _warnAdmin(String id) async {
@@ -112,28 +114,26 @@ class _AdsDetailState extends State<AdsDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final ad = Provider.of<Ads>(context)
-        .getById(ModalRoute.of(context).settings.arguments);
     final _dateAdded = DateFormat.yMEd()
         .addPattern('H:m')
-        .format(DateTime.parse(ad.dateAdded));
+        .format(DateTime.parse(_ad.dateAdded));
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          ad.title,
+          _ad.title,
           textAlign: TextAlign.center,
         ),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.favorite_border),
+              icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
               onPressed: () {
-                _setFavorite(ad.id);
+                _setFavorite(_ad.id);
               }),
           IconButton(
               icon: Icon(Icons.warning),
               color: Theme.of(context).errorColor,
               onPressed: () {
-                _warnAdmin(ad.id);
+                _warnAdmin(_ad.id);
               })
         ],
       ),
@@ -144,7 +144,7 @@ class _AdsDetailState extends State<AdsDetail> {
             children: <Widget>[
               Container(
                 child: Image.network(
-                  '$baseUrl${ad.picture}',
+                  '$baseUrl${_ad.picture}',
                   fit: BoxFit.cover,
                   height: MediaQuery.of(context).size.height / 3,
                 ),
@@ -153,7 +153,7 @@ class _AdsDetailState extends State<AdsDetail> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  '${ad.virtualPrice} nix',
+                  '${_ad.virtualPrice} nix',
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
@@ -168,7 +168,7 @@ class _AdsDetailState extends State<AdsDetail> {
                         Navigator.of(context)
                             .pushNamed(AdsCategoriedList.routeName, arguments: {
                           'categoryType': 'mainCategory',
-                          'category': ad.mainCategory
+                          'category': _ad.mainCategory
                         });
                         // print('${ad.mainCategory} pressed');
                       },
@@ -178,10 +178,10 @@ class _AdsDetailState extends State<AdsDetail> {
                             bottom: BorderSide(),
                           ),
                         ),
-                        child: Text('${ad.mainCategory}'),
+                        child: Text('${_ad.mainCategory}'),
                       ),
                     ),
-                    if (ad.subCategory.isNotEmpty)
+                    if (_ad.subCategory.isNotEmpty)
                       Row(
                         children: <Widget>[
                           Text(' > '),
@@ -191,7 +191,7 @@ class _AdsDetailState extends State<AdsDetail> {
                                   AdsCategoriedList.routeName,
                                   arguments: {
                                     'categoryType': 'subCategory',
-                                    'category': ad.subCategory
+                                    'category': _ad.subCategory
                                   });
                             },
                             child: Container(
@@ -200,12 +200,12 @@ class _AdsDetailState extends State<AdsDetail> {
                                   bottom: BorderSide(),
                                 ),
                               ),
-                              child: Text('${ad.subCategory}'),
+                              child: Text('${_ad.subCategory}'),
                             ),
                           ),
                         ],
                       ),
-                    if (ad.subSubCategory.isNotEmpty)
+                    if (_ad.subSubCategory.isNotEmpty)
                       Row(
                         children: <Widget>[
                           Text(' > '),
@@ -215,7 +215,7 @@ class _AdsDetailState extends State<AdsDetail> {
                                   AdsCategoriedList.routeName,
                                   arguments: {
                                     'categoryType': 'subSubCategory',
-                                    'category': ad.subSubCategory
+                                    'category': _ad.subSubCategory
                                   });
                             },
                             child: Container(
@@ -224,7 +224,7 @@ class _AdsDetailState extends State<AdsDetail> {
                                   bottom: BorderSide(),
                                 ),
                               ),
-                              child: Text('${ad.subSubCategory}'),
+                              child: Text('${_ad.subSubCategory}'),
                             ),
                           ),
                         ],
@@ -233,7 +233,7 @@ class _AdsDetailState extends State<AdsDetail> {
                   mainAxisAlignment: MainAxisAlignment.start,
                 ),
               ),
-              if (ad.ageCategory.isNotEmpty)
+              if (_ad.ageCategory.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.all(10),
                   child: Row(
@@ -245,7 +245,7 @@ class _AdsDetailState extends State<AdsDetail> {
                               AdsCategoriedList.routeName,
                               arguments: {
                                 'categoryType': 'ageCategory',
-                                'category': ad.ageCategory
+                                'category': _ad.ageCategory
                               });
                         },
                         child: Container(
@@ -254,7 +254,7 @@ class _AdsDetailState extends State<AdsDetail> {
                               bottom: BorderSide(),
                             ),
                           ),
-                          child: Text('${ad.ageCategory}'),
+                          child: Text('${_ad.ageCategory}'),
                         ),
                       ),
                     ],
@@ -266,13 +266,13 @@ class _AdsDetailState extends State<AdsDetail> {
                   children: <Widget>[
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage('$baseUrl${ad.creator.avatar}'),
+                          NetworkImage('$baseUrl${_ad.creator.avatar}'),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Text(
-                      'Aangemaakt door: ${ad.creator.screenName} \nop $_dateAdded',
+                      'Aangemaakt door: ${_ad.creator.screenName} \nop $_dateAdded',
                       style: TextStyle(fontSize: 16),
                     ),
                   ],
@@ -285,7 +285,7 @@ class _AdsDetailState extends State<AdsDetail> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  '${ad.description}',
+                  '${_ad.description}',
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 16),
                   softWrap: true,
@@ -299,13 +299,13 @@ class _AdsDetailState extends State<AdsDetail> {
                 children: <Widget>[
                   RaisedButton(
                     onPressed: () {
-                      _contactCreator(ad);
+                      _contactCreator(_ad);
                     },
                     child: Text('CONTACT'),
                   ),
                   RaisedButton(
                     onPressed: () {
-                      _makeOffer(ad);
+                      _makeOffer(_ad);
                     },
                     child: Text('BIED NIX'),
                   )

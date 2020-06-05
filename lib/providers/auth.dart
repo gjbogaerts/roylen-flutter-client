@@ -17,6 +17,7 @@ class Auth with ChangeNotifier {
   String _userId;
   String _email;
   String _screenName;
+  List<dynamic> _favoriteAds;
   int _nix;
   String _avatar;
 
@@ -35,6 +36,7 @@ class Auth with ChangeNotifier {
     _screenName = null;
     _nix = null;
     _avatar = null;
+    _favoriteAds = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     notifyListeners();
@@ -50,7 +52,7 @@ class Auth with ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        print(_response.body.toString());
+        // print(_response.body.toString());
         return false;
       }
     } catch (err) {
@@ -106,7 +108,7 @@ class Auth with ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        print(_response.body.toString());
+        // print(_response.body.toString());
         return false;
       }
     } catch (err) {
@@ -128,6 +130,9 @@ class Auth with ChangeNotifier {
       _userId = extractedUserData['_id'];
       _email = extractedUserData['email'];
       _screenName = extractedUserData['screenName'];
+      // print(extractedUserData);
+      // print(extractedUserData['favoriteAds']);
+      _favoriteAds = json.decode(extractedUserData['favoriteAds']);
       _nix = extractedUserData['nix'];
       _avatar = extractedUserData['avatar'];
       notifyListeners();
@@ -144,6 +149,7 @@ class Auth with ChangeNotifier {
           avatar: _avatar,
           email: _email,
           screenName: _screenName,
+          favoriteAds: _favoriteAds,
           id: _userId,
           nix: _nix,
           token: _token,
@@ -161,6 +167,7 @@ class Auth with ChangeNotifier {
       );
 
       var _userData = json.decode(uriResponse.body);
+      print(_userData);
       if (_userData['token'] == null) {
         // print('not token found');
         return false;
@@ -170,9 +177,12 @@ class Auth with ChangeNotifier {
       _screenName = _userData['screenName'];
       _userId = _userData['_id'];
       _avatar = _userData['avatar'];
+      _favoriteAds = _userData['favoriteAds'];
       _nix = _userData['nix'];
       final prefs = await SharedPreferences.getInstance();
-      final stringToStore = json.encode(_userData);
+      var _userDataToStore = _userData;
+      _userDataToStore['favoriteAds'] = json.encode(_userData['favoriteAds']);
+      final stringToStore = json.encode(_userDataToStore);
       await prefs.setString('userData', stringToStore);
       notifyListeners();
       return true;
@@ -180,6 +190,17 @@ class Auth with ChangeNotifier {
       print('Fout $err');
       return false;
     }
+  }
+
+  void updateFavorite(String adId) async {
+    if (_favoriteAds.any((element) => element == adId)) {
+      _favoriteAds.remove(adId);
+    } else {
+      _favoriteAds.add(adId);
+    }
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString('favoriteAds', json.encode(_favoriteAds));
+    notifyListeners();
   }
 
   Future<bool> registerUser({
@@ -206,7 +227,7 @@ class Auth with ChangeNotifier {
       _userId = _userData['_id'];
       _avatar = avatar;
       _nix = _userData['nix'];
-
+      _favoriteAds = [];
       var _req =
           http.MultipartRequest('POST', Uri.parse('$baseUrl/api/profile'));
       if (avatar.isNotEmpty) {
@@ -235,6 +256,7 @@ class Auth with ChangeNotifier {
       prefs.setString('_id', _userData['id']);
       prefs.setString('screenName', _userData['screenName']);
       prefs.setInt('nix', _userData['nix']);
+      prefs.setString('favoriteAds', json.encode([]));
       notifyListeners();
       return true;
     } catch (err) {
