@@ -27,7 +27,7 @@ class AdsDetail extends StatefulWidget {
 
 class _AdsDetailState extends State<AdsDetail> {
   User _user;
-  bool _isFavorite;
+  bool _isFavorite = false;
   Ad _ad;
 
   @override
@@ -90,6 +90,12 @@ class _AdsDetailState extends State<AdsDetail> {
   }
 
   void _setFavorite(String id) async {
+    if (_user == null) {
+      _showDialog(
+          'Je moet ingelogd zijn om een advertentie in je favorietenlijstje te kunnen bewaren.',
+          title: 'Graag inloggen!');
+      return;
+    }
     setState(() {
       _isFavorite = !_isFavorite;
     });
