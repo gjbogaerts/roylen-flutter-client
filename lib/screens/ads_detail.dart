@@ -98,16 +98,34 @@ class _AdsDetailState extends State<AdsDetail> {
   }
 
   void _warnAdmin(String id) async {
-    String msg;
-    var result = await Provider.of<Ads>(context, listen: false).warnAboutAd(id);
-    if (result) {
-      msg =
-          'Je waarschuwing is doorgegeven. Dank voor je betrokkenheid. De beheerders van Roylen gaan kijken wat er mis is met deze advertentie en eventueel actie ondernemen.';
-    } else {
-      msg =
-          'Excuus, er is iets misgegaan. Probeer het later nog eens alsjeblieft?';
-    }
-    _showDialog(msg);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Stuur waarschuwing'),
+          content: Text(
+            'Als je op OK klikt, wordt er een waarschuwing over deze advertentie doorgegeven aan de beheerders. Zij gaan dan kijken wat er mis is met deze advertentie en eventueel actie ondernemen.',
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Laat maar zitten'),
+              textColor: Theme.of(context).accentColor,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            RaisedButton(
+              child: Text('OK'),
+              color: Theme.of(context).accentColor,
+              onPressed: () async {
+                await Provider.of<Ads>(context, listen: false).warnAboutAd(id);
+                Navigator.of(context).pop();
+                _showDialog(
+                    'Je waarschuwing is doorgegeven. Dank voor je betrokkenheid.');
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   final baseUrl = ServerInterface.getBaseUrl();
@@ -131,7 +149,6 @@ class _AdsDetailState extends State<AdsDetail> {
               }),
           IconButton(
               icon: Icon(Icons.warning),
-              color: Theme.of(context).errorColor,
               onPressed: () {
                 _warnAdmin(_ad.id);
               })
