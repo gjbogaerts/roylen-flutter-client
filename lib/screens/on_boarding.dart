@@ -25,7 +25,7 @@ class _OnBoardingState extends State<OnBoarding> {
   final List<String> text = [
     'Wat fijn dat je Roylen hebt geïnstalleerd! In vier schermen krijg je een korte uitleg wat je met Roylen kunt doen.',
     'Met deze app bespaar je geld en help je het milieu. Je hoeft niet meer elke drie maanden nieuwe kleren voor je kinderen te kopen, of het speelgoed weg te gooien waarop ze uitgekeken zijn. In plaats daarvan ruil je deze spullen met andere (jonge) ouders.',
-    'Je maakt een account aan, maakt een foto van wat je te ruilen wilt aanbieden, geeft nog wat details, en dan maar kijken of je een goede reactie krijgt. Als je iets moois aanbiedt, kun je \'nix\' krijgen, de interne munteenheid van Roylen. Met die nix kun je later weer andere spullen ruilen.',
+    'Je maakt een account aan, maakt een foto van wat je te ruilen wilt aanbieden, geeft nog wat details, en laat dan de reacties maar komen! Als je iets moois aanbiedt, kun je \'nix\' krijgen, de interne munteenheid van Roylen. Met die nix kun je later weer andere spullen ruilen.',
     'En nu heb je de belangrijkste info, en kun je aan de gang. Je kunt eerst een beetje rondkijken, of meteen een account maken en een advertentie plaatsen.',
   ];
 
@@ -42,12 +42,12 @@ class _OnBoardingState extends State<OnBoarding> {
         },
         loop: false,
         controller: controller,
-        transformer: new PageTransformerBuilder(
-            builder: (Widget child, TransformInfo info) {
-          return new Material(
+        transformer:
+            PageTransformerBuilder(builder: (Widget child, TransformInfo info) {
+          return Material(
             color: Colors.transparent,
             child: SingleChildScrollView(
-              child: new Container(
+              child: Container(
                 alignment: Alignment.center,
                 color: Colors.transparent,
                 height: MediaQuery.of(context).size.height * 0.8,
@@ -57,10 +57,10 @@ class _OnBoardingState extends State<OnBoarding> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      new ParallaxContainer(
-                        child: new Text(
+                      ParallaxContainer(
+                        child: Text(
                           titles[info.index],
-                          style: new TextStyle(
+                          style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 24.0,
                               fontFamily: 'Quicksand',
@@ -70,8 +70,8 @@ class _OnBoardingState extends State<OnBoarding> {
                         opacityFactor: .8,
                         translationFactor: 400.0,
                       ),
-                      new ParallaxContainer(
-                        child: new Image.asset(
+                      ParallaxContainer(
+                        child: Image.asset(
                           images[info.index],
                           fit: BoxFit.contain,
                           height: 350,
@@ -79,11 +79,11 @@ class _OnBoardingState extends State<OnBoarding> {
                         position: info.position,
                         translationFactor: 400.0,
                       ),
-                      new ParallaxContainer(
-                        child: new Text(
+                      ParallaxContainer(
+                        child: Text(
                           text[info.index],
                           textAlign: TextAlign.center,
-                          style: new TextStyle(
+                          style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 14.0,
                               fontFamily: 'Quicksand',
@@ -110,29 +110,30 @@ class _OnBoardingState extends State<OnBoarding> {
         }),
         itemCount: 4);
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Welkom bij Roylen!'),
-        ),
-        body: Stack(
-          children: <Widget>[
-            Background(),
-            transformerPageView,
-            Container(
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(bottom: 20),
-              child: FloatingActionButton(
-                foregroundColor: Theme.of(context).accentColor,
-                backgroundColor: Theme.of(context).primaryColor,
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(HomeScreen.routeName);
-                },
-                child: Text('Skip'),
-                elevation: 8,
-              ),
+      appBar: AppBar(
+        title: Text('Welkom bij Roylen!'),
+      ),
+      body: Stack(
+        children: <Widget>[
+          Background(),
+          transformerPageView,
+          Container(
+            alignment: Alignment.bottomCenter,
+            padding: const EdgeInsets.only(bottom: 20),
+            child: FloatingActionButton(
+              foregroundColor: Theme.of(context).accentColor,
+              backgroundColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.of(context)
+                    .pushReplacementNamed(HomeScreen.routeName);
+              },
+              child: Text(_slideIndex == 3 ? 'Start' : 'Skip'),
+              elevation: 8,
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
 
