@@ -38,7 +38,7 @@ class _SearchState extends State<Search> {
                   children: <Widget>[
                     TextFormField(
                       autofocus: true,
-                      decoration: InputDecoration(labelText: 'Zoekterm'),
+                      decoration: InputDecoration(labelText: 'Ik zoek...'),
                       validator: (val) {
                         if (val.isEmpty) {
                           return 'Je moet een zoekterm invullen.';
@@ -62,7 +62,7 @@ class _SearchState extends State<Search> {
                         RaisedButton(
                             color: Theme.of(context).accentColor,
                             textColor: Theme.of(context).primaryColor,
-                            child: Text('Zoeken'),
+                            child: Text('Vinden'),
                             onPressed: () {
                               setSearch();
                             })
