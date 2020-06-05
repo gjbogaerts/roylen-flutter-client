@@ -264,7 +264,7 @@ class _AuthState extends State<Auth> {
                                         },
                                         color: Theme.of(context).canvasColor,
                                         icon: Icon(Icons.photo_camera),
-                                        label: Text('Neem een foto'),
+                                        label: Text('Maak een foto'),
                                       ),
                                       RaisedButton.icon(
                                         onPressed: () {

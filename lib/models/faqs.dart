@@ -10,7 +10,7 @@ class Faqs {
     Faq(
         headerValue: 'Over Roylen',
         expandedValue:
-            'Zonder winstoogmerk. Gemaakt uit liefde voor de planeet en zijn inwoners, in het bijzonder voor alle jonge ouders die zich vertwijfeld afvragen of hun kind elke drie maanden nieuwe kleren en nieuw speelgoed nodig blijft hebben. Voor altijd gratis in het basisgebruik, met volledige garantie op privacy van jou, als eindgebruiker. (zie ons privacystatement).\n\nNiet bedoeld om zoveel mogelijk clicks te genereren of je zo lang mogelijk in deze app te houden, maar om je leven net een klein beetje eenvoudiger te maken, je wat geld te besparen, en in de tussentijd ook nog iets goeds te doen voor de planeet.\n\nBen je er blij mee? Spread the word. Je kunt ook een review achterlaten in de App Store. En als je op of aanmerkingen hebt? Gebruik het contactformulier hierboven.'),
+            'Zonder winstoogmerk. Gemaakt uit liefde voor de planeet en zijn inwoners, in het bijzonder voor alle jonge ouders die zich vertwijfeld afvragen of hun kind elke drie maanden nieuwe kleren en nieuw speelgoed nodig blijft hebben. Voor altijd gratis in het basisgebruik, met volledige garantie op privacy van jou, als eindgebruiker.\n\nBedoeld om je leven net een klein beetje eenvoudiger te maken, je wat geld te besparen, en in de tussentijd ook nog iets goeds te doen voor de planeet.\n\nBen je er blij mee? Spread the word. Je kunt ook een review achterlaten in de App Store. En als je op- of aanmerkingen hebt? Gebruik het contactformulier hierboven.'),
     Faq(
       headerValue: 'Wat is Roylen? En nix? Hoezo nix?',
       expandedValue:
@@ -19,7 +19,7 @@ class Faqs {
     Faq(
       headerValue: 'Je privacy',
       expandedValue:
-          'Je locatie is alleen maar nodig om vast te leggen welke advertenties voor jou het meest van belang zijn. We filteren op afstand. Deze gegevens, en alle andere gegevens die we over jou verzamelen, worden enkel en alleen gebruikt om de app goed te laten functioneren. Wij hebben verder geen enkel financieel belang bij deze gegevens; je kunt de app anoniem gebruiken om door de advertenties te bladeren, maar als je wat van de andere functies wil proberen, moet je een account aanmaken.\n\nDat kan anoniem; het enige wat je van je nodig hebben, is een email adres. Dat wordt verwijderd als je je account verwijdert, en wordt voor geen enkel ander doel gebruikt dan je af en toe te kunnen berichten als een andere gebruiker contact met je zoekt of als er belangrijke systeem-informatie is.',
+          'Je kunt de app anoniem gebruiken om door de advertenties te bladeren en te zoeken, maar als je wat van de andere functies wil proberen, moet je een account aanmaken.\n\nDat kan anoniem; het enige wat je van je nodig hebben, is een emailadres. Dat wordt verwijderd als je je account verwijdert, en wordt voor geen enkel ander doel gebruikt dan je af en toe te kunnen berichten als een andere gebruiker contact met je zoekt of als er belangrijke systeem-informatie is. Wil je zelf advertenties plaatsen, dan vragen we ook je locatie, zodat je advertentie getoond kan worden aan mensen die bij jou in de buurt zoeken. Deze gegevens worden met geen enkele andere partij gedeeld.',
     ),
     Faq(
       headerValue: 'Leveringsvoorwaarden',

@@ -38,7 +38,7 @@ class Auth with ChangeNotifier {
     _avatar = null;
     _favoriteAds = null;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.remove('userData');
     notifyListeners();
   }
 
@@ -167,7 +167,7 @@ class Auth with ChangeNotifier {
       );
 
       var _userData = json.decode(uriResponse.body);
-      print(_userData);
+      // print(_userData);
       if (_userData['token'] == null) {
         // print('not token found');
         return false;
