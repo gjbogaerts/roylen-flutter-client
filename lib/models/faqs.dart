@@ -10,11 +10,11 @@ class Faqs {
     Faq(
         headerValue: 'Over Roylen',
         expandedValue:
-            'Gemaakt uit liefde voor de planeet en zijn inwoners, in het bijzonder voor alle jonge ouders die zich vertwijfeld afvragen of hun kind elke drie maanden nieuwe kleren en nieuw speelgoed nodig blijft hebben. Voor altijd gratis in het basisgebruik, met volledige garantie op privacy van jou, als eindgebruiker. (zie ons privacystatement).\n\nNiet bedoeld om zoveel mogelijk clicks te genereren of je zo lang mogelijk in deze app te houden, maar om je leven net een klein beetje eenvoudiger te maken, je wat geld te besparen, en in de tussentijd ook nog iets goeds te doen voor de planeet.\n\nBen je er blij mee? Spread the word. Je kunt ook een review achterlaten in de App Store.En als je op of aanmerkingen hebt? Gebruik het contactformulier hierboven.'),
+            'Zonder winstoogmerk. Gemaakt uit liefde voor de planeet en zijn inwoners, in het bijzonder voor alle jonge ouders die zich vertwijfeld afvragen of hun kind elke drie maanden nieuwe kleren en nieuw speelgoed nodig blijft hebben. Voor altijd gratis in het basisgebruik, met volledige garantie op privacy van jou, als eindgebruiker. (zie ons privacystatement).\n\nNiet bedoeld om zoveel mogelijk clicks te genereren of je zo lang mogelijk in deze app te houden, maar om je leven net een klein beetje eenvoudiger te maken, je wat geld te besparen, en in de tussentijd ook nog iets goeds te doen voor de planeet.\n\nBen je er blij mee? Spread the word. Je kunt ook een review achterlaten in de App Store. En als je op of aanmerkingen hebt? Gebruik het contactformulier hierboven.'),
     Faq(
       headerValue: 'Wat is Roylen? En nix? Hoezo nix?',
       expandedValue:
-          'Nix zijn de interne munteenheid van Roylen. Als je je inschrijft, krijg je 100 nix, zomaar, gratis en voor niks. Als je een product te ruilen aanbiedt, kun je er een waarde op plakken. Zo kun je meer nix verzamelen; en die kun je dan weer gebruiken om producten van anderen over te nemen. Zo kan de ruilwaarde van de dingen worden uitgedrukt in nix.',
+          'Roylen? Het is oud-Nederlands voor ruilen. (Zie http://www.etymologiebank.nl/trefwoord/ruilen).\n\nNix zijn de interne munteenheid van Roylen. Als je je inschrijft, krijg je 100 nix, zomaar, gratis en voor niks. Als je een product te ruilen aanbiedt, kun je er een waarde op plakken. Zo kun je meer nix verzamelen; en die kun je dan weer gebruiken om producten van anderen over te nemen. Zo kan de ruilwaarde van de dingen worden uitgedrukt in nix.',
     ),
     Faq(
       headerValue: 'Je privacy',

@@ -41,36 +41,48 @@ class _InfoScreenState extends State<InfoScreen> {
                   ),
                   child: ContactForm(),
                 ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Column(
-                    children: <Widget>[
-                      Text('FAQ', style: Theme.of(context).textTheme.headline6),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ExpansionPanelList(
-                          expansionCallback: (int index, bool isExpanded) {
-                            setState(() {
-                              _faqs[index].isExpanded = !isExpanded;
-                            });
-                          },
-                          children: _faqs.map<ExpansionPanel>((Faq faq) {
-                            return ExpansionPanel(
-                                canTapOnHeader: true,
-                                headerBuilder:
-                                    (BuildContext context, bool isExpanded) {
-                                  return ListTile(title: Text(faq.headerValue));
-                                },
-                                body: Container(
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Column(
+                      children: <Widget>[
+                        Text('FAQ',
+                            style: Theme.of(context).textTheme.headline6),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () => FocusScope.of(context)
+                                .requestFocus(FocusNode()),
+                            child: ExpansionPanelList.radio(
+                              expansionCallback: (panelIndex, isExpanded) =>
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode()),
+                              children:
+                                  _faqs.map<ExpansionPanelRadio>((Faq faq) {
+                                return ExpansionPanelRadio(
+                                  value: faq.hashCode,
+                                  canTapOnHeader: true,
+                                  headerBuilder:
+                                      (BuildContext context, bool isExpanded) {
+                                    return ListTile(
+                                        title: Text(faq.headerValue));
+                                  },
+                                  body: Container(
                                     padding: const EdgeInsets.fromLTRB(
                                         18, 0, 18, 18),
-                                    child: Text(faq.expandedValue)),
-                                isExpanded: faq.isExpanded);
-                          }).toList(),
-                        ),
-                      )
-                    ],
+                                    child: Text(faq.expandedValue),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
