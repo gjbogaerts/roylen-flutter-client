@@ -252,6 +252,7 @@ class _AuthState extends State<Auth> {
                                         return null;
                                       }
                                     },
+                                    autovalidate: true,
                                     onSaved: (val) {
                                       _authData['screenName'] = val;
                                     },

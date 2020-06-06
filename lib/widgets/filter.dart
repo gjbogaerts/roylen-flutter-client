@@ -111,7 +111,7 @@ class _FilterState extends State<Filter> {
                           child: TextFormField(
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                                labelText: 'Minimum prijs'),
+                                labelText: 'Minimale nix'),
                             onSaved: (val) {
                               _filterElements['priceMin'] = val;
                             },
@@ -122,7 +122,7 @@ class _FilterState extends State<Filter> {
                           child: TextFormField(
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                                labelText: 'Maximum prijs'),
+                                labelText: 'Maximale nix'),
                             onSaved: (val) {
                               _filterElements['priceMax'] = val;
                             },
