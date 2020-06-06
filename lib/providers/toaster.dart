@@ -27,7 +27,7 @@ class Toaster with ChangeNotifier {
   void showSnackBar(BuildContext context) {
     if (_hasMessage) {
       Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15),
@@ -37,7 +37,10 @@ class Toaster with ChangeNotifier {
         content: Text(
           _message,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyText2,
+          style: Theme.of(context)
+              .textTheme
+              .bodyText2
+              .copyWith(color: Theme.of(context).accentColor),
         ),
       ));
       clearMessage();

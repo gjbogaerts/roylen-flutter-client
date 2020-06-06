@@ -38,7 +38,6 @@ class _AdCreateState extends State<AdCreate> {
   Future<void> _saveForm(Map<String, dynamic> formData) async {
     formData['latitude'] = _locationData.latitude;
     formData['longitude'] = _locationData.longitude;
-    print(formData);
     var result = await Provider.of<Ads>(context, listen: false)
         .createAd(formData, _user.token);
     if (result) {
