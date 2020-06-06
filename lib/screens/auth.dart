@@ -186,6 +186,7 @@ class _AuthState extends State<Auth> {
                                 } else
                                   return null;
                               },
+                              autovalidate: true,
                               onSaved: (val) {
                                 _authData['email'] = val.trim();
                               },
@@ -208,6 +209,7 @@ class _AuthState extends State<Auth> {
                                 }
                                 return null;
                               },
+                              autovalidate: true,
                               onSaved: (val) {
                                 _authData['password'] = val;
                               },
@@ -232,6 +234,7 @@ class _AuthState extends State<Auth> {
                                       }
                                       return null;
                                     },
+                                    autovalidate: true,
                                   ),
                                   SizedBox(
                                     height: 10,
