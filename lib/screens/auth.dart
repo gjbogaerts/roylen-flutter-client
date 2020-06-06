@@ -23,6 +23,7 @@ class _AuthState extends State<Auth> {
   final _formKey = GlobalKey<FormState>();
   final _pwController = TextEditingController();
   bool _hasError = false;
+  bool _autoValidate = false;
   String _errorString;
   File _image;
   Map<String, String> _authData = {
@@ -40,6 +41,7 @@ class _AuthState extends State<Auth> {
     if (!_formKey.currentState.validate()) {
       setState(() {
         _hasError = true;
+        _autoValidate = true;
         _errorString =
             'Het formulier is niet correct ingevuld. Check de fouten.';
       });
@@ -73,6 +75,7 @@ class _AuthState extends State<Auth> {
   void handleRegister() async {
     if (!_formKey.currentState.validate()) {
       setState(() {
+        _autoValidate = true;
         _hasError = true;
         _errorString =
             'Het formulier is niet correct ingevuld. Check de fouten.';
@@ -168,6 +171,7 @@ class _AuthState extends State<Auth> {
                       ),
                     ),
                     Form(
+                      autovalidate: _autoValidate,
                       key: _formKey,
                       child: Container(
                         padding: const EdgeInsets.all(8),
@@ -186,7 +190,6 @@ class _AuthState extends State<Auth> {
                                 } else
                                   return null;
                               },
-                              autovalidate: true,
                               onSaved: (val) {
                                 _authData['email'] = val.trim();
                               },
@@ -209,7 +212,6 @@ class _AuthState extends State<Auth> {
                                 }
                                 return null;
                               },
-                              autovalidate: true,
                               onSaved: (val) {
                                 _authData['password'] = val;
                               },
@@ -234,7 +236,6 @@ class _AuthState extends State<Auth> {
                                       }
                                       return null;
                                     },
-                                    autovalidate: true,
                                   ),
                                   SizedBox(
                                     height: 10,
@@ -252,7 +253,6 @@ class _AuthState extends State<Auth> {
                                         return null;
                                       }
                                     },
-                                    autovalidate: true,
                                     onSaved: (val) {
                                       _authData['screenName'] = val;
                                     },
