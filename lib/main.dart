@@ -108,19 +108,23 @@ class Roylen extends StatelessWidget {
               const Locale('en', 'US'),
               const Locale('nl', 'NL')
             ],
+            locale: Localizations.localeOf(context, nullOk: true),
             title: 'Roylen',
             theme: RoylenTheme.getThemeData(),
             home: _showOnBoarding
-                ? I18n(child: OnBoarding())
+                ? OnBoarding()
                 : _authData.isAuth
-                    ? I18n(child: HomeScreen())
+                    ? HomeScreen()
                     : FutureBuilder(
                         future: _authData.tryAutoLogin(),
                         builder: (ctx, authResult) =>
                             authResult.connectionState ==
                                     ConnectionState.waiting
                                 ? SplashScreen()
-                                : I18n(child: HomeScreen()),
+                                : I18n(
+                                    child: HomeScreen(),
+                                    initialLocale: Locale('nl', 'NL'),
+                                  ),
                       ),
             routes: {
               HomeScreen.routeName: (ctx) => HomeScreen(),
