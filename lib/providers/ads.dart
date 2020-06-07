@@ -198,8 +198,8 @@ class Ads with ChangeNotifier {
   }
 
   Future<bool> createAd(Map<String, dynamic> adData, String token) async {
-    // final url = baseUrl + '/api/adCreate';
-    final url = ServerInterface.getDebugUrl() + '/api/adCreate';
+    final url = baseUrl + '/api/adCreate';
+    // final url = ServerInterface.getDebugUrl() + '/api/adCreate';
     try {
       var _req = http.MultipartRequest('POST', Uri.parse(url));
       var _picData = adData['picture'] as List<Map<String, dynamic>>;

@@ -28,6 +28,8 @@ class AdsDetail extends StatefulWidget {
 class _AdsDetailState extends State<AdsDetail> {
   User _user;
   bool _isFavorite = false;
+
+  String _mainImage;
   Ad _ad;
 
   @override
@@ -35,9 +37,12 @@ class _AdsDetailState extends State<AdsDetail> {
     super.didChangeDependencies();
     _ad = Provider.of<Ads>(context)
         .getById(ModalRoute.of(context).settings.arguments);
+    _mainImage = _ad.picture;
     if (Provider.of<Auth>(context).isAuth) {
       _user = Provider.of<Auth>(context).getUser();
-      _isFavorite = _user.favoriteAds.any((element) => element == _ad.id);
+      if (_user.favoriteAds != null) {
+        _isFavorite = _user.favoriteAds.any((element) => element == _ad.id);
+      }
     }
   }
 
@@ -134,6 +139,34 @@ class _AdsDetailState extends State<AdsDetail> {
     );
   }
 
+  Widget _showImageArray(List imgs) {
+    return Column(
+      children: <Widget>[
+        GridView.count(
+          crossAxisCount: 5,
+          shrinkWrap: true,
+          crossAxisSpacing: 3,
+          mainAxisSpacing: 3,
+          children: List.generate(imgs.length, (index) {
+            var _img = imgs[index];
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _mainImage = _img;
+                });
+              },
+              child: Image.network(
+                '$baseUrl$_img',
+                fit: BoxFit.contain,
+              ),
+            );
+          }),
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
   final baseUrl = ServerInterface.getBaseUrl();
 
   @override
@@ -167,12 +200,14 @@ class _AdsDetailState extends State<AdsDetail> {
             children: <Widget>[
               Container(
                 child: Image.network(
-                  '$baseUrl${_ad.picture}',
+                  '$baseUrl$_mainImage',
                   fit: BoxFit.cover,
                   height: MediaQuery.of(context).size.height / 3,
                 ),
               ),
               SizedBox(height: 10),
+              if (_ad.pictureArray.length > 1)
+                _showImageArray(_ad.pictureArray),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(

@@ -14,6 +14,7 @@ class Ad with ChangeNotifier {
   final String ageCategory;
   final int virtualPrice;
   final String picture;
+  final List pictureArray;
   final Creator creator;
   final String adNature;
   final Location location;
@@ -29,6 +30,7 @@ class Ad with ChangeNotifier {
       this.subCategory = '',
       this.subSubCategory = '',
       this.ageCategory = '',
+      this.pictureArray,
       @required this.virtualPrice,
       @required this.picture,
       @required this.creator,
@@ -60,6 +62,7 @@ class Ad with ChangeNotifier {
         ageCategory: json['ageCategory'] == null ? '' : json['ageCategory'],
         virtualPrice: json['virtualPrice'],
         picture: json['pics'][0],
+        pictureArray: json['pics'],
         creator: Creator.fromJson(json['creator']),
         location: json['location'] != null
             ? Location.fromJson(json['location'])

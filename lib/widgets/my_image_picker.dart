@@ -94,10 +94,11 @@ class _MyImagePickerState extends State<MyImagePicker> {
           onPressed: () => loadAssets(context),
           child: Text('Kies foto\'s'),
         ),
-        Flexible(
-          fit: FlexFit.loose,
-          child: buildGridView(),
-        )
+        if (_images.length > 0)
+          Flexible(
+            fit: FlexFit.loose,
+            child: buildGridView(),
+          )
       ],
     );
   }
