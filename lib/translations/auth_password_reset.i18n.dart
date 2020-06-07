@@ -33,7 +33,7 @@ extension Localization on String {
       } +
       {"nl_nl": "Versturen", "en_us": "Send"} +
       {"nl_nl": "Verzenden", "en_us": "Send"} +
-      {"nl_nl": "Je code", "en_us": "Your secre t key"} +
+      {"nl_nl": "Je code", "en_us": "Your secret key"} +
       {
         "nl_nl": "Je moet een code invullen",
         "en_us": "You have to fill out your secret key"
