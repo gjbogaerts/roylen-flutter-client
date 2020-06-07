@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart' as syspaths;
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-// import '../models/categories.dart';
+import 'package:location/location.dart';
+import './my_image_picker.dart';
+import './my_location_picker.dart';
 import 'ad_categories.dart';
 import 'ad_age_category.dart';
 import '../providers/toaster.dart';
-
-enum AdNature { offered, wanted }
 
 class AdForm extends StatefulWidget {
   final Function _saveCallback;
@@ -28,7 +22,6 @@ class _AdFormState extends State<AdForm> {
   String _selectedSubCategory;
   String _selectedSubSubCategory;
   String _selectedAgeCategory;
-  File _selectedImage;
   bool _autoValidate = false;
   bool _hasError = false;
   String _errorString;
@@ -41,8 +34,9 @@ class _AdFormState extends State<AdForm> {
     'subCategory': '',
     'subSubCategory': '',
     'ageCategory': '',
-    'picture': '',
-    'location': '',
+    'picture': [],
+    'latitude': '',
+    'longitude': ''
   };
 
   @override
@@ -66,7 +60,13 @@ class _AdFormState extends State<AdForm> {
     _selectedSubSubCategory = cat;
   }
 
+  void _setLocationData(LocationData _loc) {
+    _formData['latitude'] = _loc.latitude;
+    _formData['longitude'] = _loc.longitude;
+  }
+
   void _saveForm() {
+    //TODO: set validation on agecategory.
     _formData['ageCategory'] = _selectedAgeCategory;
     _formData['mainCategory'] = _selectedMainCategory;
     _formData['subCategory'] = _selectedSubCategory;
@@ -80,42 +80,21 @@ class _AdFormState extends State<AdForm> {
       });
       return;
     }
-    if (_formData['picture'] == '') {
+    var pics = _formData['picture'] as List;
+    if (pics.length == 0) {
       setState(() {
         _hasError = true;
         _errorString = 'Je hebt nog geen foto gemaakt of gekozen.';
       });
       return;
     }
-
     _formKey.currentState.save();
     widget._saveCallback(_formData);
   }
 
-  Future<void> _getImage(String source) async {
-    File _imageFile;
-    PickedFile _pickedFile;
-    var _picker = ImagePicker();
-    if (source == 'camera') {
-      _pickedFile = await _picker.getImage(source: ImageSource.camera);
-    } else {
-      _pickedFile = await _picker.getImage(source: ImageSource.gallery);
-    }
-    if (_pickedFile == null) {
-      return;
-    }
-    _imageFile = File(_pickedFile.path);
-    setState(() {
-      _selectedImage = _imageFile;
-    });
-    // print(imageFile);
-
-    final appDir = await syspaths.getApplicationDocumentsDirectory();
-    final fileName = path.basename(_imageFile.path);
-    final imageLocation = '${appDir.path}/$fileName';
-    /* final savedImage =  */
-    await _imageFile.copy(imageLocation);
-    _formData['picture'] = imageLocation;
+  Future<void> _getPickedImages(
+      List<Map<String, dynamic>> imagesDataList) async {
+    _formData['picture'] = imagesDataList;
   }
 
   @override
@@ -135,27 +114,7 @@ class _AdFormState extends State<AdForm> {
           padding: const EdgeInsets.fromLTRB(8, 20, 8, 0),
           child: Column(
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  RaisedButton.icon(
-                    color: Theme.of(context).canvasColor,
-                    onPressed: () {
-                      _getImage('camera');
-                    },
-                    icon: Icon(Icons.photo_camera),
-                    label: Text('Neem een foto'),
-                  ),
-                  RaisedButton.icon(
-                    color: Theme.of(context).canvasColor,
-                    onPressed: () {
-                      _getImage('gallery');
-                    },
-                    icon: Icon(Icons.photo_album),
-                    label: Text('Kies een foto'),
-                  )
-                ],
-              ),
+              MyImagePicker(_getPickedImages),
               SizedBox(
                 height: 10,
               ),
@@ -223,16 +182,7 @@ class _AdFormState extends State<AdForm> {
               SizedBox(
                 height: 10,
               ),
-              _selectedImage != null
-                  ? Container(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                      child: Image.file(
-                        _selectedImage,
-                        height: 200,
-                        fit: BoxFit.scaleDown,
-                      ),
-                    )
-                  : SizedBox(height: 0),
+              MyLocationPicker(_setLocationData),
               ButtonTheme(
                 minWidth: MediaQuery.of(context).size.width / 2,
                 height: 50,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import '../utils/server_interface.dart';
 import '../models/ad.dart';
 // import '../models/creator.dart';
@@ -199,14 +198,22 @@ class Ads with ChangeNotifier {
   }
 
   Future<bool> createAd(Map<String, dynamic> adData, String token) async {
-    final url = baseUrl + '/api/adCreate';
-    final contentType = ContentType.getContentType(adData['picture']);
+    // final url = baseUrl + '/api/adCreate';
+    final url = ServerInterface.getDebugUrl() + '/api/adCreate';
     try {
       var _req = http.MultipartRequest('POST', Uri.parse(url));
-      var _file = await http.MultipartFile.fromPath(
-          'filename', adData['picture'],
-          contentType: MediaType.parse(contentType));
-      _req.files.add(_file);
+      var _picData = adData['picture'] as List<Map<String, dynamic>>;
+      _picData.forEach((_pic) {
+        var _bytes = _pic['bytes'];
+        var _name = _pic['name'];
+        List<int> _imageData = _bytes.buffer
+            .asUint8List(_bytes.offsetInBytes, _bytes.lengthInBytes);
+        var _file = http.MultipartFile.fromBytes('filename', _imageData,
+            filename: _name,
+            contentType: ContentType.getContentTypeAsMap(_name));
+        _req.files.add(_file);
+      });
+      adData.remove('picture');
       adData.forEach((s, v) {
         _req.fields[s] = v.toString();
       });
@@ -214,6 +221,7 @@ class Ads with ChangeNotifier {
       _req.headers.putIfAbsent('x-api-key', () => apiKey);
       var uriResponse = await _req.send();
       if (uriResponse.statusCode != 200) {
+        print('fout: ${uriResponse.stream.bytesToString()}');
         return false;
       }
       await http.Response.fromStream(uriResponse);
@@ -221,6 +229,7 @@ class Ads with ChangeNotifier {
       // notifyListeners();
       return true;
     } catch (err) {
+      print(err.toString());
       return false;
     }
   }
