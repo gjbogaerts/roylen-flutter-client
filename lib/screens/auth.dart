@@ -262,21 +262,19 @@ class _AuthState extends State<Auth> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      RaisedButton.icon(
+                                      RaisedButton(
                                         onPressed: () {
                                           getImage('camera');
                                         },
                                         color: Theme.of(context).canvasColor,
-                                        icon: Icon(Icons.photo_camera),
-                                        label: Text('Maak een foto'),
+                                        child: Text('Maak een foto'),
                                       ),
-                                      RaisedButton.icon(
+                                      RaisedButton(
                                         onPressed: () {
                                           getImage('gallery');
                                         },
                                         color: Theme.of(context).canvasColor,
-                                        icon: Icon(Icons.photo_album),
-                                        label: Text('Kies een foto'),
+                                        child: Text('Kies een foto'),
                                       )
                                     ],
                                   )
@@ -288,28 +286,24 @@ class _AuthState extends State<Auth> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed(Auth.routeName,
-                                              arguments: {
-                                            'registering': !_isRegistering
-                                          });
-                                    },
-                                    child: Text(_isRegistering
-                                        ? 'Al een account? Je kunt hier inloggen'
-                                        : 'Nog geen account? Je kunt hier registreren'),
+                                // hier wachtwoord vergeten widget
+                                if (!_isRegistering)
+                                  GestureDetector(
+                                    onTap: _handlePasswordForgotten,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16.0),
+                                      child: Center(
+                                          child: Text('Wachtwoord vergeten?')),
+                                    ),
                                   ),
-                                ),
                                 ButtonTheme(
                                   minWidth:
                                       MediaQuery.of(context).size.width / 3,
                                   height: 50,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15)),
-                                  child: RaisedButton.icon(
+                                  child: RaisedButton(
                                     onPressed: _isRegistering
                                         ? () {
                                             handleRegister();
@@ -335,10 +329,9 @@ class _AuthState extends State<Auth> {
                                                 ),
                                               );
                                           },
-                                    icon: Icon(Icons.verified_user),
                                     color: Theme.of(context).primaryColor,
                                     textColor: Theme.of(context).accentColor,
-                                    label: Text(
+                                    child: Text(
                                       _isRegistering
                                           ? 'Registreren'
                                           : 'Inloggen',
@@ -352,14 +345,21 @@ class _AuthState extends State<Auth> {
                         ),
                       ),
                     ),
-                    if (!_isRegistering)
-                      GestureDetector(
-                        onTap: _handlePasswordForgotten,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Center(child: Text('Wachtwoord vergeten?')),
-                        ),
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.bottomRight,
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacementNamed(
+                              Auth.routeName,
+                              arguments: {'registering': !_isRegistering});
+                        },
+                        textColor: Theme.of(context).primaryColor,
+                        child: Text(_isRegistering
+                            ? 'Al een account? Je kunt hier inloggen'
+                            : 'Nog geen account? Je kunt hier registreren'),
                       ),
+                    ),
                   ],
                 );
               },
