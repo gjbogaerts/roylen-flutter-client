@@ -211,7 +211,7 @@ class Ads with ChangeNotifier {
             .asUint8List(_bytes.offsetInBytes, _bytes.lengthInBytes);
         String _name = _pic['name'];
         _name = _name.toLowerCase();
-        _name.replaceAll('heic', 'jpeg');
+        _name = _name.replaceAll('heic', 'jpeg');
         var _file = http.MultipartFile.fromBytes('filename', _imageData,
             filename: _name,
             contentType: ContentType.getContentTypeAsMap(_name));
