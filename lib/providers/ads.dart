@@ -198,7 +198,6 @@ class Ads with ChangeNotifier {
   }
 
   Future<bool> createAd(Map<String, dynamic> adData, String token) async {
-    //TODO: check on iphone, recreate
     final url = baseUrl + '/api/adCreate';
     // final url = ServerInterface.getDebugUrl() + '/api/adCreate';
     // final url = ServerInterface.getiOSDebugUrl() + '/api/adCreate';

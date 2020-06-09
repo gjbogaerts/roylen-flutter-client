@@ -66,7 +66,7 @@ class _AdFormState extends State<AdForm> {
   }
 
   void _saveForm() {
-    //TODO: set validation on agecategory.
+    //TODO: set validation on categories.
     _formData['ageCategory'] = _selectedAgeCategory;
     _formData['mainCategory'] = _selectedMainCategory;
     _formData['subCategory'] = _selectedSubCategory;

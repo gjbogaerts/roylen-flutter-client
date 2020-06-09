@@ -155,10 +155,7 @@ class _AdsDetailState extends State<AdsDetail> {
                   _mainImage = _img;
                 });
               },
-              child: Image.network(
-                '$baseUrl$_img',
-                fit: BoxFit.contain,
-              ),
+              child: Image.network('$baseUrl$_img', fit: BoxFit.cover),
             );
           }),
         ),
