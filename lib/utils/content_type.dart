@@ -15,8 +15,10 @@ class ContentType {
     return contentType;
   }
 
-  static MediaType getContentTypeAsMap(fileName) {
-    if (fileName.endsWith('jpeg') || fileName.endsWith('jpg')) {
+  static MediaType getContentTypeAsMap(String fileName) {
+    if (fileName.endsWith('jpeg') ||
+        fileName.endsWith('jpg') ||
+        fileName.endsWith('heic')) {
       return MediaType('image', 'jpeg');
     } else if (fileName.endsWith('png')) {
       return MediaType('image', 'png');

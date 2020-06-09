@@ -198,16 +198,20 @@ class Ads with ChangeNotifier {
   }
 
   Future<bool> createAd(Map<String, dynamic> adData, String token) async {
+    //TODO: check on iphone, recreate
     final url = baseUrl + '/api/adCreate';
     // final url = ServerInterface.getDebugUrl() + '/api/adCreate';
+    // final url = ServerInterface.getiOSDebugUrl() + '/api/adCreate';
     try {
       var _req = http.MultipartRequest('POST', Uri.parse(url));
       var _picData = adData['picture'] as List<Map<String, dynamic>>;
       _picData.forEach((_pic) {
         var _bytes = _pic['bytes'];
-        var _name = _pic['name'];
         List<int> _imageData = _bytes.buffer
             .asUint8List(_bytes.offsetInBytes, _bytes.lengthInBytes);
+        String _name = _pic['name'];
+        _name = _name.toLowerCase();
+        _name.replaceAll('heic', 'jpeg');
         var _file = http.MultipartFile.fromBytes('filename', _imageData,
             filename: _name,
             contentType: ContentType.getContentTypeAsMap(_name));

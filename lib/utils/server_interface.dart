@@ -7,4 +7,8 @@ class ServerInterface {
   static String getDebugUrl() {
     return 'http://10.0.2.2:3000';
   }
+
+  static String getiOSDebugUrl() {
+    return 'http://localhost:3000';
+  }
 }
