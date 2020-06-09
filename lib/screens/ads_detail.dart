@@ -236,7 +236,7 @@ class _AdsDetailState extends State<AdsDetail> {
                         child: Text('${_ad.mainCategory}'),
                       ),
                     ),
-                    if (_ad.subCategory.isNotEmpty)
+                    if (_ad.subCategory.isNotEmpty && _ad.subCategory != "null")
                       Row(
                         children: <Widget>[
                           Text(' > '),
@@ -260,7 +260,8 @@ class _AdsDetailState extends State<AdsDetail> {
                           ),
                         ],
                       ),
-                    if (_ad.subSubCategory.isNotEmpty)
+                    if (_ad.subSubCategory.isNotEmpty &&
+                        _ad.subSubCategory != "null")
                       Row(
                         children: <Widget>[
                           Text(' > '),
