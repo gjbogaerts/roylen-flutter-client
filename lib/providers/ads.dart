@@ -14,6 +14,8 @@ class Ads with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
   final String apiKey = ApiKey.getKey();
   User _user;
+  String _searchTerm;
+  Map _filters;
   ReturnMode _mode = ReturnMode.All;
 
   List<Ad> _items = [];
@@ -45,6 +47,24 @@ class Ads with ChangeNotifier {
 
   ReturnMode get mode {
     return _mode;
+  }
+
+  String get searchTerm {
+    return _searchTerm;
+  }
+
+  void setSearchTerm(String q) {
+    _searchTerm = q;
+    notifyListeners();
+  }
+
+  Map get filters {
+    return _filters;
+  }
+
+  void setFilters(Map f) {
+    _filters = f;
+    notifyListeners();
   }
 
   Ad getById(String id) {

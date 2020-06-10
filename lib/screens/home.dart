@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/ads.dart';
 import './ads_list.dart';
 import './ad_create.dart';
 import './ads_search.dart';
@@ -17,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, Object>> _pages;
   int _selectedPageIndex = 0;
-
+  String _searchTerm;
   @override
   void initState() {
     super.initState();
@@ -41,19 +43,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void setSearchTerm(String q) {
-    setState(() {
-      _selectedPageIndex = 1;
-      _pages[1] = {'page': AdsSearch(q), 'title': 'Zoek advertenties'};
-    });
-  }
-
   void setFilterElements(elements) {
+    Provider.of<Ads>(context, listen: false).setFilters(elements);
     setState(() {
       _selectedPageIndex = 2;
       _pages[2] = {
         'page': AdsFilters(elements),
         'title': 'Filter advertenties'
+      };
+    });
+  }
+
+  void setSearchTerm(String q) {
+    Provider.of<Ads>(context, listen: false).setSearchTerm(q);
+    setState(() {
+      _searchTerm = q;
+      _selectedPageIndex = 1;
+      _pages[1] = {
+        'page': AdsSearch(_searchTerm),
+        'title': 'Zoek advertenties'
       };
     });
   }
