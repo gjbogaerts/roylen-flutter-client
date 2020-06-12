@@ -78,8 +78,8 @@ class Roylen extends StatelessWidget {
     // _showOnBoarding = true;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: AuthProvider.Auth()),
-        ChangeNotifierProvider.value(value: Toaster()),
+        ChangeNotifierProvider(create: (ctx) => AuthProvider.Auth()),
+        ChangeNotifierProvider(create: (ctx) => Toaster()),
         ChangeNotifierProxyProvider<AuthProvider.Auth, Messages>(
           create: (ctx) => Messages(null, []),
           update: (ctx, auth, previousMessages) =>
