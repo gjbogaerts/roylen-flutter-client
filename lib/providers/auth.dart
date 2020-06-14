@@ -63,6 +63,7 @@ class Auth with ChangeNotifier {
 
   Future<bool> changeProfile(String _imageLocation, String _newEmail) async {
     final _url = '$baseUrl/api/profile';
+    // final _url = '${ServerInterface.getDebugUrl()}/api/profile';
     try {
       var _req = http.MultipartRequest('POST', Uri.parse(_url));
       if (_imageLocation != null) {
@@ -83,12 +84,14 @@ class Auth with ChangeNotifier {
         throw Exception(
             'Het lukte niet om je wijzingen op te slaan. Probeer het later nog eens.');
       }
+      var doc = await http.Response.fromStream(_imageData);
+      var data = json.decode(doc.body);
+      data = data['doc'];
       var prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', _newEmail);
-      prefs.setString('avatar', _imageLocation);
-      _email = _newEmail;
-      _avatar = _imageLocation;
-
+      prefs.setString('email', data['email']);
+      prefs.setString('avatar', data['avatar']);
+      _email = data['email'];
+      _avatar = data['avatar'];
       notifyListeners();
       return true;
     } catch (err) {

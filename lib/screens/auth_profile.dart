@@ -63,8 +63,8 @@ class _AuthProfileState extends State<AuthProfile> {
     _imageFile = File(_pickedFile.path);
     /* final savedImage =  */
     await _imageFile.copy(imageLocation);
-    _imageLocation = imageLocation;
     setState(() {
+      _imageLocation = imageLocation;
       _pic = _imageFile;
     });
   }
@@ -139,7 +139,7 @@ class _AuthProfileState extends State<AuthProfile> {
                                   if (snapshot.hasData) {
                                     return Center(
                                       child: Text(
-                                          'Je profielwijziging is gelukt. Om je wijzingen te zien, moet je even uitloggen en weer opnieuw inloggen.'),
+                                          'Je profielwijziging is gelukt.'),
                                     );
                                   } else if (snapshot.hasError) {
                                     return Center(
