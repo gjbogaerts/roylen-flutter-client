@@ -27,15 +27,17 @@ class _AdsCategoriedListState extends State<AdsCategoriedList> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: Text(_category),
+        title: Text(_categoryType == 'creator' ? 'Adverteerder' : _category),
       ),
       // drawer: AppDrawer(),
       body: Stack(
         children: <Widget>[
           Background(),
           FutureBuilder(
-            future: Provider.of<Ads>(context)
-                .fetchCategoryItems(_categoryType, _category),
+            future: _categoryType == 'creator'
+                ? Provider.of<Ads>(context).fetchItemsFromUser(_category)
+                : Provider.of<Ads>(context)
+                    .fetchCategoryItems(_categoryType, _category),
             builder: (context, snapshot) {
               return snapshot.connectionState == ConnectionState.waiting
                   ? CircularProgressIndicator()

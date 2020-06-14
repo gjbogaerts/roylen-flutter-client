@@ -168,9 +168,8 @@ class _AdsDetailState extends State<AdsDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final _dateAdded = DateFormat.yMEd()
-        .addPattern('H:m')
-        .format(DateTime.parse(_ad.dateAdded));
+    final _dateFormat = DateFormat('dd-MM-yyyy, HH:mm');
+    final _dateAdded = _dateFormat.format(DateTime.parse(_ad.dateAdded));
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -318,6 +317,21 @@ class _AdsDetailState extends State<AdsDetail> {
                 ),
               SizedBox(height: 10),
               Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  '${_ad.description}',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 16),
+                  softWrap: true,
+                ),
+              ),
+              SizedBox(height: 20),
+              Divider(),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
                 child: Row(
                   children: <Widget>[
                     CircleAvatar(
@@ -327,25 +341,38 @@ class _AdsDetailState extends State<AdsDetail> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      'Aangemaakt door: ${_ad.creator.screenName} \nop $_dateAdded',
-                      style: TextStyle(fontSize: 16),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(AdsCategoriedList.routeName, arguments: {
+                          'categoryType': 'creator',
+                          'category': _ad.creator.id
+                        });
+                      },
+                      child: Container(
+                        child: RichText(
+                          text: TextSpan(
+                            style: Theme.of(context).textTheme.bodyText2,
+                            children: [
+                              TextSpan(
+                                text: 'Aangemaakt door: ',
+                              ),
+                              TextSpan(
+                                text: '${_ad.creator.screenName}',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    decorationThickness: 2),
+                              ),
+                              TextSpan(text: ' \nop $_dateAdded')
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-              ),
-              SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  '${_ad.description}',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 16),
-                  softWrap: true,
-                ),
               ),
               SizedBox(
                 height: 20,
