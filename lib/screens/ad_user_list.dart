@@ -33,7 +33,7 @@ class _AdUserListState extends State<AdUserList> {
     }
   }
 
-  void _showAlert(BuildContext context) {
+/*   void _showAlert(BuildContext context) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -49,7 +49,7 @@ class _AdUserListState extends State<AdUserList> {
                 )
               ],
             ));
-  }
+  } */
 
   Center _adInvite(BuildContext context) {
     return Center(
@@ -100,19 +100,22 @@ class _AdUserListState extends State<AdUserList> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(
-                              curItem.title,
-                              style: Theme.of(context).textTheme.subtitle1,
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              child: Text(
+                                curItem.title,
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
-                                IconButton(
+                                /* IconButton(
                                     color: Theme.of(context).primaryColor,
                                     icon: Icon(Icons.edit),
                                     onPressed: () {
                                       _showAlert(context);
-                                    }),
+                                    }), */
                                 IconButton(
                                   icon: Icon(Icons.delete_forever),
                                   color: Theme.of(context).primaryColor,
