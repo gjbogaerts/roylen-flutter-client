@@ -22,7 +22,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
     var name;
     var map;
     for (int x = 0; x < assets.length; x++) {
-      bytes = await assets[x].getByteData(quality: 70);
+      bytes = await assets[x].getByteData();
       name = assets[x].name;
       map = {'bytes': bytes, 'name': name};
       byteDataImageList.add(map);
@@ -66,16 +66,31 @@ class _MyImagePickerState extends State<MyImagePicker> {
 
   Widget buildGridView() {
     if (_images != null) {
-      return GridView.count(
-        shrinkWrap: true,
-        crossAxisCount: 3,
-        mainAxisSpacing: 3,
-        crossAxisSpacing: 3,
-        children: List.generate(_images.length, (index) {
-          Asset asset = _images[index];
-          return AssetThumb(asset: asset, width: 40, height: 40);
-        }),
-      );
+      return Row(
+          children: _images
+              .map(
+                (e) => Container(
+                  child: AssetThumb(
+                    asset: e,
+                    width: 40,
+                    height: 40,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                  ),
+                ),
+              )
+              .toList());
+//      return GridView.count(
+//        shrinkWrap: true,
+//        crossAxisCount: 3,
+//        mainAxisSpacing: 3,
+//        crossAxisSpacing: 3,
+//        children: List.generate(_images.length, (index) {
+//          Asset asset = _images[index];
+//          return AssetThumb(asset: asset, width: 40, height: 40);
+//        }),
+//      );
     } else {
       return Container(color: Colors.white);
     }
@@ -91,8 +106,9 @@ class _MyImagePickerState extends State<MyImagePicker> {
             child: Text('Fout: $_error'),
           ),
         RaisedButton(
-          onPressed: () => loadAssets(context),
-          child: Text('Kies foto\'s'),
+          onPressed:
+              widget.maxPickedImages == 0 ? null : () => loadAssets(context),
+          child: Text('Kies maximaal ${widget.maxPickedImages} foto(\'s)'),
         ),
         if (_images.length > 0)
           Flexible(

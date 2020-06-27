@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../utils/server_interface.dart';
+
 import '../models/ad.dart';
-// import '../models/creator.dart';
 import '../models/user.dart';
-import '../utils/content_type.dart';
 import '../utils/api_key.dart';
+import '../utils/content_type.dart';
+import '../utils/server_interface.dart';
 
 enum ReturnMode { Search, Favorites, Filtered, All }
 
@@ -69,6 +70,66 @@ class Ads with ChangeNotifier {
 
   Ad getById(String id) {
     return _items.firstWhere((it) => it.id == id);
+  }
+
+  Future<bool> adPicToAd(
+      String adId, List<Map<String, dynamic>> imagesDataList) async {
+    final url = '$baseUrl/api/ads/addPic';
+    final token = user.token;
+    try {
+      var _req = http.MultipartRequest('POST', Uri.parse(url));
+      imagesDataList.forEach((_pic) {
+        var _bytes = _pic['bytes'];
+        List<int> _imageData = _bytes.buffer
+            .asUint8List(_bytes.offsetInBytes, _bytes.lengthInBytes);
+        String _name = _pic['name'];
+        _name = _name.toLowerCase();
+        _name = _name.replaceAll('heic', 'jpeg');
+        var _file = http.MultipartFile.fromBytes('filename', _imageData,
+            filename: _name,
+            contentType: ContentType.getContentTypeAsMap(_name));
+        _req.files.add(_file);
+      });
+      _req.fields['adId'] = adId;
+      _req.headers.putIfAbsent('Authorization', () => 'Bearer $token');
+      _req.headers.putIfAbsent('x-api-key', () => apiKey);
+      var uriResponse = await _req.send();
+      if (uriResponse.statusCode != 200) {
+        print('fout: ${uriResponse.stream.bytesToString()}');
+        return false;
+      }
+      await http.Response.fromStream(uriResponse);
+      await fetchAndSetItems();
+      return true;
+    } catch (err) {
+      print(err.toString());
+      return false;
+    }
+  }
+
+  Future<bool> removePicFromAd(String adId, String uri) async {
+    final _token = user.token;
+    final _url = '$baseUrl/api/ads/removePic';
+    try {
+      var _response = await http.post(
+        _url,
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': apiKey,
+          'Authorization': 'Bearer $_token'
+        },
+        body: json.encode({'adId': adId, 'picUri': uri}),
+      );
+      if (_response.statusCode != 200) {
+        print(_response.body);
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<List<Ad>> fetchCategoryItems(
@@ -213,6 +274,28 @@ class Ads with ChangeNotifier {
       return false;
     } catch (err) {
       print('Fouten Deleten: $err');
+      return false;
+    }
+  }
+
+  Future<bool> updateAd(Map<String, dynamic> adData, String token) async {
+    final url = '$baseUrl/api/ads/update';
+    try {
+      var response = await http.post(url,
+          headers: {
+            'x-api-key': apiKey,
+            'Authorization': 'Bearer $token',
+            'content-type': 'application/json'
+          },
+          body: json.encode(adData));
+      if (response.statusCode == 200) {
+        fetchAndSetFavoriteItems();
+        return true;
+      } else {
+        throw Exception('Error from server: ${response.body}');
+      }
+    } catch (err) {
+      print(err);
       return false;
     }
   }

@@ -5,9 +5,18 @@ class AdCategories extends StatefulWidget {
   final Function _callbackMainCats;
   final Function _callbackSubCats;
   final Function _callbackSubSubCats;
+  final String existingMainCat;
+  final String existingSubCat;
+  final String existingSubSubCat;
 
   AdCategories(
-      this._callbackMainCats, this._callbackSubCats, this._callbackSubSubCats);
+    this._callbackMainCats,
+    this._callbackSubCats,
+    this._callbackSubSubCats, {
+    this.existingMainCat,
+    this.existingSubCat,
+    this.existingSubSubCat,
+  });
 
   @override
   _AdCategoriesState createState() => _AdCategoriesState();
@@ -19,6 +28,22 @@ class _AdCategoriesState extends State<AdCategories> {
   String _subSubCat;
   List<String> _subCatsList;
   List<String> _subSubCatsList;
+
+  @override
+  void initState() {
+    super.initState();
+    _mainCat = widget.existingMainCat ?? null;
+    _subCat = widget.existingSubCat ?? null;
+    _subSubCat = widget.existingSubSubCat ?? null;
+    if (_mainCat != null) {
+      _subCatsList = Cats.getSubCategories(_mainCat);
+      _buildSubItems();
+    }
+    if (_subCat != null) {
+      _subSubCatsList = Cats.getSubSubCategories(_mainCat, _subCat);
+      _buildSubSubItems();
+    }
+  }
 
   List<DropdownMenuItem<String>> _buildList(List<String> items) {
     if (items == null) {

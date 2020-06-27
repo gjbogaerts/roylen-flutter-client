@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth.dart';
-import '../providers/ads.dart';
 import '../models/ad.dart';
-import '../providers/toaster.dart';
 import '../models/user.dart';
-import '../widgets/ad_form.dart';
+import '../providers/ads.dart';
+import '../providers/toaster.dart';
+import '../providers/auth.dart';
 import '../screens/auth.dart' as AuthScreen;
 import '../screens/home.dart';
+import '../widgets/ad_form.dart';
 import '../widgets/background.dart';
 import '../widgets/my_dialog.dart';
 
@@ -33,11 +33,12 @@ class _AdEditState extends State<AdEdit> {
   }
 
   Future<void> _saveForm(Map<String, dynamic> formData) async {
+    formData['adId'] = widget._ad.id;
     var result = await Provider.of<Ads>(context, listen: false)
-        .createAd(formData, _user.token);
+        .updateAd(formData, _user.token);
     if (result) {
       Provider.of<Toaster>(context, listen: false)
-          .setMessage('Je advertentie is aangemaakt');
+          .setMessage('Je advertentie is gewijzigd');
       Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
     }
   }

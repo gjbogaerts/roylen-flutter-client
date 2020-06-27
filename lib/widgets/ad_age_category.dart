@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 
 class AdAgeCategory extends StatefulWidget {
   final Function callback;
-  AdAgeCategory(this.callback);
+  final String existingAgeCat;
+  AdAgeCategory(this.callback, {this.existingAgeCat});
   @override
   _AdAgeCategoryState createState() => _AdAgeCategoryState();
 }
 
 class _AdAgeCategoryState extends State<AdAgeCategory> {
   String _ageCategory;
+  @override
+  void initState() {
+    super.initState();
+    _ageCategory = widget.existingAgeCat ?? '0-16';
+  }
+
   @override
   Widget build(BuildContext context) {
     return DropdownButton(

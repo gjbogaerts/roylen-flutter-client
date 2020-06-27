@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
+
 import './my_image_picker.dart';
 import './my_location_picker.dart';
-import 'ad_categories.dart';
-import 'ad_age_category.dart';
+import '../models/ad.dart';
+import '../providers/ads.dart';
 import '../providers/toaster.dart';
+import '../utils/server_interface.dart';
+import 'ad_age_category.dart';
+import 'ad_categories.dart';
 
 class AdForm extends StatefulWidget {
   final Function _saveCallback;
-
-  AdForm(this._saveCallback);
+  final Ad ad;
+  AdForm(this._saveCallback, {this.ad});
   @override
   _AdFormState createState() => _AdFormState();
 }
@@ -25,15 +29,16 @@ class _AdFormState extends State<AdForm> {
   bool _autoValidate = false;
   bool _hasError = false;
   String _errorString;
+  String _baseUrl = ServerInterface.getBaseUrl();
 
-  var _formData = {
+  Map<String, dynamic> _formData = {
     'title': '',
     'description': '',
     'virtualPrice': 0,
     'mainCategory': '',
     'subCategory': '',
     'subSubCategory': '',
-    'ageCategory': '',
+    'ageCategory': '0-16',
     'picture': [],
     'latitude': '',
     'longitude': ''
@@ -42,6 +47,20 @@ class _AdFormState extends State<AdForm> {
   @override
   void initState() {
     super.initState();
+    if (widget.ad != null) {
+      _formData['title'] = widget.ad.title;
+      _formData['description'] = widget.ad.description;
+      _formData['virtualPrice'] = widget.ad.virtualPrice.toString();
+      _formData['mainCategory'] = widget.ad.mainCategory;
+      _formData['subCategory'] = widget.ad.subCategory;
+      _formData['subSubCategory'] = widget.ad.subSubCategory;
+      _formData['ageCategory'] = widget.ad.ageCategory;
+      _formData['picture'] = widget.ad.pictureArray;
+      _setAdAgeCategory(widget.ad.ageCategory);
+      _setMainCat(widget.ad.mainCategory);
+      _setSubCat(widget.ad.subCategory);
+      _setSubSubCat(widget.ad.subSubCategory);
+    }
   }
 
   void _setAdAgeCategory(String age) {
@@ -94,6 +113,49 @@ class _AdFormState extends State<AdForm> {
   Future<void> _getPickedImages(
       List<Map<String, dynamic>> imagesDataList) async {
     _formData['picture'] = imagesDataList;
+    await Provider.of<Ads>(context, listen: false)
+        .adPicToAd(widget.ad.id, imagesDataList);
+  }
+
+  List<Widget> _getExistingImages() {
+    return (_formData['picture'] as List)
+        .map(
+          (e) => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: <Widget>[
+                Image.network(
+                  '$_baseUrl$e',
+                  fit: BoxFit.cover,
+                  width: 40,
+                  height: 40,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    var success = await Provider.of<Ads>(context, listen: false)
+                        .removePicFromAd(widget.ad.id, e);
+                    if (success) {
+                      setState(() {
+                        _formData['picture'].remove(e);
+                      });
+                    }
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 20,
+                    height: 20,
+                    child: Icon(
+                      Icons.delete,
+                      color: Color(0x99FF0000),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+        .toList();
   }
 
   @override
@@ -113,7 +175,13 @@ class _AdFormState extends State<AdForm> {
           padding: const EdgeInsets.fromLTRB(8, 20, 8, 0),
           child: Column(
             children: <Widget>[
-              MyImagePicker(_getPickedImages),
+              MyImagePicker(
+                _getPickedImages,
+                maxPickedImages: 5 - _formData['picture'].length,
+              ),
+              Row(
+                children: _getExistingImages(),
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -130,6 +198,7 @@ class _AdFormState extends State<AdForm> {
                 onSaved: (val) {
                   _formData['title'] = val;
                 },
+                initialValue: _formData['title'],
               ),
               SizedBox(
                 height: 10,
@@ -150,12 +219,14 @@ class _AdFormState extends State<AdForm> {
                 onSaved: (val) {
                   _formData['description'] = val;
                 },
+                initialValue: _formData['description'],
               ),
               SizedBox(
                 height: 10,
               ),
               TextFormField(
                 keyboardType: TextInputType.number,
+                initialValue: _formData['virtualPrice'].toString(),
                 decoration: const InputDecoration(
                     labelText: 'Prijs in nix',
                     hintText: 'Gebruik alleen gehele getallen'),
@@ -175,9 +246,22 @@ class _AdFormState extends State<AdForm> {
               SizedBox(
                 height: 10,
               ),
-              AdAgeCategory(_setAdAgeCategory),
+              AdAgeCategory(
+                _setAdAgeCategory,
+                existingAgeCat: _formData['ageCategory'],
+              ),
               SizedBox(height: 10),
-              AdCategories(_setMainCat, _setSubCat, _setSubSubCat),
+              AdCategories(
+                _setMainCat,
+                _setSubCat,
+                _setSubSubCat,
+                existingMainCat:
+                    widget.ad != null ? widget.ad.mainCategory : null,
+                existingSubCat:
+                    widget.ad != null ? widget.ad.subCategory : null,
+                existingSubSubCat:
+                    widget.ad != null ? widget.ad.subSubCategory : null,
+              ),
               SizedBox(
                 height: 10,
               ),

@@ -8,6 +8,7 @@ import '../providers/toaster.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/background.dart';
 import '../widgets/ad_offer.dart';
+import './ad_edit.dart';
 import '../screens/home.dart';
 
 class AdUserList extends StatefulWidget {
@@ -110,12 +111,15 @@ class _AdUserListState extends State<AdUserList> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
-                                /* IconButton(
+                                IconButton(
                                     color: Theme.of(context).primaryColor,
                                     icon: Icon(Icons.edit),
                                     onPressed: () {
-                                      _showAlert(context);
-                                    }), */
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AdEdit(curItem)));
+                                    }),
                                 IconButton(
                                   icon: Icon(Icons.delete_forever),
                                   color: Theme.of(context).primaryColor,

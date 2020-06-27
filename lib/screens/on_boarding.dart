@@ -119,7 +119,7 @@ class _OnBoardingState extends State<OnBoarding> {
           transformerPageView,
           Container(
             alignment: Alignment.bottomCenter,
-            padding: const EdgeInsets.only(bottom: 20),
+            // padding: const EdgeInsets.only(bottom: 20),
             child: FloatingActionButton(
               foregroundColor: Theme.of(context).accentColor,
               backgroundColor: Theme.of(context).primaryColor,
