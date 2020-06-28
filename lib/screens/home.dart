@@ -1,14 +1,17 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/ads.dart';
-import './ads_list.dart';
+
 import './ad_create.dart';
-import './ads_search.dart';
-import './ads_filters.dart';
+import './ads_detail.dart';
 import './ads_favorites.dart';
+import './ads_filters.dart';
+import './ads_list.dart';
+import './ads_search.dart';
+import '../providers/ads.dart';
 import '../widgets/app_drawer.dart';
-import '../widgets/search.dart';
 import '../widgets/filter.dart';
+import '../widgets/search.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -31,6 +34,36 @@ class _HomeScreenState extends State<HomeScreen> {
       {'page': AdsFavorites(), 'title': 'Je favorieten'},
       {'page': AdCreate(), 'title': 'Plaats advertentie'},
     ];
+
+    initListenDynamicLinks();
+  }
+
+  void initListenDynamicLinks() async {
+    final PendingDynamicLinkData _data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    /*
+    final Uri _deepLink = _data?.link;
+    print('Data: $_data');
+    if (_deepLink != null) {
+      print(_deepLink.queryParameters);
+    } else {
+      print(_data.toString());
+    }*/
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      final Uri _deepLink = dynamicLink?.link;
+      if (_deepLink != null) {
+        var _segments = _deepLink.pathSegments;
+        if (_segments[0] == 'detail') {
+          Navigator.of(context)
+              .pushNamed(AdsDetail.routeName, arguments: _segments[1]);
+        }
+//        print(_deepLink.pathSegments.toString());
+//        print('DeepLink: $_deepLink');
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError: ${e.message}');
+    });
   }
 
   @override

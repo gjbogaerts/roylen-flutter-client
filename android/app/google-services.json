@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "213820736820",
+    "firebase_url": "https://manifest-reach-279612.firebaseio.com",
+    "project_id": "manifest-reach-279612",
+    "storage_bucket": "manifest-reach-279612.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213820736820:android:5905bc341c8a1882dd5161",
+        "android_client_info": {
+          "package_name": "nl.raker.roylen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213820736820-bphhji91kfp3p8sf6tgb9q12ffitpr1t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.raker.roylen",
+            "certificate_hash": "98b8d84d2798672bb41fec1bf376ed403377cc87"
+          }
+        },
+        {
+          "client_id": "213820736820-bt7h5rj209k7vian8qj4qoppkm9jh4od.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd5fca6dLkjIQU5MsjEnKEZJu-qq_mfmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213820736820-bt7h5rj209k7vian8qj4qoppkm9jh4od.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

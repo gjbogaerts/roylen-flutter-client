@@ -1,16 +1,20 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
-import '../utils/server_interface.dart';
-import '../models/user.dart';
+import './ads_categoried_list.dart';
 import '../models/ad.dart';
+import '../models/user.dart';
 import '../providers/ads.dart';
 import '../providers/auth.dart';
+import '../utils/api_key.dart';
+import '../utils/server_interface.dart';
+import '../widgets/background.dart';
 import '../widgets/contact.dart';
 import '../widgets/offer.dart';
-import '../widgets/background.dart';
-import './ads_categoried_list.dart';
 
 class ScreenArguments {
   final String categoryType;
@@ -28,9 +32,25 @@ class AdsDetail extends StatefulWidget {
 class _AdsDetailState extends State<AdsDetail> {
   User _user;
   bool _isFavorite = false;
-
+  final baseUrl = ServerInterface.getBaseUrl();
   String _mainImage;
+  Uri _detailPageDeepLink;
   Ad _ad;
+
+  void initBuildDynamicLink(String adId) async {
+    final DynamicLinkParameters _params = DynamicLinkParameters(
+      link: Uri.parse('https://roylen.net/detail/$adId'),
+      uriPrefix: ApiKey.getDeepLink(),
+      androidParameters: AndroidParameters(
+        packageName: 'nl.raker.roylen',
+      ),
+      iosParameters: IosParameters(
+        appStoreId: '1512764806',
+        bundleId: 'nl.raker.roylen',
+      ),
+    );
+    _detailPageDeepLink = await _params.buildUrl();
+  }
 
   @override
   void didChangeDependencies() {
@@ -38,6 +58,7 @@ class _AdsDetailState extends State<AdsDetail> {
     _ad = Provider.of<Ads>(context)
         .getById(ModalRoute.of(context).settings.arguments);
     _mainImage = _ad.picture;
+    initBuildDynamicLink(_ad.id);
     if (Provider.of<Auth>(context).isAuth) {
       _user = Provider.of<Auth>(context).getUser();
       if (_user.favoriteAds != null) {
@@ -164,24 +185,33 @@ class _AdsDetailState extends State<AdsDetail> {
     );
   }
 
-  final baseUrl = ServerInterface.getBaseUrl();
-
   @override
   Widget build(BuildContext context) {
+    final _ios = Theme.of(context).platform == TargetPlatform.iOS;
     final _dateFormat = DateFormat('dd-MM-yyyy, HH:mm');
     final _dateAdded = _dateFormat.format(DateTime.parse(_ad.dateAdded));
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _ad.title,
-          textAlign: TextAlign.center,
-        ),
+        title: Text('Details'),
         actions: <Widget>[
           IconButton(
               icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
               onPressed: () {
                 _setFavorite(_ad.id);
               }),
+          Builder(
+            builder: (BuildContext ctx) => IconButton(
+              icon: Icon(_ios ? CupertinoIcons.share : Icons.share),
+              onPressed: () {
+                final String _scheme = '$_detailPageDeepLink';
+                final RenderBox box = ctx.findRenderObject();
+                Share.share(_scheme,
+                    subject: 'Advertentie van Roylen app',
+                    sharePositionOrigin:
+                        box.localToGlobal(Offset.zero) & box.size);
+              },
+            ),
+          ),
           IconButton(
               icon: Icon(Icons.warning),
               onPressed: () {
@@ -206,10 +236,17 @@ class _AdsDetailState extends State<AdsDetail> {
                 _showImageArray(_ad.pictureArray),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
+                alignment: Alignment.center,
+                child: Text(
+                  _ad.title,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   '${_ad.virtualPrice} nix',
                   style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
                 ),
               ),
               SizedBox(height: 20),
