@@ -8,6 +8,7 @@ import './ads_favorites.dart';
 import './ads_filters.dart';
 import './ads_list.dart';
 import './ads_search.dart';
+import './auth_password_reset.dart';
 import '../providers/ads.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/filter.dart';
@@ -39,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void initListenDynamicLinks() async {
-    final PendingDynamicLinkData _data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
+    // final PendingDynamicLinkData _data =
+    //     await FirebaseDynamicLinks.instance.getInitialLink();
     /*
     final Uri _deepLink = _data?.link;
     print('Data: $_data');
@@ -58,8 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.of(context)
               .pushNamed(AdsDetail.routeName, arguments: _segments[1]);
         }
-//        print(_deepLink.pathSegments.toString());
-//        print('DeepLink: $_deepLink');
+        if (_segments[0] == 'resetPasswordLink') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AuthPasswordReset(resetKey: _segments[1]),
+            ),
+          );
+        }
       }
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError: ${e.message}');

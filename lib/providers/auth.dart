@@ -1,13 +1,17 @@
-import 'dart:convert';
-import 'package:http_parser/http_parser.dart';
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/server_interface.dart';
+
 import '../models/user.dart';
-import '../utils/content_type.dart';
 import '../utils/api_key.dart';
+import '../utils/content_type.dart';
+import '../utils/server_interface.dart';
+import '../utils/crypto.dart';
 
 class Auth with ChangeNotifier {
   final String baseUrl = ServerInterface.getBaseUrl();
@@ -103,10 +107,36 @@ class Auth with ChangeNotifier {
 
   Future<bool> startResetPasswordSequence(String email) async {
     final _url = baseUrl + '/api/resetPassword';
+    final _crypto = Crypto.createRandomCryptoString();
+    final DynamicLinkParameters _params = DynamicLinkParameters(
+      link: Uri.parse('https://roylen.net/resetPasswordLink/$_crypto'),
+      uriPrefix: ApiKey.getDeepLink(),
+      androidParameters: AndroidParameters(
+        packageName: 'nl.raker.roylen',
+      ),
+      iosParameters: IosParameters(
+        appStoreId: '1512764806',
+        bundleId: 'nl.raker.roylen',
+      ),
+    );
+    var _detailPageDeepLink = await _params.buildUrl();
+    // print(_detailPageDeepLink);
+    // return false;
     try {
-      final _response = await http.post(_url,
-          headers: {'content-type': 'application/json', 'x-api-key': apiKey},
-          body: json.encode({'email': email}));
+      final _response = await http.post(
+        _url,
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': apiKey,
+        },
+        body: json.encode(
+          {
+            'email': email,
+            'resetLink': _detailPageDeepLink.toString(),
+            'secretKey': _crypto
+          },
+        ),
+      );
       if (_response.statusCode == 200) {
         notifyListeners();
         return true;

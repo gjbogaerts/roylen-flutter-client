@@ -7,6 +7,9 @@ import '../translations/auth_password_reset.i18n.dart';
 
 class AuthPasswordReset extends StatefulWidget {
   static const routeName = '/auth_password_reset';
+  final String resetKey;
+
+  AuthPasswordReset({this.resetKey});
 
   @override
   _AuthPasswordResetState createState() => _AuthPasswordResetState();
@@ -129,6 +132,9 @@ class _AuthPasswordResetState extends State<AuthPasswordReset> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        initialValue:
+                            widget.resetKey != null ? widget.resetKey : '',
+                        readOnly: widget.resetKey != null ? true : false,
                         decoration: InputDecoration(labelText: 'Je code'.i18n),
                         validator: (val) => val.isEmpty
                             ? 'Je moet een code invullen'.i18n
