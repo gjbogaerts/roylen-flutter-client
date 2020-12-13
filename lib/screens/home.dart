@@ -168,23 +168,23 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.grid_on),
-            title: Text('Advertenties'),
+            label: 'Advertenties',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            title: Text('Zoeken'),
+            label: 'Zoeken',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.filter_list),
-            title: Text('Filter'),
+            label: 'Filter',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            title: Text('Favorieten'),
+            label: 'Favorieten',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_circle_outline),
-            title: Text('Plaatsen'),
+            label: 'Plaatsen',
           ),
         ],
       ),
